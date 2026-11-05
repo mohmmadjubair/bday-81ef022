@@ -168,22 +168,29 @@ h1,h2,h3{margin:0;font-weight:600}
 .gift:nth-child(3) .float{animation-delay:1s}
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
-/* ───────── POLAROID ───────── */
-.polaroid{
-  background:#fff;padding:13px 13px 52px;border-radius:4px;
-  box-shadow:0 14px 30px rgba(150,110,95,.26);
-  transform:rotate(-2.6deg);margin:30px auto 0;max-width:252px;position:relative;
-}
-.polaroid .photo{
-  width:100%;aspect-ratio:4/5;border-radius:2px;overflow:hidden;position:relative;
-  background:linear-gradient(160deg,#FFE9EF 0%,#FDF0E3 50%,#E9F1EA 100%);
+/* ───────── DIGICAM ───────── */
+.cam-wrap{position:relative;margin:28px auto 0;max-width:344px;transform:rotate(-1.6deg)}
+.cam-wrap > svg{width:100%;height:auto;display:block;filter:drop-shadow(0 13px 24px rgba(150,110,95,.3))}
+/* the LCD overlay must match the screen rect in the SVG (x150 y72 w400 h300 of 720x400) */
+.lcd{
+  position:absolute;left:20.833%;top:18%;width:55.556%;height:75%;
+  overflow:hidden;border-radius:3px;background:#15161A;
   display:flex;align-items:center;justify-content:center;
 }
-/* object-position tunes which part of a tall photo survives the crop */
-.polaroid .photo img{width:100%;height:100%;object-fit:cover;object-position:50% 100%;display:block}
-.polaroid .cap{
-  position:absolute;left:0;right:0;bottom:12px;text-align:center;
-  font-family:'Caveat',cursive;font-size:1.28rem;color:var(--ink);
+.lcd img{width:100%;height:100%;object-fit:cover;display:block}
+.lcd .stamp{
+  position:absolute;right:7px;bottom:5px;font-family:'Patrick Hand',monospace;
+  font-size:.6rem;letter-spacing:1.5px;color:#FFB443;text-shadow:0 0 5px rgba(0,0,0,.85);
+}
+.lcd .rec{
+  position:absolute;left:7px;top:5px;display:flex;align-items:center;gap:4px;
+  font-family:'Patrick Hand',monospace;font-size:.58rem;letter-spacing:1px;
+  color:#FFF;text-shadow:0 0 5px rgba(0,0,0,.85);
+}
+.lcd .rec b{width:6px;height:6px;border-radius:50%;background:#FF5A5A;display:block}
+.cap{
+  margin:14px auto 0;text-align:center;
+  font-family:'Caveat',cursive;font-size:1.3rem;color:var(--ink);
 }
 .note{
   position:relative;font-family:'Caveat',cursive;font-size:1.2rem;line-height:1.3;
@@ -283,19 +290,76 @@ h1,h2,h3{margin:0;font-weight:600}
   <section class="screen" id="s-polaroid">
     <div class="stagger">
       <h2 class="title" style="font-size:1.35rem">a little snapshot 📸</h2>
-      <div class="polaroid">
-        <span class="tape tl" style="width:84px"></span>
-        <div class="photo">
+      <div class="cam-wrap">
+        <span class="tape tl" style="width:84px;z-index:3"></span>
+        <svg viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="dial" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FFFFFF"/><stop offset="45%" stop-color="#DCD5CA"/>
+              <stop offset="55%" stop-color="#F4EFE7"/><stop offset="100%" stop-color="#B8AFA1"/>
+            </linearGradient>
+            <linearGradient id="shell" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F7F0E6"/><stop offset="100%" stop-color="#E9DECE"/>
+            </linearGradient>
+          </defs>
+          <g stroke="#4A3A33" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+            <!-- body -->
+            <rect x="8" y="8" width="704" height="384" rx="32" fill="url(#shell)"/>
+            <!-- lens barrel -->
+            <rect x="34" y="52" width="86" height="152" rx="36" fill="#E4D9C9"/>
+            <circle cx="77" cy="96" r="27" fill="#2E3038"/>
+            <circle cx="77" cy="96" r="13" fill="#555D6E" stroke="none"/>
+            <circle cx="69" cy="88" r="5" fill="#FFFFFF" stroke="none"/>
+            <!-- little round button, lower left -->
+            <circle cx="77" cy="316" r="25" fill="#E4D9C9"/>
+            <circle cx="77" cy="316" r="9" fill="#C9BCA8" stroke="none"/>
+            <!-- top slider + buttons -->
+            <rect x="178" y="22" width="76" height="26" rx="13" fill="#E4D9C9"/>
+            <circle cx="197" cy="35" r="8" fill="#C9BCA8" stroke="none"/>
+            <rect x="300" y="24" width="44" height="22" rx="11" fill="#E4D9C9"/>
+            <rect x="354" y="24" width="44" height="22" rx="11" fill="#E4D9C9"/>
+            <rect x="408" y="24" width="44" height="22" rx="11" fill="#E4D9C9"/>
+            <!-- top-right info panel -->
+            <rect x="566" y="22" width="120" height="50" rx="9" fill="#E4D9C9"/>
+            <g stroke="#B6A992" stroke-width="5">
+              <path d="M586 40 h34 M586 54 h58"/>
+            </g>
+            <!-- screen bezel + dark screen -->
+            <rect x="140" y="62" width="420" height="320" rx="12" fill="#D9CFC2"/>
+            <rect x="150" y="72" width="400" height="300" rx="4" fill="#15161A" stroke-width="3"/>
+            <!-- control wheel -->
+            <circle cx="630" cy="214" r="66" fill="url(#dial)"/>
+            <circle cx="630" cy="214" r="29" fill="#F2EBE1"/>
+            <g fill="#A99C88" stroke="none">
+              <circle cx="630" cy="166" r="5"/><circle cx="630" cy="262" r="5"/>
+              <circle cx="582" cy="214" r="5"/><circle cx="678" cy="214" r="5"/>
+            </g>
+            <!-- bottom-right button -->
+            <rect x="594" y="318" width="74" height="34" rx="17" fill="#E4D9C9"/>
+            <!-- blue doodle hearts + sparkles -->
+            <g stroke="none">
+              <path d="M598 110 q-12 -9 -12 -17 a7.5 7.5 0 0 1 12 -4 a7.5 7.5 0 0 1 12 4 q0 8 -12 17 z" fill="#7FA8E8"/>
+              <path d="M660 300 q-10 -7 -10 -14 a6 6 0 0 1 10 -3 a6 6 0 0 1 10 3 q0 7 -10 14 z" fill="#A9C6F2"/>
+              <path d="M126 258 q-9 -7 -9 -13 a5.5 5.5 0 0 1 9 -3 a5.5 5.5 0 0 1 9 3 q0 6 -9 13 z" fill="#7FA8E8"/>
+              <path d="M520 36 l4 11 11 4 -11 4 -4 11 -4 -11 -11 -4 11 -4 z" fill="#A9C6F2"/>
+              <path d="M120 360 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 z" fill="#7FA8E8"/>
+              <path d="M690 118 l3 9 9 3 -9 3 -3 9 -3 -9 -9 -3 9 -3 z" fill="#A9C6F2"/>
+            </g>
+          </g>
+        </svg>
+        <div class="lcd">
           <img id="herPhoto" src="photo.jpg" alt="">
-          <div id="photoFallback" style="display:none;text-align:center;padding:16px">
-            <div style="font-size:2.1rem">🌷</div>
-            <div class="hand" style="font-size:1.12rem;color:var(--ink-soft);line-height:1.25;margin-top:6px">
-              your photo goes here<br><span class="kao">(ɔ◔‿◔)ɔ ♥</span>
+          <div id="photoFallback" style="display:none;text-align:center;padding:14px">
+            <div style="font-size:1.8rem">🌷</div>
+            <div class="hand" style="font-size:1rem;color:#C9BCA8;line-height:1.25;margin-top:4px">
+              your photo goes here<br><span style="color:#E79AAE">(ɔ◔‿◔)ɔ ♥</span>
             </div>
           </div>
+          <span class="rec"><b></b>PLAY</span>
+          <span class="stamp">12 11 ✿</span>
         </div>
-        <div class="cap">saiyeda ✿ the birthday girl</div>
       </div>
+      <div class="cap">saiyeda ✿ the birthday girl</div>
       <div class="notes">
         <div class="note a"><span class="tape tl butter" style="width:70px;height:22px"></span>
           Happiest of birthdays to the person with the best taste in aesthetics 🌸</div>
