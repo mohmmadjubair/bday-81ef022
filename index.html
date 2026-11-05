@@ -135,17 +135,61 @@ h1,h2,h3{margin:0;font-weight:600}
 .dots{display:flex;gap:14px;justify-content:center;margin:20px 0 6px}
 .dot{width:16px;height:16px;border-radius:50%;border:2.5px solid var(--ink);background:transparent;transition:all .22s cubic-bezier(.3,1.5,.5,1)}
 .dot.on{background:var(--pink-deep);transform:scale(1.2)}
-.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:272px;margin:18px auto 0}
-.key{
-  aspect-ratio:1/1;border-radius:50%;border:2.5px solid var(--ink);
-  background:var(--paper);box-shadow:0 4px 0 var(--ink);
-  font-family:'Fredoka',system-ui,sans-serif;font-size:1.45rem;font-weight:600;color:var(--ink);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:transform .12s ease,box-shadow .12s ease,background .2s;
+/* recessed dial panel the keys sit in */
+.keypad{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:13px;
+  max-width:280px;margin:18px auto 0;padding:15px 13px 17px;border-radius:24px;
+  background:linear-gradient(180deg,#F0E4D6 0%,#F8EFE4 100%);
+  box-shadow:
+    inset 0 2px 5px rgba(150,112,92,.3),
+    inset 0 -2px 0 rgba(255,255,255,.75),
+    0 1px 0 rgba(255,255,255,.8);
 }
-.key:hover{background:var(--pink-soft)}
-.key:active{transform:translateY(4px);box-shadow:0 0 0 var(--ink)}
-.key.alt{background:var(--butter);font-size:1.1rem}
+.key{
+  position:relative;aspect-ratio:1/1;border-radius:50%;border:0;padding:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  font-family:'Fredoka',system-ui,sans-serif;font-size:1.5rem;font-weight:600;
+  color:#5E4A41;cursor:pointer;touch-action:manipulation;user-select:none;
+  background:linear-gradient(180deg,#FFFEFB 0%,#FCF5EB 42%,#F2E4D3 100%);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(95,74,65,.22),      /* rim */
+    inset 0 2px 1px rgba(255,255,255,.95),     /* top highlight */
+    inset 0 -5px 7px rgba(168,126,102,.22),    /* under-curve shading */
+    0 6px 0 #DCC6AF,                           /* the key's side wall */
+    0 7px 3px rgba(120,85,70,.18),
+    0 10px 14px rgba(120,85,70,.22);           /* cast shadow */
+  transition:transform .09s ease-out,box-shadow .09s ease-out,filter .09s ease-out;
+}
+.key .sub{
+  font-size:.44rem;font-weight:600;letter-spacing:1.6px;line-height:1;
+  color:#A78D7C;text-indent:1.6px;
+}
+.key:hover{filter:brightness(1.03)}
+/* pressed: the cap travels down and its side wall collapses */
+.key:active,.key.down{
+  transform:translateY(6px);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(95,74,65,.26),
+    inset 0 3px 6px rgba(140,100,85,.34),
+    inset 0 -1px 0 rgba(255,255,255,.55),
+    0 0 0 #DCC6AF,
+    0 1px 2px rgba(120,85,70,.3);
+  filter:brightness(.975);
+}
+.key.alt{background:linear-gradient(180deg,#FFFBEA 0%,#FBF0CF 45%,#F3E3B4 100%);font-size:1.15rem}
+.key.alt{box-shadow:
+    inset 0 0 0 1.5px rgba(95,74,65,.2),
+    inset 0 2px 1px rgba(255,255,255,.95),
+    inset 0 -5px 7px rgba(178,145,86,.22),
+    0 6px 0 #DFCB9B,
+    0 7px 3px rgba(120,85,70,.18),
+    0 10px 14px rgba(120,85,70,.22)}
+.key.alt:active,.key.alt.down{box-shadow:
+    inset 0 0 0 1.5px rgba(95,74,65,.24),
+    inset 0 3px 6px rgba(150,115,70,.34),
+    inset 0 -1px 0 rgba(255,255,255,.55),
+    0 0 0 #DFCB9B,
+    0 1px 2px rgba(120,85,70,.3)}
 .shake{animation:shake .45s}
 @keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-11px)}30%{transform:translateX(10px)}45%{transform:translateX(-7px)}60%{transform:translateX(6px)}80%{transform:translateX(-3px)}}
 
@@ -216,18 +260,44 @@ h1,h2,h3{margin:0;font-weight:600}
 .wish{display:none;margin-top:20px}
 .wish.show{display:block;animation:rise .7s cubic-bezier(.22,.9,.3,1) both}
 
-/* ───────── LETTER ───────── */
-.letter{
-  background:var(--paper);border-radius:12px;padding:30px 22px 26px;position:relative;
-  box-shadow:var(--shadow);border:1px solid rgba(214,188,170,.55);
-  background-image:repeating-linear-gradient(transparent,transparent 30px,rgba(190,160,140,.17) 30px,rgba(190,160,140,.17) 31px);
-  background-position:0 24px;
+/* ───────── LETTER · real paper ───────── */
+.letter{position:relative;margin-top:16px;padding:0 0 74px;filter:drop-shadow(0 16px 26px rgba(140,102,84,.26))}
+/* the sheet itself — torn deckle edges come from the SVG filter */
+.letter .sheet{
+  position:absolute;inset:-7px -5px;z-index:0;filter:url(#deckle);
+  background:
+    radial-gradient(125% 85% at 18% 8%, rgba(255,255,255,.95), rgba(255,255,255,0) 58%),
+    radial-gradient(95% 75% at 88% 92%, rgba(205,172,133,.32), rgba(205,172,133,0) 68%),
+    radial-gradient(60% 45% at 72% 28%, rgba(198,166,128,.18), rgba(198,166,128,0) 70%),
+    linear-gradient(176deg,#FEFaF0 0%,#FAF2E2 48%,#F4E9D4 100%);
+  box-shadow:inset 0 0 44px rgba(176,140,102,.2);
 }
-.letter::before{
-  content:"";position:absolute;top:0;bottom:0;left:26px;width:1.5px;background:rgba(236,160,180,.42);
+/* laid-paper striations + grain, kept unfiltered so they stay straight */
+.letter .grain{
+  position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.6;
+  background-image:
+    repeating-linear-gradient(90deg,rgba(166,132,98,.05) 0 1px,transparent 1px 4px),
+    repeating-linear-gradient(0deg,rgba(166,132,98,.045) 0 1px,transparent 1px 7px),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='170' height='170'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4'/><feColorMatrix type='saturate' values='0'/></filter><rect width='170' height='170' filter='url(%23p)' opacity='.1'/></svg>");
 }
-.letter p{font-family:'Caveat',cursive;font-size:1.32rem;line-height:31px;margin:0 0 31px;padding-left:20px}
-.letter .sign{text-align:right;font-size:1.18rem;color:var(--ink-soft);line-height:1.5}
+/* the two creases of a letter folded in three */
+.letter .folds{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:
+    linear-gradient(180deg,transparent calc(34% - 2px),rgba(150,114,84,.15) calc(34% - 1px),rgba(255,255,255,.8) calc(34% + 1px),transparent calc(34% + 3px)),
+    linear-gradient(180deg,transparent calc(67% - 2px),rgba(150,114,84,.13) calc(67% - 1px),rgba(255,255,255,.75) calc(67% + 1px),transparent calc(67% + 3px));
+}
+.letter .ink{position:relative;z-index:3;padding:34px 26px 6px}
+.letter p{font-family:'Caveat',cursive;font-size:1.34rem;line-height:1.52;margin:0 0 20px;color:#54423A}
+.letter .sign{text-align:right;font-size:1.2rem;color:#7B6558;line-height:1.5;margin-bottom:4px}
+/* wax seal, sitting on the bottom edge of the sheet */
+.letter .seal{
+  position:absolute;z-index:4;left:50%;bottom:-6px;width:96px;margin-left:-48px;
+  filter:drop-shadow(0 5px 7px rgba(110,40,55,.45));
+  animation:sealIn .7s cubic-bezier(.3,1.5,.5,1) .35s both;
+}
+.letter .seal svg{width:100%;height:auto;display:block}
+@keyframes sealIn{from{opacity:0;transform:scale(1.7) rotate(-18deg)}to{opacity:1;transform:none}}
 
 /* ───────── FINAL ───────── */
 .hearts{position:absolute;inset:0;pointer-events:none;overflow:hidden}
@@ -243,6 +313,18 @@ h1,h2,h3{margin:0;font-weight:600}
 </style>
 </head>
 <body>
+
+<!-- filters: torn paper edge + poured wax edge -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="deckle" x="-12%" y="-12%" width="124%" height="124%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.022 0.035" numOctaves="4" seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="11" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="waxedge" x="-25%" y="-25%" width="150%" height="150%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="3" seed="3" result="w"/>
+    <feDisplacementMap in="SourceGraphic" in2="w" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 
 <div class="doodles" id="doodles" aria-hidden="true"></div>
 
@@ -447,12 +529,45 @@ h1,h2,h3{margin:0;font-weight:600}
   <section class="screen" id="s-letter">
     <div class="stagger">
       <h2 class="title" style="font-size:1.42rem">a little note for you… ✎</h2>
-      <div class="letter" style="margin-top:14px">
-        <span class="tape tl butter"></span><span class="tape tr"></span>
-        <p>Happy birthday, Saiyeda ✿ I'm not very good at saying things out loud, so I built you a whole little website instead. Seemed easier. Hopefully it counts.</p>
-        <p>You have this way of making ordinary things feel considered — a good café, a good song, a tidy page of notes, a tiny doodle in the corner. Caring about small beautiful things is rarer than people think, and honestly the world is nicer because you do.</p>
-        <p>So here's to a year that's kind to you. Slow mornings, strawberry season, music a bit too loud, and people who notice how lovely you are.</p>
-        <p class="sign">Happy birthday, Saiyeda.<br>I'm really glad I know you 🎂<br>— from someone who noticed you a while ago <span class="kao">(˶ᵔᵕᵔ˶)</span></p>
+      <div class="letter">
+        <div class="sheet"></div>
+        <div class="grain"></div>
+        <div class="folds"></div>
+        <span class="tape tl butter" style="z-index:5"></span><span class="tape tr" style="z-index:5"></span>
+        <div class="ink">
+          <p>Happy birthday, Saiyeda ✿ I'm not very good at saying things out loud, so I built you a whole little website instead. Seemed easier. Hopefully it counts.</p>
+          <p>You have this way of making ordinary things feel considered — a good café, a good song, a tidy page of notes, a tiny doodle in the corner. Caring about small beautiful things is rarer than people think, and honestly the world is nicer because you do.</p>
+          <p>So here's to a year that's kind to you. Slow mornings, strawberry season, music a bit too loud, and people who notice how lovely you are.</p>
+          <p class="sign">Happy birthday, Saiyeda.<br>I'm really glad I know you 🎂<br>— from someone who noticed you a while ago <span class="kao">(˶ᵔᵕᵔ˶)</span></p>
+        </div>
+        <div class="seal" aria-hidden="true">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="waxg" cx="36%" cy="30%" r="78%">
+                <stop offset="0%" stop-color="#E0788C"/>
+                <stop offset="42%" stop-color="#C6485F"/>
+                <stop offset="100%" stop-color="#8B2440"/>
+              </radialGradient>
+            </defs>
+            <!-- molten blob: the turbulence filter gives it uneven, poured edges -->
+            <g filter="url(#waxedge)">
+              <circle cx="60" cy="60" r="46" fill="url(#waxg)"/>
+            </g>
+            <!-- pressed rim -->
+            <circle cx="60" cy="60" r="36" fill="none" stroke="#7B1E36" stroke-width="2.4" opacity=".45"/>
+            <circle cx="60" cy="60" r="36" fill="none" stroke="#F09AAA" stroke-width="1.2" opacity=".35"
+                    transform="translate(0,-1.4)"/>
+            <!-- embossed initial -->
+            <g font-family="Georgia,'Times New Roman',serif" font-size="46" font-weight="700"
+               text-anchor="middle" dominant-baseline="central">
+              <text x="60" y="63.6" fill="#731B33" opacity=".85">S</text>
+              <text x="60" y="61" fill="#EFA3B2" opacity=".5">S</text>
+              <text x="60" y="62.2" fill="#A5304C">S</text>
+            </g>
+            <!-- wet highlight -->
+            <ellipse cx="42" cy="36" rx="15" ry="9" fill="#FFFFFF" opacity=".17" transform="rotate(-28 42 36)"/>
+          </svg>
+        </div>
       </div>
       <button class="btn ghost back" onclick="go('s-gifts')">← back to the gifts</button>
     </div>
@@ -602,10 +717,30 @@ $('#finalBears').innerHTML =
 
 /* ───────── keypad ───────── */
 let entry = '';
-const KEYS = ['1','2','3','4','5','6','7','8','9','✿','0','⌫'];
-$('#keypad').innerHTML = KEYS.map(k =>
-  `<button class="key${/[0-9]/.test(k) ? '' : ' alt'}" data-k="${k}" aria-label="${k === '⌫' ? 'delete' : k === '✿' ? 'clear' : k}">${k}</button>`
+const KEYS = [
+  ['1',''],    ['2','ABC'], ['3','DEF'],
+  ['4','GHI'], ['5','JKL'], ['6','MNO'],
+  ['7','PQRS'],['8','TUV'], ['9','WXYZ'],
+  ['✿',''],    ['0','+'],   ['⌫','']
+];
+$('#keypad').innerHTML = KEYS.map(([k, sub]) =>
+  `<button class="key${/[0-9]/.test(k) ? '' : ' alt'}" data-k="${k}" aria-label="${k === '⌫' ? 'delete' : k === '✿' ? 'clear' : k}">` +
+  `<span>${k}</span>${sub ? `<span class="sub">${sub}</span>` : ''}</button>`
 ).join('');
+
+/* press state that also fires for touch and for the physical keyboard */
+function flash(btn){
+  if (!btn) return;
+  btn.classList.add('down');
+  setTimeout(() => btn.classList.remove('down'), 110);
+}
+$('#keypad').addEventListener('pointerdown', e => {
+  const b = e.target.closest('.key');
+  if (b) b.classList.add('down');
+});
+['pointerup','pointercancel','pointerleave'].forEach(ev =>
+  $('#keypad').addEventListener(ev, () => $$('.key.down').forEach(b => b.classList.remove('down')))
+);
 
 function paintDots(){
   $$('#dots .dot').forEach((d,i) => d.classList.toggle('on', i < entry.length));
@@ -637,9 +772,13 @@ $('#keypad').addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => {
   if (!$('#s-lock').classList.contains('active')) return;
-  if (/^[0-9]$/.test(e.key)) press(e.key);
-  else if (e.key === 'Backspace') press('⌫');
-  else if (e.key === 'Escape') press('✿');
+  let k = null;
+  if (/^[0-9]$/.test(e.key)) k = e.key;
+  else if (e.key === 'Backspace') k = '⌫';
+  else if (e.key === 'Escape') k = '✿';
+  if (!k) return;
+  flash($(`.key[data-k="${k}"]`));
+  press(k);
 });
 $('#lockHint').innerHTML = PASSCODE_HINT + ' <span class="kao">(◕‿◕)</span>';
 
