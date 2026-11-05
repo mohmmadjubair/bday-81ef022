@@ -36,23 +36,20 @@ html,body{margin:0;padding:0}
 body{
   font-family:'Patrick Hand','Caveat',ui-rounded,system-ui,sans-serif;
   color:var(--ink);
-  background:
-    radial-gradient(900px 500px at 15% -5%, #FFE9EF 0%, transparent 60%),
-    radial-gradient(700px 480px at 95% 8%, #FFF3DC 0%, transparent 62%),
-    radial-gradient(800px 600px at 50% 110%, #F3E7DC 0%, transparent 60%),
-    var(--cream);
+  /* pink gingham: a 2×2 tile of dark / light / light / white */
+  background-color:#FFFFFF;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'><rect width='44' height='44' fill='%23FFFFFF'/><rect width='22' height='22' fill='%23E0808F'/><rect x='22' width='22' height='22' fill='%23F3C6CE'/><rect y='22' width='22' height='22' fill='%23F3C6CE'/></svg>");
+  background-size:44px 44px;
   min-height:100dvh;
   overflow-x:hidden;
 }
-/* faint journal grid over everything */
+/* cream wash down the middle so the check never fights the writing */
 body::before{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:
-    linear-gradient(rgba(190,160,140,.10) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(190,160,140,.10) 1px, transparent 1px);
-  background-size:26px 26px;
-  mask-image:radial-gradient(circle at 50% 40%, #000 55%, transparent 100%);
-  -webkit-mask-image:radial-gradient(circle at 50% 40%, #000 55%, transparent 100%);
+  background:radial-gradient(ellipse 64% 70% at 50% 44%,
+    rgba(255,251,245,.90) 0%,
+    rgba(255,251,245,.66) 44%,
+    rgba(255,251,245,0) 82%);
 }
 /* paper grain */
 body::after{
@@ -114,6 +111,12 @@ h1,h2,h3{margin:0;font-weight:600}
 }
 .hand{font-family:'Caveat',cursive}
 .sub{font-family:'Caveat',cursive;color:var(--ink-soft);text-align:center;font-size:1.22rem;line-height:1.35}
+/* lift type off the gingham when it sits straight on the background */
+.screen > .stagger > .title,
+.screen > .stagger > .sub,
+.tapme,.cap,.gift .label{
+  text-shadow:0 0 10px rgba(255,252,246,.95), 0 0 20px rgba(255,252,246,.8), 0 1px 0 rgba(255,252,246,.9);
+}
 .kao{font-family:'Patrick Hand',monospace;color:var(--rose)}
 
 /* ───────── buttons ───────── */
@@ -135,61 +138,18 @@ h1,h2,h3{margin:0;font-weight:600}
 .dots{display:flex;gap:14px;justify-content:center;margin:20px 0 6px}
 .dot{width:16px;height:16px;border-radius:50%;border:2.5px solid var(--ink);background:transparent;transition:all .22s cubic-bezier(.3,1.5,.5,1)}
 .dot.on{background:var(--pink-deep);transform:scale(1.2)}
-/* recessed dial panel the keys sit in */
-.keypad{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:13px;
-  max-width:280px;margin:18px auto 0;padding:15px 13px 17px;border-radius:24px;
-  background:linear-gradient(180deg,#F0E4D6 0%,#F8EFE4 100%);
-  box-shadow:
-    inset 0 2px 5px rgba(150,112,92,.3),
-    inset 0 -2px 0 rgba(255,255,255,.75),
-    0 1px 0 rgba(255,255,255,.8);
-}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:272px;margin:18px auto 0}
 .key{
-  position:relative;aspect-ratio:1/1;border-radius:50%;border:0;padding:0;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
-  font-family:'Fredoka',system-ui,sans-serif;font-size:1.5rem;font-weight:600;
-  color:#5E4A41;cursor:pointer;touch-action:manipulation;user-select:none;
-  background:linear-gradient(180deg,#FFFEFB 0%,#FCF5EB 42%,#F2E4D3 100%);
-  box-shadow:
-    inset 0 0 0 1.5px rgba(95,74,65,.22),      /* rim */
-    inset 0 2px 1px rgba(255,255,255,.95),     /* top highlight */
-    inset 0 -5px 7px rgba(168,126,102,.22),    /* under-curve shading */
-    0 6px 0 #DCC6AF,                           /* the key's side wall */
-    0 7px 3px rgba(120,85,70,.18),
-    0 10px 14px rgba(120,85,70,.22);           /* cast shadow */
-  transition:transform .09s ease-out,box-shadow .09s ease-out,filter .09s ease-out;
+  aspect-ratio:1/1;border-radius:50%;border:2.5px solid var(--ink);
+  background:var(--paper);box-shadow:0 4px 0 var(--ink);
+  font-family:'Fredoka',system-ui,sans-serif;font-size:1.45rem;font-weight:600;color:var(--ink);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  touch-action:manipulation;user-select:none;
+  transition:transform .12s ease,box-shadow .12s ease,background .2s;
 }
-.key .sub{
-  font-size:.44rem;font-weight:600;letter-spacing:1.6px;line-height:1;
-  color:#A78D7C;text-indent:1.6px;
-}
-.key:hover{filter:brightness(1.03)}
-/* pressed: the cap travels down and its side wall collapses */
-.key:active,.key.down{
-  transform:translateY(6px);
-  box-shadow:
-    inset 0 0 0 1.5px rgba(95,74,65,.26),
-    inset 0 3px 6px rgba(140,100,85,.34),
-    inset 0 -1px 0 rgba(255,255,255,.55),
-    0 0 0 #DCC6AF,
-    0 1px 2px rgba(120,85,70,.3);
-  filter:brightness(.975);
-}
-.key.alt{background:linear-gradient(180deg,#FFFBEA 0%,#FBF0CF 45%,#F3E3B4 100%);font-size:1.15rem}
-.key.alt{box-shadow:
-    inset 0 0 0 1.5px rgba(95,74,65,.2),
-    inset 0 2px 1px rgba(255,255,255,.95),
-    inset 0 -5px 7px rgba(178,145,86,.22),
-    0 6px 0 #DFCB9B,
-    0 7px 3px rgba(120,85,70,.18),
-    0 10px 14px rgba(120,85,70,.22)}
-.key.alt:active,.key.alt.down{box-shadow:
-    inset 0 0 0 1.5px rgba(95,74,65,.24),
-    inset 0 3px 6px rgba(150,115,70,.34),
-    inset 0 -1px 0 rgba(255,255,255,.55),
-    0 0 0 #DFCB9B,
-    0 1px 2px rgba(120,85,70,.3)}
+.key:hover{background:var(--pink-soft)}
+.key:active,.key.down{transform:translateY(4px);box-shadow:0 0 0 var(--ink)}
+.key.alt{background:var(--butter);font-size:1.1rem}
 .shake{animation:shake .45s}
 @keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-11px)}30%{transform:translateX(10px)}45%{transform:translateX(-7px)}60%{transform:translateX(6px)}80%{transform:translateX(-3px)}}
 
@@ -717,15 +677,9 @@ $('#finalBears').innerHTML =
 
 /* ───────── keypad ───────── */
 let entry = '';
-const KEYS = [
-  ['1',''],    ['2','ABC'], ['3','DEF'],
-  ['4','GHI'], ['5','JKL'], ['6','MNO'],
-  ['7','PQRS'],['8','TUV'], ['9','WXYZ'],
-  ['✿',''],    ['0','+'],   ['⌫','']
-];
-$('#keypad').innerHTML = KEYS.map(([k, sub]) =>
-  `<button class="key${/[0-9]/.test(k) ? '' : ' alt'}" data-k="${k}" aria-label="${k === '⌫' ? 'delete' : k === '✿' ? 'clear' : k}">` +
-  `<span>${k}</span>${sub ? `<span class="sub">${sub}</span>` : ''}</button>`
+const KEYS = ['1','2','3','4','5','6','7','8','9','✿','0','⌫'];
+$('#keypad').innerHTML = KEYS.map(k =>
+  `<button class="key${/[0-9]/.test(k) ? '' : ' alt'}" data-k="${k}" aria-label="${k === '⌫' ? 'delete' : k === '✿' ? 'clear' : k}">${k}</button>`
 ).join('');
 
 /* press state that also fires for touch and for the physical keyboard */
