@@ -28,7 +28,7 @@
   --sage:#CFE0D2;
   --butter:#FBEFC8;
   --line:#E6D6C8;
-  --shadow:0 10px 28px rgba(160,120,105,.16);
+  --shadow:0 14px 30px rgba(150,104,96,.22);
 }
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -36,20 +36,20 @@ html,body{margin:0;padding:0}
 body{
   font-family:'Patrick Hand','Caveat',ui-rounded,system-ui,sans-serif;
   color:var(--ink);
-  /* pink gingham: a 2×2 tile of dark / light / light / white */
-  background-color:#FFFFFF;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'><rect width='44' height='44' fill='%23FFFFFF'/><rect width='22' height='22' fill='%23E0808F'/><rect x='22' width='22' height='22' fill='%23F3C6CE'/><rect y='22' width='22' height='22' fill='%23F3C6CE'/></svg>");
-  background-size:44px 44px;
+  /* pink gingham: a 2×2 tile of dark / light / light / warm white.
+     Kept soft and even — no vignette, so it reads as cloth, not fog. */
+  background-color:#FFFCF8;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='34' height='34'><rect width='34' height='34' fill='%23FFFCF8'/><rect width='17' height='17' fill='%23EAAAB2'/><rect x='17' width='17' height='17' fill='%23F7DBDD'/><rect y='17' width='17' height='17' fill='%23F7DBDD'/></svg>");
+  background-size:34px 34px;
   min-height:100dvh;
   overflow-x:hidden;
 }
-/* cream wash down the middle so the check never fights the writing */
+/* woven threads — stops the check looking like flat vector blocks */
 body::before{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-  background:radial-gradient(ellipse 64% 70% at 50% 44%,
-    rgba(255,251,245,.90) 0%,
-    rgba(255,251,245,.66) 44%,
-    rgba(255,251,245,0) 82%);
+  background-image:
+    repeating-linear-gradient(0deg,  rgba(255,255,255,.20) 0 1px, rgba(255,255,255,0) 1px 3px),
+    repeating-linear-gradient(90deg, rgba(150,100,100,.055) 0 1px, rgba(150,100,100,0) 1px 3px);
 }
 /* paper grain */
 body::after{
