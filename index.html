@@ -41,6 +41,7 @@ body{
   background-color:#FFFCF8;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='34' height='34'><rect width='34' height='34' fill='%23FFFCF8'/><rect width='17' height='17' fill='%23EAAAB2'/><rect x='17' width='17' height='17' fill='%23F7DBDD'/><rect y='17' width='17' height='17' fill='%23F7DBDD'/></svg>");
   background-size:34px 34px;
+  min-height:100vh;   /* fallback: dvh needs iOS 15.4+ */
   min-height:100dvh;
   overflow-x:hidden;
 }
@@ -63,7 +64,7 @@ body::after{
 @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-14px) rotate(calc(var(--r,0deg) + 6deg))}}
 
 /* ───────── stage / screens ───────── */
-.stage{position:relative;z-index:2;width:100%;max-width:470px;margin:0 auto;padding:26px 18px 46px;min-height:100dvh;display:flex;flex-direction:column;justify-content:center}
+.stage{position:relative;z-index:2;width:100%;max-width:470px;margin:0 auto;padding:26px 18px 46px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center}
 .screen{display:none;animation:none}
 .screen.active{display:block}
 .screen.in{animation:slideIn .55s cubic-bezier(.22,.9,.3,1) both}
