@@ -264,35 +264,30 @@ h1,h2,h3{margin:0;font-weight:600}
 .hearts i{position:absolute;bottom:-30px;font-style:normal;font-size:18px;animation:up linear infinite}
 @keyframes up{0%{transform:translateY(0) rotate(0);opacity:0}10%{opacity:.9}100%{transform:translateY(-105vh) rotate(260deg);opacity:0}}
 
-/* ───────── the song ───────── */
-.song{margin-top:22px;position:relative}
-.song-title{
-  font-family:'Fredoka',system-ui,sans-serif;font-weight:600;font-size:1rem;
-  color:var(--ink);text-align:center;margin-bottom:9px;
+/* ───────── music ───────── */
+.credit{
+  margin-top:18px;text-align:center;font-family:'Caveat',cursive;
+  font-size:1.06rem;color:var(--ink-soft);line-height:1.4;
 }
-.vinyl-frame{
-  position:relative;width:100%;aspect-ratio:16/9;border-radius:11px;overflow:hidden;
-  background:linear-gradient(158deg,#F7E2E7 0%,#FBEEDF 55%,#EDE6DA 100%);
-  border:2.5px solid var(--ink);box-shadow:0 4px 0 var(--ink);
+.player{
+  /* top-right, clear of the keypad — bottom-right collides with ⌫ */
+  position:fixed;right:11px;top:11px;z-index:7;width:48px;height:48px;padding:4px;
+  border-radius:50%;border:2.5px solid var(--ink);background:var(--paper);
+  box-shadow:0 4px 0 var(--ink);cursor:pointer;display:none;
+  transition:transform .14s ease,box-shadow .14s ease;
 }
-.vinyl-frame iframe{width:100%;height:100%;border:0;display:block}
-.vinyl-play{
-  position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent;
-  cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-}
-.vinyl-play .disc{width:88px;height:88px;animation:spin 7s linear infinite}
-.vinyl-play .cue{
-  font-family:'Caveat',cursive;font-size:1.1rem;color:var(--ink);
-  text-shadow:0 0 8px rgba(255,252,246,.95);
-}
-.vinyl-play:active .disc{transform:scale(.95)}
+.player.show{display:block;animation:rise .5s both}
+.player:active{transform:translateY(4px);box-shadow:0 0 0 var(--ink)}
+.player .disc{width:100%;height:auto;display:block;transition:opacity .3s}
+.player.on .disc{animation:spin 3.6s linear infinite}
+.player:not(.on) .disc{opacity:.35}
 @keyframes spin{to{transform:rotate(360deg)}}
-.song-meta{
-  margin-top:10px;text-align:center;font-family:'Caveat',cursive;
-  font-size:1.08rem;color:var(--ink-soft);line-height:1.45;
+.player .xmark{
+  display:none;position:absolute;inset:0;align-items:center;justify-content:center;
+  font-family:'Fredoka',system-ui,sans-serif;font-weight:600;font-size:1.4rem;
+  color:var(--rose);text-shadow:0 0 7px #FFF,0 0 7px #FFF;
 }
-/* safety net if the embed is blocked wherever she opens this */
-.song-link{color:var(--rose);text-decoration:underline;text-underline-offset:2px}
+.player:not(.on) .xmark{display:flex}
 
 .back{display:block;margin:24px auto 0}
 .hr{display:flex;align-items:center;gap:10px;color:var(--line);margin:22px 0 6px}
@@ -576,40 +571,32 @@ h1,h2,h3{margin:0;font-weight:600}
         happy birthday, saiyeda<br><span class="kao" style="font-size:1.2rem">♡ (˶ᵔ ᵕ ᵔ˶) ♡</span>
       </p>
 
-      <div class="song">
-        <div class="song-title">a song for you ♪</div>
-        <div class="vinyl-frame" id="songBox">
-          <button class="vinyl-play" id="songPlay" aria-label="play the song">
-            <svg class="disc" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="50" r="46" fill="#2E2A2E" stroke="#4A3A33" stroke-width="3"/>
-              <g fill="none" stroke="#4A4248" stroke-width="1.2">
-                <circle cx="50" cy="50" r="40"/><circle cx="50" cy="50" r="35"/>
-                <circle cx="50" cy="50" r="30"/><circle cx="50" cy="50" r="25"/>
-              </g>
-              <circle cx="50" cy="50" r="18" fill="#EFA2B5" stroke="#4A3A33" stroke-width="2.5"/>
-              <g fill="#FFFFFF">
-                <ellipse cx="50" cy="42.5" rx="4" ry="5.5"/><ellipse cx="57" cy="47.5" rx="4" ry="5.5" transform="rotate(72 57 47.5)"/>
-                <ellipse cx="54.5" cy="56" rx="4" ry="5.5" transform="rotate(144 54.5 56)"/>
-                <ellipse cx="45.5" cy="56" rx="4" ry="5.5" transform="rotate(216 45.5 56)"/>
-                <ellipse cx="43" cy="47.5" rx="4" ry="5.5" transform="rotate(288 43 47.5)"/>
-              </g>
-              <circle cx="50" cy="50" r="3.6" fill="#FBEFC8" stroke="#4A3A33" stroke-width="1.6"/>
-            </svg>
-            <span class="cue">press play ✿</span>
-          </button>
-        </div>
-        <div class="song-meta">
-          Alfaaz · Hamza Malik × Zain Zohaib<br>
-          <a class="song-link" href="https://www.youtube.com/watch?v=cQq6iLF66Gc"
-             target="_blank" rel="noopener noreferrer">or open it on YouTube ↗</a>
-        </div>
-      </div>
+      <div class="credit">♪ Alfaaz · Hamza Malik × Zain Zohaib</div>
 
-      <button class="btn ghost" style="margin-top:20px" onclick="go('s-gifts')">↺ open the gifts again</button>
+      <button class="btn ghost" style="margin-top:18px" onclick="go('s-gifts')">↺ open the gifts again</button>
     </div>
   </section>
 
 </main>
+
+<button class="player" id="player" aria-label="mute the music" aria-pressed="false">
+  <svg class="disc" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="46" fill="#2E2A2E" stroke="#4A3A33" stroke-width="3"/>
+    <g fill="none" stroke="#4A4248" stroke-width="1.4">
+      <circle cx="50" cy="50" r="40"/><circle cx="50" cy="50" r="34"/><circle cx="50" cy="50" r="28"/>
+    </g>
+    <circle cx="50" cy="50" r="18" fill="#EFA2B5" stroke="#4A3A33" stroke-width="2.5"/>
+    <g fill="#FFFFFF">
+      <ellipse cx="50" cy="42.5" rx="4" ry="5.5"/>
+      <ellipse cx="57" cy="47.5" rx="4" ry="5.5" transform="rotate(72 57 47.5)"/>
+      <ellipse cx="54.5" cy="56" rx="4" ry="5.5" transform="rotate(144 54.5 56)"/>
+      <ellipse cx="45.5" cy="56" rx="4" ry="5.5" transform="rotate(216 45.5 56)"/>
+      <ellipse cx="43" cy="47.5" rx="4" ry="5.5" transform="rotate(288 43 47.5)"/>
+    </g>
+    <circle cx="50" cy="50" r="3.6" fill="#FBEFC8" stroke="#4A3A33" stroke-width="1.6"/>
+  </svg>
+  <span class="xmark">✕</span>
+</button>
 
 <script>
 /* ══════════════════════════════════════════════════════════════
@@ -760,6 +747,7 @@ function paintDots(){
   $$('#dots .dot').forEach((d,i) => d.classList.toggle('on', i < entry.length));
 }
 function press(k){
+  startMusic();                 // her first tap is the gesture audio needs
   if (k === '✿'){ entry = ''; }
   else if (k === '⌫'){ entry = entry.slice(0,-1); }
   else if (entry.length < 4){ entry += k; }
@@ -818,20 +806,90 @@ ph.addEventListener('error', () => {
 });
 if (ph.complete && ph.naturalWidth === 0) ph.dispatchEvent(new Event('error'));
 
-/* ───────── the song ─────────
-   The YouTube player is only loaded once she presses play: nothing is
-   requested from YouTube before that, and the tap is the user gesture
-   browsers require, so it starts with sound. */
-const SONG_ID = 'cQq6iLF66Gc';   // Alfaaz — Hamza Malik x Zain Zohaib
-$('#songPlay').addEventListener('click', () => {
-  const frame = document.createElement('iframe');
-  frame.src = `https://www.youtube-nocookie.com/embed/${SONG_ID}` +
-              '?autoplay=1&playsinline=1&rel=0&modestbranding=1';
-  frame.title = 'Alfaaz — Hamza Malik x Zain Zohaib';
-  frame.allow = 'autoplay; encrypted-media; picture-in-picture';
-  frame.referrerPolicy = 'no-referrer';
-  frame.allowFullscreen = true;
-  $('#songBox').replaceChildren(frame);
+/* ───────── music ─────────
+   The clip is ~25s, so a plain loop would click back to the start every
+   time. Instead each pass is scheduled to overlap the one before it by
+   XFADE seconds and the two are cross-faded, which turns it into a
+   continuous bed. Browsers refuse audio until the page is touched, so
+   it starts on her very first keypad tap. */
+const SONG   = 'song.mp3';
+const XFADE  = 1.5;    // seconds of overlap between passes
+const VOLUME = 0.55;
+
+let actx = null, master = null, buffer = null, playing = false, muted = false;
+let nextAt = 0, scheduler = null, fallbackEl = null;
+
+/* grab the bytes up front so there's no wait when she taps */
+const songBytes = fetch(SONG)
+  .then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error(r.status)));
+
+function spawnPass(at){
+  const src = actx.createBufferSource();
+  const g   = actx.createGain();
+  const d   = buffer.duration;
+  src.buffer = buffer;
+  g.gain.setValueAtTime(0.0001, at);
+  g.gain.linearRampToValueAtTime(1, at + XFADE);          // fade this pass up
+  g.gain.setValueAtTime(1, at + d - XFADE);
+  g.gain.linearRampToValueAtTime(0.0001, at + d);         // and back down
+  src.connect(g); g.connect(master);
+  src.start(at);
+  src.stop(at + d + 0.05);
+}
+
+/* keep roughly two seconds of audio scheduled ahead of the clock */
+function pump(){
+  if (!playing || !buffer) return;
+  while (nextAt < actx.currentTime + 2){
+    spawnPass(nextAt);
+    nextAt += buffer.duration - XFADE;
+  }
+}
+
+async function startMusic(){
+  if (playing) return;
+  playing = true;
+  try{
+    actx = new (window.AudioContext || window.webkitAudioContext)();
+    master = actx.createGain();
+    master.gain.value = 0.0001;
+    master.connect(actx.destination);
+    await actx.resume();                                  // must happen in the gesture
+    buffer = await actx.decodeAudioData(await songBytes);
+    nextAt = actx.currentTime + 0.06;
+    pump();
+    scheduler = setInterval(pump, 250);
+    master.gain.linearRampToValueAtTime(VOLUME, actx.currentTime + 1.4);
+    revealPlayer();
+  }catch(err){
+    playing = false;
+    plainLoop();                                          // Web Audio unavailable
+  }
+}
+
+function plainLoop(){
+  if (fallbackEl) return;
+  fallbackEl = new Audio(SONG);
+  fallbackEl.loop = true;
+  fallbackEl.volume = VOLUME;
+  fallbackEl.play().then(() => { playing = true; revealPlayer(); }).catch(() => {});
+}
+
+function revealPlayer(){ $('#player').classList.add('show','on'); }
+
+$('#player').addEventListener('click', () => {
+  muted = !muted;
+  const btn = $('#player');
+  btn.classList.toggle('on', !muted);
+  btn.setAttribute('aria-pressed', String(muted));
+  btn.setAttribute('aria-label', muted ? 'unmute the music' : 'mute the music');
+  if (master) master.gain.linearRampToValueAtTime(muted ? 0.0001 : VOLUME, actx.currentTime + .35);
+  if (fallbackEl) fallbackEl.muted = muted;
+});
+
+/* phones suspend audio when the tab goes to the background */
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && playing && actx && actx.state === 'suspended') actx.resume();
 });
 
 /* ───────── background doodles ───────── */
