@@ -215,8 +215,27 @@ h1,h2,h3{margin:0;font-weight:600}
 #smoke{opacity:0}
 .blown #smoke{animation:smoke 2.4s ease-out .15s forwards}
 @keyframes smoke{0%{opacity:0;transform:translateY(0) scale(.6)}25%{opacity:.6}100%{opacity:0;transform:translateY(-52px) scale(1.5)}}
-.tapme{font-family:'Caveat',cursive;font-size:1.18rem;color:var(--rose);text-align:center;margin-top:4px;animation:pulse 1.7s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+/* the candle needs to look tappable — ripples on it, a nudging hand,
+   and a pill that is itself a second tap target */
+.cake-cue{position:absolute;left:57%;top:14%;font-size:30px;pointer-events:none;
+  animation:tapbob 1.25s ease-in-out infinite;filter:drop-shadow(0 2px 3px rgba(150,110,95,.45))}
+@keyframes tapbob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-11px) scale(1.1)}}
+.ring{transform-origin:150px 74px;animation:ripple 1.9s ease-out infinite}
+.ring.r2{animation-delay:.95s}
+@keyframes ripple{0%{transform:scale(.6);opacity:.9}70%{opacity:.22}100%{transform:scale(2.2);opacity:0}}
+.blown .cake-cue,.blown #cue{display:none}
+.tapme{
+  display:inline-block;margin:12px auto 0;padding:8px 18px;border-radius:999px;
+  border:2.5px solid var(--ink);background:var(--pink-soft);box-shadow:0 3px 0 var(--ink);
+  font-family:'Fredoka',system-ui,sans-serif;font-weight:600;font-size:.95rem;color:var(--ink);
+  cursor:pointer;animation:nudge 1.5s ease-in-out infinite;
+}
+.tapme:active{transform:translateY(3px);box-shadow:0 0 0 var(--ink)}
+@keyframes nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.tapme.done{
+  animation:none;background:transparent;border-color:transparent;box-shadow:none;
+  color:var(--rose);font-family:'Caveat',cursive;font-size:1.2rem;cursor:default;
+}
 .wish{display:none;margin-top:20px}
 .wish.show{display:block;animation:rise .7s cubic-bezier(.22,.9,.3,1) both}
 
@@ -446,6 +465,11 @@ h1,h2,h3{margin:0;font-weight:600}
           <g stroke="#4A3A33" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round">
             <!-- glow -->
             <circle id="glow" cx="150" cy="74" r="34" fill="#FFD98A" opacity=".4" stroke="none"/>
+            <!-- "tap me" ripples around the flame -->
+            <g id="cue" fill="none" stroke="#E07D96" stroke-width="2.6">
+              <circle class="ring r1" cx="150" cy="74" r="27"/>
+              <circle class="ring r2" cx="150" cy="74" r="27"/>
+            </g>
             <!-- smoke -->
             <path id="smoke" d="M150 66 q-9 -12 0 -22 q9 -10 0 -21" fill="none" stroke="#C9B6AB" stroke-width="3.2"/>
             <!-- flame -->
@@ -472,12 +496,19 @@ h1,h2,h3{margin:0;font-weight:600}
                   fill="#F9C6D3"/>
             <!-- strawberries on top -->
             <g>
-              <path d="M92 117 a12 11 0 0 1 24 0 q0 13 -12 20 q-12 -7 -12 -20 z" fill="#F0607A"/>
-              <g stroke="none" fill="#FFECB3">
-                <ellipse cx="99" cy="120" rx="1.7" ry="2.2"/><ellipse cx="109" cy="121" rx="1.7" ry="2.2"/>
-                <ellipse cx="104" cy="128" rx="1.7" ry="2.2"/>
-              </g>
-              <path d="M94 113 q4 -8 10 -5 q6 -3 10 5 q-10 4 -20 0 z" fill="#7FB47A"/>
+              <!-- an open cream-and-cocoa egg, drawn in the site's own hand
+                   rather than copied from any packaging -->
+              <ellipse cx="104" cy="135" rx="23" ry="4.5" fill="#E7C8B4" stroke="none" opacity=".45"/>
+              <path d="M82 112 q0 24 22 24 q22 0 22 -24 z" fill="#FFFAF2"/>
+              <ellipse cx="104" cy="112" rx="22" ry="7.6" fill="#FFFDF8"/>
+              <path d="M104 104.4 A22 7.6 0 0 1 104 119.6 Z" fill="#8C5A3C" stroke="none"/>
+              <ellipse cx="104" cy="112" rx="22" ry="7.6" fill="none"/>
+              <circle cx="96" cy="106.5" r="5.6" fill="#6B4226"/>
+              <circle cx="113" cy="107.5" r="5.6" fill="#6B4226"/>
+              <circle cx="94" cy="104.5" r="1.7" fill="#C2946F" stroke="none"/>
+              <circle cx="111" cy="105.5" r="1.7" fill="#C2946F" stroke="none"/>
+              <path d="M80 105 l-9 -15"/>
+              <ellipse cx="69" cy="86" rx="5.2" ry="7.4" fill="#FFF4DE" transform="rotate(-30 69 86)"/>
               <path d="M184 117 a12 11 0 0 1 24 0 q0 13 -12 20 q-12 -7 -12 -20 z" fill="#F0607A"/>
               <g stroke="none" fill="#FFECB3">
                 <ellipse cx="191" cy="120" rx="1.7" ry="2.2"/><ellipse cx="201" cy="121" rx="1.7" ry="2.2"/>
@@ -495,8 +526,9 @@ h1,h2,h3{margin:0;font-weight:600}
             </g>
           </g>
         </svg>
+        <span class="cake-cue" aria-hidden="true">👆</span>
       </div>
-      <p class="tapme" id="tapme">tap the flame to blow it out ✧</p>
+      <div class="center"><button class="tapme" id="tapme" type="button">👆 tap the candle</button></div>
       <div class="wish" id="wish">
         <div class="card">
           <span class="tape tl"></span><span class="tape br mint"></span>
@@ -791,9 +823,11 @@ function blowOut(){
   blown = true;
   $('#cakeStage').classList.add('blown');
   $('#tapme').textContent = '✧ poof ✧';
+  $('#tapme').classList.add('done');
   setTimeout(() => $('#wish').classList.add('show'), 520);
 }
 $('#cakeStage').addEventListener('click', blowOut);
+$('#tapme').addEventListener('click', blowOut);   // the pill works as well as the cake
 $('#cakeStage').addEventListener('keydown', e => {
   if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); blowOut(); }
 });
@@ -814,7 +848,16 @@ if (ph.complete && ph.naturalWidth === 0) ph.dispatchEvent(new Event('error'));
    it starts on her very first keypad tap. */
 const SONG   = 'song.mp3';
 const XFADE  = 1.5;    // seconds of overlap between passes
-const VOLUME = 0.55;
+const VOLUME = 0.82;
+
+/* iOS mutes web audio whenever the Ring/Silent switch is on, whatever the
+   volume is set to. Declaring the session as media playback (Safari 16.4+)
+   is what lets a song keep playing through it. */
+function claimPlaybackSession(){
+  try{ if (navigator.audioSession) navigator.audioSession.type = 'playback'; }
+  catch(e){ /* older browser, nothing to do */ }
+}
+claimPlaybackSession();
 
 let actx = null, master = null, buffer = null, playing = false, muted = false;
 let nextAt = 0, scheduler = null, fallbackEl = null;
@@ -850,6 +893,7 @@ async function startMusic(){
   if (playing) return;
   playing = true;
   try{
+    claimPlaybackSession();                               // again, inside the gesture
     actx = new (window.AudioContext || window.webkitAudioContext)();
     master = actx.createGain();
     master.gain.value = 0.0001;
