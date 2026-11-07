@@ -53,6 +53,9 @@
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
+/* nothing may push the page wider than the phone: a stray 1px makes iOS
+   let it slide sideways and show a blank strip down the edge */
+html{overflow-x:clip}
 body{
   font-family:'Patrick Hand','Caveat',ui-rounded,system-ui,sans-serif;
   color:var(--ink);
@@ -335,9 +338,8 @@ h1,h2,h3{margin:0;font-weight:600}
 .hr span{font-family:'Caveat',cursive;color:var(--ink-soft);font-size:1.05rem}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}}
-/* confetti canvas — the library's default canvas is appended with
-   z-index:auto, which paints behind .stage; this one sits above it */
-#confettiCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:20;pointer-events:none}
+/* falling sakura — above the cards, never in the way of a tap */
+#sakuraCanvas{position:fixed;left:0;top:0;width:100%;height:100%;z-index:20;pointer-events:none}
 /* ───────── mobile viewport ─────────
    100dvh (with the 100vh fallback above) already keeps Safari's collapsing
    URL bar from cutting the UI off. These add the rest of it: content clear
@@ -498,13 +500,13 @@ input,textarea,select{font-size:16px}
    The one screen that changes the room. While the candle is lit the page
    dims to a warm dark with a pool of light on the flame; blowing it out
    brings the lights back up. Only opacity animates, so it stays smooth. */
-body::after{
-  content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;
+.dimmer{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;
   background:radial-gradient(circle at var(--lx,50%) var(--ly,38%),
     rgba(255,198,128,.14) 0, rgba(78,42,52,.55) 140px, rgba(28,16,24,.9) 400px);
   transition:opacity 1.4s ease;
 }
-body.dim::after{opacity:1}
+body.dim .dimmer{opacity:1}
 #s-cake{position:relative}
 #s-cake > .stagger{position:relative;z-index:1}
 #s-cake .title{transition:color 1.2s ease,text-shadow 1.2s ease}
@@ -524,7 +526,7 @@ body.dim #s-cake .btn.ghost{
 #s-cake .tapme,#s-cake .btn.ghost{transition:background .9s ease,color .9s ease,border-color .9s ease,box-shadow .9s ease}
 
 /* soft out-of-focus lights drifting in the dark */
-.bokeh{position:absolute;inset:-30px -20px;pointer-events:none;z-index:0;opacity:0;transition:opacity 1.3s ease}
+.bokeh{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;opacity:0;transition:opacity 1.3s ease}
 body.dim .bokeh{opacity:1}
 .bokeh i{
   position:absolute;border-radius:50%;
@@ -623,6 +625,7 @@ body.dim .bokeh{opacity:1}
 </svg>
 
 <div class="doodles" id="doodles" aria-hidden="true"></div>
+<div class="dimmer" aria-hidden="true"></div>
 
 <main class="stage">
 
@@ -984,7 +987,6 @@ body.dim .bokeh{opacity:1}
   <span class="xmark">✕</span>
 </button>
 
-<script src="confetti.min.js"></script>
 <script>
 /* ══════════════════════════════════════════════════════════════
    ↓↓↓  THE PASSCODE — change these 4 digits to her birthday  ↓↓↓
@@ -1210,11 +1212,9 @@ function showHint(){
 }
 
 function unlockConfetti(){
-  const gun = confettiGun();
-  if (!gun) return;
-  gun({ colors:PETALS, disableForReducedMotion:true, particleCount:38,
-        spread:78, startVelocity:34, origin:{x:.5, y:.46},
-        scalar:.9, gravity:.8, decay:.91, ticks:220 });
+  /* the lock bursts open into petals that drift down over the gifts */
+  Sakura.burst({ x:.5, y:.46, count:46, angle:90, spread:330, power:.62 });
+  Sakura.shower({ count:16, over:1.6, delay:.3 });
 }
 
 function check(){
@@ -1261,27 +1261,163 @@ $('#lockHint').innerHTML = PASSCODE_HINT + ' <span class="kao">(◕‿◕)</span
 
 /* ───────── cake ───────── */
 let blown = false;
-/* ───────── confetti ─────────
-   Vendored rather than loaded from a CDN, so the card still bursts if
-   jsDelivr is unreachable or blocked on her network. Kept to the site's
-   own palette; the default rainbow fights the gingham. */
-const PETALS = ['#F7C9D3','#E88BA2','#D96F8B','#FFE6EC','#FBEFC8','#CFE0D2'];
-let fire = null, petalShapes = null;
+/* ───────── sakura ─────────
+   Cherry-blossom petals in place of confetti. Every petal is drawn
+   straight onto one canvas as a vector path: no bitmaps and no fill
+   patterns, which is what turned the old library's ✿ and ♡ shapes into
+   blank white boxes on iPhone. Petals launch, lose speed to the air,
+   then drift down turning over. About one in seven is a whole blossom. */
+const Sakura = (() => {
+  /* [deep pink at the base, pale at the notched tip] */
+  const TINTS = [
+    ['#EC6C90', '#FFD3DE'],
+    ['#F283A2', '#FFDDE6'],
+    ['#E25D84', '#FDC4D3'],
+    ['#F496B0', '#FFE3EA'],
+    ['#E8799A', '#FBCAD7']
+  ];
+  const reduce = window.matchMedia ? matchMedia('(prefers-reduced-motion: reduce)') : { matches:false };
+  const MAX = 240;
+  let cv = null, ctx = null, W = 0, H = 0, dpr = 1, raf = 0, last = 0, PETAL = null, VEIN = null;
+  const live = [], grads = [];
 
-function confettiGun(){
-  if (typeof confetti !== 'function') return null;       // library missing → card unaffected
-  if (!fire){
-    const c = document.createElement('canvas');
-    c.id = 'confettiCanvas';
-    document.body.appendChild(c);
-    fire = confetti.create(c, { resize:true });
-    try{
-      petalShapes = [confetti.shapeFromText({ text:'✿', scalar:2.2 }),
-                     confetti.shapeFromText({ text:'♡', scalar:2.2 })];
-    }catch(e){ petalShapes = null; }                     // falls back to plain squares
+  function size(){
+    W = window.innerWidth; H = window.innerHeight;
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
   }
-  return fire;
-}
+
+  function setup(){
+    if (ctx) return true;
+    if (!window.Path2D) return false;
+    cv = document.createElement('canvas');
+    cv.id = 'sakuraCanvas';
+    cv.setAttribute('aria-hidden', 'true');
+    ctx = cv.getContext('2d');
+    if (!ctx) return false;
+    document.body.appendChild(cv);
+    size();
+    window.addEventListener('resize', size);
+    /* one petal, 1 unit long, base at +.5 and notch at -.5 */
+    PETAL = new Path2D('M0 .5C-.44 .32-.47-.26-.17-.5L0-.37L.17-.5C.47-.26 .44 .32 0 .5Z');
+    VEIN  = new Path2D('M0 .42Q.035 .02 0-.3');
+    /* gradients live in that unit space, so each petal's transform
+       stretches them with it — five objects, reused every frame */
+    TINTS.forEach(([base, tip]) => {
+      const g = ctx.createLinearGradient(0, .5, 0, -.5);
+      g.addColorStop(0, base); g.addColorStop(.6, tip); g.addColorStop(1, tip);
+      grads.push(g);
+    });
+    return true;
+  }
+
+  const rnd = (a, b) => a + Math.random() * (b - a);
+
+  function make(x, y, vx, vy, o){
+    const bloom = Math.random() < (o.blossoms == null ? .14 : o.blossoms);
+    return {
+      x, y, vx, vy, bloom,
+      s: (o.size || 1) * rnd(12, 19) * (bloom ? 1.45 : 1),     // length in px
+      g: grads[Math.random() * grads.length | 0],
+      rot: rnd(0, 6.283), vr: rnd(-2.2, 2.2),                  // spin, rad/s
+      flip: rnd(0, 6.283), vf: rnd(2.2, 5.2),                  // turning over
+      sway: rnd(0, 6.283), vs: rnd(1, 2.1), amp: rnd(16, 42),  // side to side
+      fall: (o.fall || 1) * rnd(62, 118),                      // settled fall, px/s
+      age: -(o.delay || 0), life: (o.life || 7) * rnd(.8, 1.25)
+    };
+  }
+
+  function draw(p, alpha){
+    let fx = Math.cos(p.flip);                                 // edge-on at 0
+    if (Math.abs(fx) < .14) fx = fx < 0 ? -.14 : .14;
+    const c = Math.cos(p.rot) * p.s * dpr, s = Math.sin(p.rot) * p.s * dpr;
+    const X = p.x * dpr, Y = p.y * dpr;
+    ctx.globalAlpha = alpha * (.78 + .22 * Math.abs(fx));      // the far side reads a touch darker
+    ctx.fillStyle = p.g;
+    if (!p.bloom){
+      ctx.setTransform(c * fx, s * fx, -s, c, X, Y);
+      ctx.fill(PETAL);
+      ctx.stroke(VEIN);
+      return;
+    }
+    /* a whole blossom: five petals round a pale centre */
+    ctx.setTransform(c * fx, s * fx, -s, c, X, Y);
+    for (let k = 0; k < 5; k++){
+      ctx.rotate(1.2566);
+      ctx.translate(0, -.27); ctx.scale(.5, .56);
+      ctx.fill(PETAL);
+      ctx.scale(2, 1 / .56); ctx.translate(0, .27);
+    }
+    ctx.fillStyle = '#FFE9A8';
+    ctx.beginPath(); ctx.arc(0, 0, .085, 0, 6.283); ctx.fill();
+    ctx.fillStyle = '#D9507A';
+    for (let k = 0; k < 5; k++){
+      const a = k * 1.2566 + .6;
+      ctx.beginPath(); ctx.arc(Math.cos(a) * .13, Math.sin(a) * .13, .024, 0, 6.283); ctx.fill();
+    }
+  }
+
+  function tick(now){
+    const dt = Math.min(.05, (now - last) / 1000);
+    last = now;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.strokeStyle = 'rgba(255,255,255,.5)';
+    ctx.lineWidth = .035;
+    const drag = Math.exp(-2.3 * dt);
+    for (let i = live.length - 1; i >= 0; i--){
+      const p = live[i];
+      p.age += dt;
+      if (p.age < 0) continue;                                 // still waiting its turn
+      p.vx *= drag;
+      p.vy = p.vy * drag + p.fall * (1 - drag);                // eases into a slow fall
+      p.x += (p.vx + 14 + Math.cos(p.sway + p.age * p.vs) * p.amp) * dt;   // 14: a light breeze
+      p.y += p.vy * dt;
+      p.rot += p.vr * dt;
+      p.flip += p.vf * dt;
+      const left = p.life - p.age;
+      if (left <= 0 || p.y > H + 40 || p.x < -80 || p.x > W + 80){ live.splice(i, 1); continue; }
+      draw(p, Math.min(1, left / 1.1, p.age / .12));
+    }
+    ctx.globalAlpha = 1;
+    raf = live.length ? requestAnimationFrame(tick) : 0;
+    if (!raf){ ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); }
+  }
+
+  function go(){
+    if (raf) return;
+    last = performance.now();
+    raf = requestAnimationFrame(tick);
+  }
+  const room = n => Math.max(0, Math.min(reduce.matches ? Math.ceil(n / 4) : n, MAX - live.length));
+
+  return {
+    /* a puff from a point; x and y are fractions of the screen, angle in
+       degrees with 90 straight up, spread the cone width (360 = all round) */
+    burst(o = {}){
+      if (!setup()) return;
+      const n = room(o.count || 40);
+      const angle = o.angle == null ? 90 : o.angle, spread = o.spread == null ? 70 : o.spread;
+      for (let i = 0; i < n; i++){
+        const a = (angle + (Math.random() - .5) * spread) * Math.PI / 180;
+        const v = rnd(380, 760) * (o.power || 1);
+        live.push(make((o.x == null ? .5 : o.x) * W, (o.y == null ? .5 : o.y) * H,
+                       Math.cos(a) * v, -Math.sin(a) * v, o));
+      }
+      go();
+    },
+    /* petals drifting in from above the top edge, spread over `over` seconds */
+    shower(o = {}){
+      if (!setup()) return;
+      const n = room(o.count || 30), over = o.over == null ? 2.5 : o.over;
+      for (let i = 0; i < n; i++){
+        live.push(make(rnd(-.1, 1) * W, rnd(-60, -20), 0, rnd(40, 90),
+                       { ...o, life:o.life || 30, delay:(o.delay || 0) + Math.random() * over }));
+      }
+      go();
+    }
+  };
+})();
 
 /* the flame lives at 150,74 inside a 300×268 viewBox — measure it so the
    burst starts at the wick on any screen size */
@@ -1296,37 +1432,17 @@ function flameOrigin(){
 }
 
 function wishConfetti(){
-  const gun = confettiGun();
-  if (!gun) return;
-  const origin = flameOrigin();
-  const common = { origin, colors:PETALS, disableForReducedMotion:true };
-  /* a quick puff straight up out of the wick */
-  gun({ ...common, particleCount:32, spread:52, startVelocity:27,
-        decay:.92, scalar:.8, gravity:.8, ticks:150 });
-  /* then slower blossoms that drift back down over the cake */
-  setTimeout(() => gun({ ...common, particleCount:24, spread:95, startVelocity:19,
-        decay:.9, scalar:1.1, gravity:.52, drift:.35, ticks:280,
-        ...(petalShapes ? { shapes:petalShapes } : {}) }), 230);
+  const o = flameOrigin();
+  /* a little puff up out of the wick, then blossoms floating down over the cake */
+  Sakura.burst({ x:o.x, y:o.y, count:26, angle:90, spread:60, power:.75, size:.85 });
+  Sakura.shower({ count:30, over:2.2, delay:.2, blossoms:.22 });
 }
 
 function finaleConfetti(){
-  const gun = confettiGun();
-  if (!gun) return;
-  const base   = { colors:PETALS, disableForReducedMotion:true };
-  const petals = petalShapes ? { shapes:petalShapes } : {};
-  /* two cannons from the bottom corners, arcing inward over the bears */
-  gun({ ...base, particleCount:42, angle:62,  spread:62, startVelocity:52,
-        origin:{x:0, y:.84}, scalar:.95, gravity:.85, decay:.91, ticks:300 });
-  gun({ ...base, particleCount:42, angle:118, spread:62, startVelocity:52,
-        origin:{x:1, y:.84}, scalar:.95, gravity:.85, decay:.91, ticks:300 });
-  /* then blossoms drifting down from above — slow, so they linger with
-     the rising hearts instead of racing past them */
-  setTimeout(() => gun({ ...base, ...petals, particleCount:28, spread:140,
-        startVelocity:12, origin:{x:.5, y:-.08}, scalar:1.2,
-        gravity:.4, drift:.3, decay:.93, ticks:380 }), 330);
-  setTimeout(() => gun({ ...base, ...petals, particleCount:20, spread:150,
-        startVelocity:10, origin:{x:.5, y:-.08}, scalar:1.35,
-        gravity:.34, drift:-.3, decay:.93, ticks:420 }), 780);
+  /* two gusts from the bottom corners, then a long slow fall from above */
+  Sakura.burst({ x:0, y:.88, count:34, angle:64,  spread:34, power:1.45 });
+  Sakura.burst({ x:1, y:.88, count:34, angle:116, spread:34, power:1.45 });
+  Sakura.shower({ count:46, over:4, delay:.35, blossoms:.2 });
 }
 
 function blowOut(){
@@ -1695,12 +1811,7 @@ $('#vinyl').addEventListener('click', () => {
 });
 
 function secretConfetti(){
-  const gun = confettiGun();
-  if (!gun) return;
-  const petals = petalShapes ? { shapes:petalShapes } : {};
-  setTimeout(() => gun({ colors:PETALS, disableForReducedMotion:true, ...petals,
-    particleCount:30, spread:120, startVelocity:16, origin:{x:.5, y:-.05},
-    scalar:1.25, gravity:.42, drift:.2, decay:.93, ticks:340 }), 420);
+  Sakura.shower({ count:40, over:3, delay:.4, blossoms:.3 });
 }
 /* ───────── lights down for the wish ───────── */
 function lightsDown(){
@@ -1836,13 +1947,9 @@ function setRating(n, celebrate){
   send.textContent = 'send it back 💌';
   try{ localStorage.setItem('bday-rating', String(n)); }catch(e){}
   if (celebrate && n === 5){
-    const gun = confettiGun();
-    if (gun){
-      const r = $('#stars').getBoundingClientRect();
-      gun({ colors:PETALS, disableForReducedMotion:true, particleCount:40, spread:70,
-            startVelocity:28, scalar:.9, ticks:200,
-            origin:{ x:(r.left + r.width / 2) / innerWidth, y:(r.top + r.height / 2) / innerHeight } });
-    }
+    const r = $('#stars').getBoundingClientRect();
+    Sakura.burst({ x:(r.left + r.width / 2) / innerWidth, y:(r.top + r.height / 2) / innerHeight,
+                   count:34, angle:90, spread:300, power:.5 });
   }
 }
 
