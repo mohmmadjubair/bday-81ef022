@@ -412,6 +412,53 @@ input,textarea,select{font-size:16px}
 @media (prefers-reduced-motion: reduce){
   .shake,.gift.denied,.unlocking p,.unlock-dots i,.gift.just-unlocked .float{animation:none}
 }
+/* ───────── the record, and what it hides ─────────
+   No label on it: it is meant to be found, not advertised. It bobs like
+   the other doodles, so it reads as decoration until she taps it. */
+.secret-spot{display:flex;justify-content:center;margin-top:30px}
+.vinyl{
+  background:none;border:0;padding:0;line-height:0;cursor:pointer;
+  width:58px;opacity:.88;animation:bob 4.6s ease-in-out infinite;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+.vinyl svg{width:100%;height:auto;display:block}
+.vinyl.turn svg{animation:spin .55s cubic-bezier(.3,.8,.4,1)}
+/* once all three gifts are open she has earned a nudge towards it */
+.vinyl.hint{opacity:1;animation:bob 4.6s ease-in-out infinite, glowpulse 2.3s ease-in-out infinite}
+@keyframes glowpulse{
+  0%,100%{filter:drop-shadow(0 0 0 rgba(232,139,162,0))}
+  50%{filter:drop-shadow(0 0 9px rgba(232,139,162,.85))}
+}
+
+/* ───────── bouquet ───────── */
+.bouquet{max-width:290px;margin:4px auto 0}
+.bouquet svg{width:100%;height:auto;display:block;
+  filter:drop-shadow(0 12px 20px rgba(150,104,96,.22))}
+.secret-line{
+  font-family:'Caveat',cursive;font-size:1.34rem;color:var(--rose);
+  margin:14px 0 0;line-height:1.45;
+}
+.secret-name{
+  font-family:'Caveat',cursive;font-weight:700;font-size:2.1rem;
+  color:var(--ink);margin:2px 0 0;line-height:1.1;
+}
+
+/* a pressed sprig taped into the letter, like a real journal */
+.pressed{
+  position:absolute;right:-6px;top:84px;width:62px;z-index:6;
+  transform:rotate(11deg);pointer-events:none;
+}
+.pressed svg{width:100%;height:auto;display:block;
+  filter:drop-shadow(0 3px 4px rgba(140,102,84,.3))}
+.pressed::after{
+  content:"";position:absolute;left:14px;top:-9px;width:34px;height:15px;
+  background:rgba(251,239,200,.9);transform:rotate(-14deg);
+  border-left:1.5px dashed rgba(255,255,255,.7);
+  border-right:1.5px dashed rgba(255,255,255,.7);
+}
+@media (prefers-reduced-motion: reduce){
+  .vinyl,.vinyl.hint{animation:none}
+}
 </style>
 </head>
 <body>
@@ -464,6 +511,21 @@ input,textarea,select{font-size:16px}
       <div id="allDone" style="display:none" class="center">
         <div class="hr"><span>✦ ✦ ✦</span></div>
         <button class="btn" onclick="go('s-final')">one last thing ✿</button>
+      </div>
+      <div class="secret-spot">
+        <button class="vinyl" id="vinyl" type="button" aria-label="a little record">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <g stroke="#4A3A33" stroke-width="4" stroke-linejoin="round">
+              <circle cx="50" cy="50" r="44" fill="#3B3340"/>
+              <circle cx="50" cy="50" r="35" fill="none" stroke="#5B5162" stroke-width="1.8"/>
+              <circle cx="50" cy="50" r="28" fill="none" stroke="#5B5162" stroke-width="1.8"/>
+              <circle cx="50" cy="50" r="21" fill="none" stroke="#5B5162" stroke-width="1.8"/>
+              <circle cx="50" cy="50" r="14" fill="#F7C9D3"/>
+              <circle cx="50" cy="50" r="3" fill="#FFFCF8"/>
+              <path d="M26 28 a34 34 0 0 1 17 -11" fill="none" stroke="#7A7080" stroke-width="3"/>
+            </g>
+          </svg>
+        </button>
       </div>
     </div>
   </section>
@@ -665,6 +727,7 @@ input,textarea,select{font-size:16px}
           <p>So here's to a year that's kind to you. Slow mornings, strawberry season, music a bit too loud, and people who notice how lovely you are.</p>
           <p class="sign">Happy birthday, Saiyeda.<br>I'm really glad I know you 🎂<br>— from someone who noticed you a while ago <span class="kao">(˶ᵔᵕᵔ˶)</span></p>
         </div>
+        <span class="pressed" id="pressedSprig" aria-hidden="true"></span>
         <div class="seal" aria-hidden="true">
           <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -699,6 +762,23 @@ input,textarea,select{font-size:16px}
   </section>
 
   <!-- ═══════════ FINAL ═══════════ -->
+  <!-- ═══════════ HIDDEN · BOUQUET ═══════════ -->
+  <section class="screen" id="s-secret">
+    <div class="card center stagger">
+      <span class="tape tl"></span><span class="tape br mint"></span>
+      <h2 class="title" style="font-size:1.3rem">✿ you found it ✿</h2>
+      <p class="sub" style="margin:6px 0 2px">this one wasn't in the row</p>
+      <div class="bouquet" id="bouquet"></div>
+      <p class="secret-name">for Saiyeda,</p>
+      <p class="secret-line">
+        flowers — because you like them,<br>
+        and because I couldn't hand you<br>
+        real ones today <span class="kao">(˶ᵔᵕᵔ˶)</span>
+      </p>
+      <button class="btn ghost" style="margin-top:20px" onclick="go('s-gifts')">↺ back to the gifts</button>
+    </div>
+  </section>
+
   <section class="screen" id="s-final">
     <div class="card center stagger" style="overflow:hidden">
       <span class="tape tl"></span><span class="tape tr butter"></span>
@@ -897,7 +977,10 @@ $$('.gift').forEach(b => b.addEventListener('click', () => {
     const nxt = $(`.gift[data-idx="${unlockedUpTo}"]`);   // pops when she comes back
     if (nxt){ nxt.classList.remove('just-unlocked'); void nxt.offsetWidth; nxt.classList.add('just-unlocked'); }
   }
-  if (opened.size === GIFTS.length) $('#allDone').style.display = 'block';
+  if (opened.size === GIFTS.length){
+    $('#allDone').style.display = 'block';
+    $('#vinyl').classList.add('hint');      // she has earned the nudge
+  }
   go(b.dataset.id);
 }));
 refreshLocks();
@@ -1101,6 +1184,105 @@ ph.addEventListener('error', () => {
 });
 if (ph.complete && ph.naturalWidth === 0) ph.dispatchEvent(new Event('error'));
 
+/* ───────── flowers ─────────
+   One bloom: n petals swung around a centre, drawn in the same ink as the
+   bears so it belongs to the rest of the card. */
+function bloom(cx, cy, r, petal, core, n, rot){
+  let out = '';
+  const d = r * 0.95;
+  for (let i = 0; i < n; i++){
+    const a = rot + (360 / n) * i;
+    out += `<ellipse cx="${cx}" cy="${(cy - d).toFixed(1)}" rx="${(r*.45).toFixed(1)}" ry="${(r*.75).toFixed(1)}" fill="${petal}" transform="rotate(${a.toFixed(1)} ${cx} ${cy})"/>`;
+  }
+  return out + `<circle cx="${cx}" cy="${cy}" r="${(r*.42).toFixed(1)}" fill="${core}"/>`;
+}
+
+function leaf(x, y, rot, fill){
+  return `<ellipse cx="${x}" cy="${y}" rx="7" ry="13" fill="${fill}" transform="rotate(${rot} ${x} ${y})"/>`;
+}
+
+const BLOOMS = [
+  {cx: 78, cy:  76, r:25, petal:'#F7C9D3', core:'#FBEFC8', n:6, rot:  6},
+  {cx:150, cy:  50, r:28, petal:'#FFFCF8', core:'#FBEFC8', n:7, rot: 22},
+  {cx:222, cy:  78, r:24, petal:'#E88BA2', core:'#FFF9F3', n:6, rot: -8},
+  {cx:110, cy: 128, r:21, petal:'#FBEFC8', core:'#E88BA2', n:6, rot: 30},
+  {cx:192, cy: 130, r:22, petal:'#FFE6EC', core:'#D96F8B', n:7, rot: 12},
+  {cx: 52, cy: 136, r:16, petal:'#CFE0D2', core:'#FFF9F3', n:6, rot: -16},
+  {cx:248, cy: 138, r:15, petal:'#F7C9D3', core:'#FFF9F3', n:6, rot: 18}
+];
+
+function buildBouquet(){
+  const host = $('#bouquet');
+  if (!host) return;
+  let stems = '', heads = '';
+  BLOOMS.forEach(b => {
+    stems += `<path d="M150 214 Q ${((150+b.cx)/2).toFixed(0)} ${(b.cy+70).toFixed(0)} ${b.cx} ${(b.cy + b.r*0.6).toFixed(0)}" fill="none" stroke="#7FA882" stroke-width="4"/>`;
+    heads += bloom(b.cx, b.cy, b.r, b.petal, b.core, b.n, b.rot);
+  });
+  host.innerHTML = `
+  <svg viewBox="0 0 300 268" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="#4A3A33" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
+      ${stems}
+      ${leaf(112, 168, -34, '#CFE0D2')}
+      ${leaf(188, 172,  34, '#B9D4BE')}
+      ${leaf(150, 186,   8, '#CFE0D2')}
+      ${heads}
+      <path d="M104 196 L196 196 L166 258 L134 258 Z" fill="#FFF6EA"/>
+      <path d="M104 196 L150 232 L196 196" fill="none"/>
+      <path d="M120 220 q30 -12 60 0" fill="none" stroke-width="2.6"/>
+      <path d="M130 226 q20 10 40 0 q-6 14 -20 14 q-14 0 -20 -14 z" fill="#E88BA2"/>
+      <circle cx="150" cy="226" r="6" fill="#D96F8B"/>
+    </g>
+  </svg>`;
+}
+buildBouquet();
+
+/* a single pressed sprig taped into the letter */
+(function pressSprig(){
+  const host = $('#pressedSprig');
+  if (!host) return;
+  host.innerHTML = `
+  <svg viewBox="0 0 90 150" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="#4A3A33" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M45 146 Q40 100 46 56" fill="none" stroke="#8FB092"/>
+      ${leaf(27, 108, -38, '#CFE0D2')}
+      ${leaf(63, 92,   38, '#B9D4BE')}
+      ${bloom(46, 44, 23, '#F7C9D3', '#FBEFC8', 6, 10)}
+    </g>
+  </svg>`;
+})();
+
+/* ───────── the record: three taps ─────────
+   Deliberately unlabelled. Each tap spins it a little so she knows it is
+   doing something, and the third opens the bouquet. */
+let vinylTaps = 0, vinylTimer = null;
+
+$('#vinyl').addEventListener('click', () => {
+  const v = $('#vinyl');
+  v.classList.remove('turn');
+  void v.offsetWidth;
+  v.classList.add('turn');
+
+  vinylTaps++;
+  clearTimeout(vinylTimer);
+  vinylTimer = setTimeout(() => { vinylTaps = 0; }, 1600);   // taps must be in a row
+
+  if (vinylTaps >= 3){
+    vinylTaps = 0;
+    clearTimeout(vinylTimer);
+    v.classList.remove('hint');
+    setTimeout(() => { go('s-secret'); secretConfetti(); }, 240);
+  }
+});
+
+function secretConfetti(){
+  const gun = confettiGun();
+  if (!gun) return;
+  const petals = petalShapes ? { shapes:petalShapes } : {};
+  setTimeout(() => gun({ colors:PETALS, disableForReducedMotion:true, ...petals,
+    particleCount:30, spread:120, startVelocity:16, origin:{x:.5, y:-.05},
+    scalar:1.25, gravity:.42, drift:.2, decay:.93, ticks:340 }), 420);
+}
 /* ───────── music ─────────
    The clip is ~25s, so a plain loop would click back to the start every
    time. Instead each pass is scheduled to overlap the one before it by
