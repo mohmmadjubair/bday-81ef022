@@ -539,7 +539,7 @@ input,textarea,select{font-size:16px}
       <div class="cake-stage" id="cakeStage" role="button" tabindex="0" aria-label="Blow out the candle">
         <svg viewBox="0 0 300 268" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <clipPath id="kjShell"><ellipse cx="110" cy="117" rx="16" ry="22"/></clipPath>
+            <clipPath id="kjShell"><ellipse cx="110" cy="109" rx="18" ry="25"/></clipPath>
           </defs>
           <g stroke="#4A3A33" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round">
             <!-- glow -->
@@ -575,22 +575,27 @@ input,textarea,select{font-size:16px}
                   fill="#F9C6D3"/>
             <!-- strawberries on top -->
             <g>
-              <!-- a sealed egg lying at 70 degrees on the top tier.
-                   White shell with the brown-and-red seam band: the colour
-                   scheme only, drawn in this card's own hand. No wordmark,
-                   logo or packaging artwork is reproduced. -->
-              <ellipse cx="110" cy="134.5" rx="18" ry="3.4" fill="#E0C0AC" stroke="none" opacity=".5"/>
-              <g transform="rotate(70 110 117)">
-                <ellipse cx="110" cy="117" rx="16" ry="22" fill="#FFFFFF"/>
+              <!-- sealed Kinder Joy egg on the top tier, drawn in this card's
+                   own hand. Tilted 25 rather than 70: at 70 the label runs
+                   sideways and can't be read, which defeats the point. -->
+              <ellipse cx="110" cy="132" rx="18" ry="3.4" fill="#E0C0AC" stroke="none" opacity=".5"/>
+              <g transform="rotate(25 110 109)">
+                <ellipse cx="110" cy="109" rx="18" ry="25" fill="#FFFFFF"/>
                 <g clip-path="url(#kjShell)" stroke="none">
-                  <rect x="92" y="125.4" width="36" height="18" fill="#F6F2EC"/>
-                  <rect x="92" y="108.6" width="36" height="2.4" fill="#E2001A"/>
-                  <rect x="92" y="111.0" width="36" height="12" fill="#5C3317"/>
-                  <rect x="92" y="123.0" width="36" height="2.4" fill="#E2001A"/>
-                  <ellipse cx="103.5" cy="106" rx="3.1" ry="5" fill="#FFFFFF" opacity=".85"
-                           transform="rotate(-22 103.5 106)"/>
+                  <rect x="90" y="115" width="40" height="25" fill="#F6F2EC"/>
+                  <rect x="90" y="98" width="40" height="22" fill="#FFFDF8"/>
+                  <rect x="90" y="98.4" width="40" height="1.4" fill="#5C3317"/>
+                  <rect x="90" y="118.2" width="40" height="1.4" fill="#5C3317"/>
+                  <text x="110" y="107.2" text-anchor="middle"
+                        font-family="Caveat, cursive" font-size="10.4" font-weight="700"
+                        fill="#5C3317">Kinder</text>
+                  <text x="110" y="115.8" text-anchor="middle"
+                        font-family="Fredoka, sans-serif" font-size="7.6" font-weight="600"
+                        letter-spacing="0.6" fill="#E2001A">JOY</text>
+                  <ellipse cx="103" cy="92" rx="3.4" ry="5.4" fill="#FFFFFF" opacity=".9"
+                           transform="rotate(-22 103 92)"/>
                 </g>
-                <ellipse cx="110" cy="117" rx="16" ry="22" fill="none"/>
+                <ellipse cx="110" cy="109" rx="18" ry="25" fill="none"/>
               </g>
               <path d="M184 117 a12 11 0 0 1 24 0 q0 13 -12 20 q-12 -7 -12 -20 z" fill="#F0607A"/>
               <g stroke="none" fill="#FFECB3">
