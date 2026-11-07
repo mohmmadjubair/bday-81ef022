@@ -430,10 +430,45 @@ input,textarea,select{font-size:16px}
   50%{filter:drop-shadow(0 0 9px rgba(232,139,162,.85))}
 }
 
-/* ───────── bouquet ───────── */
-.bouquet{max-width:290px;margin:4px auto 0}
-.bouquet svg{width:100%;height:auto;display:block;
-  filter:drop-shadow(0 12px 20px rgba(150,104,96,.22))}
+/* ───────── bouquet ─────────
+   Motion in three layers, each on its own clock so it never looks looped:
+   the whole bouquet sways from the hand holding it, each flower nods on
+   its stem, and baby's breath shimmers. Petals bloom in one by one when
+   the screen opens, and a few drift down and away. No filters on anything
+   that moves — they force a repaint every frame on a phone. */
+.bouquet{position:relative;max-width:300px;margin:2px auto 0}
+.bouquet svg{width:100%;height:auto;display:block;overflow:visible}
+.bouquet .sway{transform-box:fill-box;transform-origin:50% 100%;animation:bqsway 6s ease-in-out infinite}
+.bouquet .nod{transform-box:fill-box;transform-origin:50% 88%;animation:bqnod 3.6s ease-in-out infinite alternate}
+.bouquet .pop{transform-box:fill-box;transform-origin:50% 60%;animation:bqpop 1s cubic-bezier(.34,1.4,.55,1) both}
+.bouquet .twinkle{animation:bqtwinkle 2.8s ease-in-out infinite}
+@keyframes bqsway{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1.4deg)}}
+@keyframes bqnod{0%{transform:rotate(-3deg)}100%{transform:rotate(3deg)}}
+@keyframes bqpop{0%{transform:scale(.1) rotate(-25deg);opacity:0}60%{opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes bqtwinkle{0%,100%{opacity:.55}50%{opacity:1}}
+
+.bouquet .fall{
+  position:absolute;top:24%;width:11px;pointer-events:none;opacity:0;
+  animation:petalfall 7.6s linear infinite;
+}
+.bouquet .fall svg{width:100%;height:auto;display:block;overflow:visible}
+@keyframes petalfall{
+  0%  {transform:translate(0,0) rotate(0);opacity:0}
+  8%  {opacity:.95}
+  30% {transform:translate(16px,70px) rotate(110deg)}
+  60% {transform:translate(-8px,150px) rotate(220deg)}
+  85% {opacity:.8}
+  100%{transform:translate(12px,240px) rotate(330deg);opacity:0}
+}
+
+/* the pressed flower stirs very slightly, as if the tape is lifting */
+.pressed{animation:flutter 7s ease-in-out infinite}
+@keyframes flutter{0%,100%{transform:rotate(11deg)}50%{transform:rotate(13.5deg) translateY(-1px)}}
+
+@media (prefers-reduced-motion: reduce){
+  .bouquet .sway,.bouquet .nod,.bouquet .pop,.bouquet .twinkle,.pressed{animation:none}
+  .bouquet .fall{display:none}
+}
 .secret-line{
   font-family:'Caveat',cursive;font-size:1.34rem;color:var(--rose);
   margin:14px 0 0;line-height:1.45;
@@ -1185,72 +1220,321 @@ ph.addEventListener('error', () => {
 if (ph.complete && ph.naturalWidth === 0) ph.dispatchEvent(new Event('error'));
 
 /* ───────── flowers ─────────
-   One bloom: n petals swung around a centre, drawn in the same ink as the
-   bears so it belongs to the rest of the card. */
-function bloom(cx, cy, r, petal, core, n, rot){
-  let out = '';
-  const d = r * 0.95;
-  for (let i = 0; i < n; i++){
-    const a = rot + (360 / n) * i;
-    out += `<ellipse cx="${cx}" cy="${(cy - d).toFixed(1)}" rx="${(r*.45).toFixed(1)}" ry="${(r*.75).toFixed(1)}" fill="${petal}" transform="rotate(${a.toFixed(1)} ${cx} ${cy})"/>`;
+   Still drawn rather than photographed, so they belong to the same card as
+   the bears, but shaded the way petals actually are: every petal carries
+   its own gradient (deep where it joins the flower, pale at the tip) and a
+   thin edge in its own colour instead of the ink outline the doodles use.
+   Shapes are real flowers: garden roses, a peony, tulips, cosmos,
+   ranunculus, baby's breath and eucalyptus. A seeded random keeps each
+   petal slightly irregular but identical on every visit. */
+function floraRand(seed){
+  return function(){
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+const f1 = n => (+n).toFixed(1);
+
+/* one petal pointing straight up from the origin */
+function petalD(h, w){
+  return `M0 0C${f1(-w*1.05)} ${f1(-h*.22)} ${f1(-w)} ${f1(-h*.9)} ${f1(-w*.2)} ${f1(-h)}`
+       + `Q0 ${f1(-h*1.04)} ${f1(w*.2)} ${f1(-h)}`
+       + `C${f1(w)} ${f1(-h*.9)} ${f1(w*1.05)} ${f1(-h*.22)} 0 0Z`;
+}
+/* frilled tip — peony and ranunculus */
+function ruffleD(h, w){
+  return `M0 0C${f1(-w*1.1)} ${f1(-h*.2)} ${f1(-w*1.05)} ${f1(-h*.84)} ${f1(-w*.58)} ${f1(-h*.96)}`
+       + `Q${f1(-w*.4)} ${f1(-h*.87)} ${f1(-w*.2)} ${f1(-h*1.02)}`
+       + `Q0 ${f1(-h*.9)} ${f1(w*.2)} ${f1(-h*1.02)}`
+       + `Q${f1(w*.4)} ${f1(-h*.87)} ${f1(w*.58)} ${f1(-h*.96)}`
+       + `C${f1(w*1.05)} ${f1(-h*.84)} ${f1(w*1.1)} ${f1(-h*.2)} 0 0Z`;
+}
+/* notched tip — cosmos */
+function notchD(h, w){
+  return `M0 0C${f1(-w*1.1)} ${f1(-h*.25)} ${f1(-w*1.05)} ${f1(-h*.92)} ${f1(-w*.5)} ${f1(-h)}`
+       + `L0 ${f1(-h*.9)}L${f1(w*.5)} ${f1(-h)}`
+       + `C${f1(w*1.05)} ${f1(-h*.92)} ${f1(w*1.1)} ${f1(-h*.25)} 0 0Z`;
+}
+function leafD(L, W){
+  return `M0 0C${f1(-W)} ${f1(-L*.28)} ${f1(-W*.75)} ${f1(-L*.82)} 0 ${f1(-L)}`
+       + `C${f1(W*.75)} ${f1(-L*.82)} ${f1(W)} ${f1(-L*.28)} 0 0Z`;
+}
+
+/* base→tip gradient; objectBoundingBox follows each petal's own rotation */
+function lg(id, stops){
+  return `<linearGradient id="${id}" x1="0" y1="1" x2="0" y2="0">`
+       + stops.map(([o, c, a]) => `<stop offset="${o}" stop-color="${c}"${a != null ? ` stop-opacity="${a}"` : ''}/>`).join('')
+       + `</linearGradient>`;
+}
+function rg(id, stops, cx = '50%', cy = '50%', r = '50%'){
+  return `<radialGradient id="${id}" cx="${cx}" cy="${cy}" r="${r}">`
+       + stops.map(([o, c, a]) => `<stop offset="${o}" stop-color="${c}"${a != null ? ` stop-opacity="${a}"` : ''}/>`).join('')
+       + `</radialGradient>`;
+}
+
+/* palettes: outer / middle / inner ring gradients, edge line, centre shade */
+const FLORA = {
+  blush: { o:[['0','#E7A1B3'],['.55','#F8D0DA'],['1','#FFF4F6']],
+           m:[['0','#E494A8'],['.6','#F6C3CF'],['1','#FFEDF1']],
+           i:[['0','#D97F96'],['1','#F9D3DC']],
+           edge:'#E6A9B8', core:'#C8607C' },
+  dusty: { o:[['0','#C75C75'],['.55','#E79AAB'],['1','#FADAE1']],
+           m:[['0','#BC4F69'],['.6','#E08799'],['1','#F6C8D2']],
+           i:[['0','#A63F59'],['1','#E58C9F']],
+           edge:'#C8667D', core:'#8E2E48' },
+  deep:  { o:[['0','#A9324F'],['.55','#D35E78'],['1','#F2A9B8']],
+           m:[['0','#9A2A46'],['.6','#C84E6A'],['1','#EA97A8']],
+           i:[['0','#82203B'],['1','#C9506C']],
+           edge:'#A83A55', core:'#6E1730' },
+  cream: { o:[['0','#E4C3A2'],['.55','#F6E4CE'],['1','#FFFAF2']],
+           m:[['0','#DDB894'],['.6','#F2DCC2'],['1','#FFF5E8']],
+           i:[['0','#CFA47C'],['1','#F1D7B9']],
+           edge:'#D9BC9C', core:'#B88A5E' },
+  coral: { o:[['0','#E1667C'],['.55','#F4A0A6'],['1','#FFE3DC']],
+           m:[['0','#D95A71'],['.6','#F08F97'],['1','#FFD5CF']],
+           i:[['0','#C84860'],['1','#F2949C']],
+           edge:'#DC7486', core:'#A93049' }
+};
+
+function floraDefs(P){
+  let d = '';
+  for (const [k, p] of Object.entries(FLORA)){
+    d += lg(`${P}${k}o`, p.o) + lg(`${P}${k}m`, p.m) + lg(`${P}${k}i`, p.i);
+    d += rg(`${P}${k}c`, [['0', p.core, .55], ['1', p.core, 0]]);
   }
-  return out + `<circle cx="${cx}" cy="${cy}" r="${(r*.42).toFixed(1)}" fill="${core}"/>`;
+  d += lg(`${P}dsy`,  [['0','#EADFD5'],['.4','#FBF7F2'],['1','#FFFFFF']]);
+  d += rg(`${P}dsyc`, [['0','#FFE9A0'],['.6','#F2C04E'],['1','#D7922E']], '42%', '38%', '62%');
+  d += lg(`${P}tulb`, [['0','#B83F5C'],['1','#E7728C']]);
+  d += lg(`${P}tulf`, [['0','#D2516D'],['.65','#F28EA3'],['1','#FFC9D4']]);
+  d += lg(`${P}tulc`, [['0','#DA5E79'],['.7','#F7A3B5'],['1','#FFD8E0']]);
+  d += lg(`${P}lf`,   [['0','#5E8E64'],['1','#A8CDA6']]);
+  d += lg(`${P}lf2`,  [['0','#6F9C74'],['1','#BCD9B8']]);
+  d += rg(`${P}euc`,  [['0','#D3E3DC'],['1','#8FAFA4']], '40%', '35%', '70%');
+  return d;
 }
 
-function leaf(x, y, rot, fill){
-  return `<ellipse cx="${x}" cy="${y}" rx="7" ry="13" fill="${fill}" transform="rotate(${rot} ${x} ${y})"/>`;
-}
-
-const BLOOMS = [
-  {cx: 78, cy:  76, r:25, petal:'#F7C9D3', core:'#FBEFC8', n:6, rot:  6},
-  {cx:150, cy:  50, r:28, petal:'#FFFCF8', core:'#FBEFC8', n:7, rot: 22},
-  {cx:222, cy:  78, r:24, petal:'#E88BA2', core:'#FFF9F3', n:6, rot: -8},
-  {cx:110, cy: 128, r:21, petal:'#FBEFC8', core:'#E88BA2', n:6, rot: 30},
-  {cx:192, cy: 130, r:22, petal:'#FFE6EC', core:'#D96F8B', n:7, rot: 12},
-  {cx: 52, cy: 136, r:16, petal:'#CFE0D2', core:'#FFF9F3', n:6, rot: -16},
-  {cx:248, cy: 138, r:15, petal:'#F7C9D3', core:'#FFF9F3', n:6, rot: 18}
-];
-
-function buildBouquet(){
-  const host = $('#bouquet');
-  if (!host) return;
-  let stems = '', heads = '';
-  BLOOMS.forEach(b => {
-    stems += `<path d="M150 214 Q ${((150+b.cx)/2).toFixed(0)} ${(b.cy+70).toFixed(0)} ${b.cx} ${(b.cy + b.r*0.6).toFixed(0)}" fill="none" stroke="#7FA882" stroke-width="4"/>`;
-    heads += bloom(b.cx, b.cy, b.r, b.petal, b.core, b.n, b.rot);
+function rosette(P, pal, R, rand, rings, shape, spiral){
+  const p = FLORA[pal];
+  let s = '';
+  rings.forEach((ring, k) => {
+    const tone = k === 0 ? 'o' : (k === rings.length - 1 ? 'i' : 'm');
+    for (let i = 0; i < ring.n; i++){
+      const a = ring.off + i * 360 / ring.n + (rand() - .5) * 16;
+      const h = R * ring.h * (.9 + rand() * .16);
+      const w = R * ring.w * (.92 + rand() * .14);
+      s += `<path d="${shape(h, w)}" transform="rotate(${f1(a)})" fill="url(#${P}${pal}${tone})" stroke="${p.edge}" stroke-width=".6"/>`;
+    }
   });
-  host.innerHTML = `
-  <svg viewBox="0 0 300 268" xmlns="http://www.w3.org/2000/svg">
-    <g stroke="#4A3A33" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
-      ${stems}
-      ${leaf(112, 168, -34, '#CFE0D2')}
-      ${leaf(188, 172,  34, '#B9D4BE')}
-      ${leaf(150, 186,   8, '#CFE0D2')}
-      ${heads}
-      <path d="M104 196 L196 196 L166 258 L134 258 Z" fill="#FFF6EA"/>
-      <path d="M104 196 L150 232 L196 196" fill="none"/>
-      <path d="M120 220 q30 -12 60 0" fill="none" stroke-width="2.6"/>
-      <path d="M130 226 q20 10 40 0 q-6 14 -20 14 q-14 0 -20 -14 z" fill="#E88BA2"/>
-      <circle cx="150" cy="226" r="6" fill="#D96F8B"/>
-    </g>
-  </svg>`;
+  s += `<circle r="${f1(R * .5)}" fill="url(#${P}${pal}c)"/>`;
+  if (spiral){
+    s += `<path d="M${f1(-R*.1)} ${f1(R*.04)}C${f1(-R*.15)} ${f1(-R*.13)} ${f1(R*.15)} ${f1(-R*.15)} ${f1(R*.12)} ${f1(R*.03)}`
+       + `C${f1(R*.1)} ${f1(R*.13)} ${f1(-R*.05)} ${f1(R*.12)} ${f1(-R*.04)} ${f1(R*.02)}"`
+       + ` fill="none" stroke="${p.core}" stroke-width="1.1" stroke-linecap="round" opacity=".55"/>`;
+  }
+  return s;
 }
-buildBouquet();
 
-/* a single pressed sprig taped into the letter */
-(function pressSprig(){
-  const host = $('#pressedSprig');
+const ROSE_RINGS  = [{n:6,h:1,w:.6,off:0},{n:5,h:.8,w:.52,off:36},{n:5,h:.6,w:.44,off:10},{n:4,h:.4,w:.34,off:50},{n:3,h:.24,w:.26,off:20}];
+const PEONY_RINGS = [{n:9,h:1,w:.46,off:0},{n:8,h:.88,w:.46,off:22},{n:7,h:.74,w:.43,off:8},{n:6,h:.58,w:.4,off:30},{n:5,h:.42,w:.34,off:14},{n:4,h:.27,w:.28,off:40}];
+const RANUN_RINGS = [{n:7,h:1,w:.5,off:0},{n:7,h:.84,w:.48,off:26},{n:6,h:.68,w:.44,off:6},{n:6,h:.52,w:.4,off:34},{n:5,h:.36,w:.34,off:12},{n:4,h:.22,w:.26,off:44}];
+
+const rose     = (P, pal, R, r) => rosette(P, pal, R, r, ROSE_RINGS,  petalD,  true);
+const peony    = (P, pal, R, r) => rosette(P, pal, R, r, PEONY_RINGS, ruffleD, false);
+const ranuncul = (P, pal, R, r) => rosette(P, pal, R, r, RANUN_RINGS, petalD,  true);
+
+function cosmos(P, R, rand){
+  let s = '';
+  const n = 8;
+  for (let i = 0; i < n; i++){
+    const a = i * 360 / n + (rand() - .5) * 12;
+    const h = R * (.9 + rand() * .14), w = R * .3;
+    s += `<g transform="rotate(${f1(a)})"><path d="${notchD(h, w)}" fill="url(#${P}dsy)" stroke="#E2D5CA" stroke-width=".5"/>`
+       + `<path d="M0 ${f1(-R*.3)}L0 ${f1(-h*.84)}M${f1(-w*.35)} ${f1(-R*.36)}L${f1(-w*.42)} ${f1(-h*.8)}M${f1(w*.35)} ${f1(-R*.36)}L${f1(w*.42)} ${f1(-h*.8)}"`
+       + ` stroke="#E6DBD1" stroke-width=".5" fill="none"/></g>`;
+  }
+  s += `<circle r="${f1(R*.3)}" fill="url(#${P}dsyc)" stroke="#C98A2D" stroke-width=".6"/>`;
+  for (let i = 0; i < 14; i++){
+    const a = rand() * Math.PI * 2, d = rand() * R * .22;
+    s += `<circle cx="${f1(Math.cos(a)*d)}" cy="${f1(Math.sin(a)*d)}" r=".9" fill="#A86A1C" opacity=".65"/>`;
+  }
+  return s;
+}
+
+function tulip(P, H){
+  const w = H * .44;
+  const st = `stroke="#C2486A" stroke-width=".6"`;
+  return `<path d="M0 ${f1(H*.05)}Q2 ${f1(H*.4)} 0 ${f1(H*.75)}" stroke="#6F9C74" stroke-width="2.6" fill="none" stroke-linecap="round"/>`
+    + `<path d="M0 0C${f1(-w)} ${f1(-H*.08)} ${f1(-w*1.06)} ${f1(-H*.78)} ${f1(-w*.38)} ${f1(-H)}C${f1(-w*.12)} ${f1(-H*.84)} ${f1(w*.12)} ${f1(-H*.84)} ${f1(w*.38)} ${f1(-H)}C${f1(w*1.06)} ${f1(-H*.78)} ${f1(w)} ${f1(-H*.08)} 0 0Z" fill="url(#${P}tulb)" ${st}/>`
+    + `<path d="M0 0C${f1(-w*.98)} ${f1(-H*.06)} ${f1(-w*1.02)} ${f1(-H*.66)} ${f1(-w*.6)} ${f1(-H*.94)}C${f1(-w*.16)} ${f1(-H*.78)} ${f1(w*.1)} ${f1(-H*.42)} 0 0Z" fill="url(#${P}tulf)" ${st}/>`
+    + `<path d="M0 0C${f1(w*.98)} ${f1(-H*.06)} ${f1(w*1.02)} ${f1(-H*.66)} ${f1(w*.6)} ${f1(-H*.94)}C${f1(w*.16)} ${f1(-H*.78)} ${f1(-w*.1)} ${f1(-H*.42)} 0 0Z" fill="url(#${P}tulf)" ${st}/>`
+    + `<path d="M0 0C${f1(-w*.52)} ${f1(-H*.1)} ${f1(-w*.5)} ${f1(-H*.74)} 0 ${f1(-H*.95)}C${f1(w*.5)} ${f1(-H*.74)} ${f1(w*.52)} ${f1(-H*.1)} 0 0Z" fill="url(#${P}tulc)" ${st}/>`
+    + `<path d="M${f1(-w*.1)} ${f1(-H*.2)}Q${f1(-w*.02)} ${f1(-H*.55)} ${f1(-w*.06)} ${f1(-H*.82)}" fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity=".35" stroke-linecap="round"/>`;
+}
+
+function leaf(P, x, y, rot, L, W, fill = 'lf'){
+  return `<g transform="translate(${x} ${y}) rotate(${rot})">`
+       + `<path d="${leafD(L, W)}" fill="url(#${P}${fill})" stroke="#5A8760" stroke-width=".6"/>`
+       + `<path d="M0 0Q${f1(W*.14)} ${f1(-L*.5)} 0 ${f1(-L*.92)}" fill="none" stroke="#4E7A55" stroke-width=".7" opacity=".5"/></g>`;
+}
+
+function eucalyptus(P, x, y, rot, len){
+  let s = `<g transform="translate(${x} ${y}) rotate(${rot})">`
+        + `<path d="M0 0Q${f1(len*.07)} ${f1(-len*.5)} 0 ${f1(-len)}" fill="none" stroke="#7B978C" stroke-width="1.3"/>`;
+  for (let i = 1; i <= 6; i++){
+    const yy = -len * i / 6.4, r = 6.4 - i * .55;
+    for (const side of [-1, 1]){
+      s += `<ellipse cx="${f1(side * r * .95)}" cy="${f1(yy + side * 1.2)}" rx="${f1(r)}" ry="${f1(r * .86)}" fill="url(#${P}euc)" stroke="#7B978C" stroke-width=".5"/>`;
+    }
+  }
+  return s + '</g>';
+}
+
+function babysBreath(x, y, rand){
+  /* the shimmer runs on the cluster, not each dot: ~10 animations, not ~110 */
+  let s = `<g transform="translate(${x} ${y})"><g class="twinkle" style="animation-delay:${f1(rand() * 3)}s">`;
+  const n = 8 + Math.floor(rand() * 5);
+  for (let i = 0; i < n; i++){
+    const a = rand() * Math.PI * 2, d = 4 + rand() * 11;
+    const cx = Math.cos(a) * d, cy = Math.sin(a) * d * .8;
+    s += `<path d="M0 7L${f1(cx)} ${f1(cy)}" stroke="#A3BBA0" stroke-width=".5"/>`
+       + `<circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(1.5 + rand() * 1.4)}" fill="#FFFFFF" stroke="#E4DAD2" stroke-width=".5"/>`;
+  }
+  return s + '</g></g>';
+}
+
+/* every head sways on its own clock and blooms in on its own beat */
+function head(x, y, rot, inner, k){
+  const nodDelay = (-k * .63).toFixed(2), nodDur = (3.2 + (k % 4) * .45).toFixed(2);
+  const popDelay = (.12 + k * .09).toFixed(2);
+  return `<g transform="translate(${x} ${y}) rotate(${rot})">`
+       + `<g class="nod" style="animation-delay:${nodDelay}s;animation-duration:${nodDur}s">`
+       + `<g class="pop" style="animation-delay:${popDelay}s">${inner}</g></g></g>`;
+}
+
+function buildBouquet(host){
   if (!host) return;
+  const P = 'bq', r = floraRand(1211);
+  let k = 0;
+
+  const greens =
+      eucalyptus(P, 74, 196, -34, 96) + eucalyptus(P, 248, 190, 34, 92)
+    + eucalyptus(P, 160, 150, -4, 108)
+    + leaf(P, 86, 198, -58, 52, 15) + leaf(P, 238, 194, 56, 50, 15, 'lf2')
+    + leaf(P, 116, 112, -30, 46, 13, 'lf2') + leaf(P, 206, 108, 32, 46, 13)
+    + leaf(P, 138, 160, -14, 50, 16) + leaf(P, 184, 158, 16, 50, 16, 'lf2')
+    + leaf(P, 160, 204, 0, 46, 15) + leaf(P, 104, 190, -36, 44, 14, 'lf2')
+    + leaf(P, 218, 188, 38, 44, 14);
+
+  const heads =
+      head(78,  110, -10, rose(P, 'coral', 18, r), k++)
+    + head(244, 104,  10, rose(P, 'blush', 18, r), k++)
+    + head(112, 118, -20, tulip(P, 58), k++)
+    + head(210, 112,  18, tulip(P, 56), k++)
+    + head(160, 104,   0, peony(P, 'blush', 47, r), k++)
+    + head(100, 148,   8, rose(P, 'dusty', 36, r), k++)
+    + head(222, 144,  -6, rose(P, 'deep', 35, r), k++)
+    + head(54,  158,  12, cosmos(P, 25, r), k++)
+    + head(268, 152, -10, cosmos(P, 24, r), k++)
+    + head(161, 166,   0, ranuncul(P, 'blush', 25, r), k++)
+    + head(126, 194,   4, rose(P, 'cream', 30, r), k++)
+    + head(196, 196,  -4, ranuncul(P, 'coral', 30, r), k++);
+
+  const gyp = [[132,70],[190,66],[66,132],[258,126],[140,136],[184,134],[92,206],[230,204],[36,178],[286,172],[160,58]]
+    .map(([x, y]) => babysBreath(x, y, r)).join('');
+
+  host.innerHTML = `
+  <svg viewBox="0 0 320 346" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      ${floraDefs(P)}
+      ${lg('bqpink',  [['0','#DE9DAE'],['1','#F6D2DA']])}
+      ${lg('bqpink2', [['0','#E4A9B8'],['.7','#F7D7DE'],['1','#FCE7EC']])}
+      ${lg('bqcream', [['0','#E9D9C7'],['.6','#FAF0E4'],['1','#FFF9F1']])}
+      ${lg('bqtissue',[['0','#F3DCE1'],['1','#FFF4F2']])}
+      ${lg('bqrib',   [['0','#B94A68'],['.5','#DD7590'],['1','#C85A77']])}
+      ${rg('bqshadow',[['0','#7A4E52',.32],['1','#7A4E52',0]])}
+    </defs>
+
+    <ellipse cx="160" cy="336" rx="74" ry="9" fill="url(#bqshadow)"/>
+
+    <g class="sway">
+      <!-- paper behind the flowers -->
+      <path d="M160 270L58 74Q160 26 262 74Z" fill="url(#bqtissue)" stroke="#EADFD6" stroke-width=".8"/>
+      <path d="M156 270L14 124Q34 70 96 54Z" fill="url(#bqpink)"  stroke="#D6909F" stroke-width=".8"/>
+      <path d="M164 270L306 122Q286 68 224 52Z" fill="url(#bqpink)" stroke="#D6909F" stroke-width=".8"/>
+      <path d="M156 270L96 54L110 60Z" fill="#C97E90" opacity=".25"/>
+      <path d="M164 270L224 52L210 58Z" fill="#C97E90" opacity=".25"/>
+
+      ${greens}
+      ${heads}
+      ${gyp}
+
+      <!-- paper in front, folded across the stems -->
+      <path d="M60 198Q118 216 178 208L158 336Z" fill="url(#bqpink2)" stroke="#D6909F" stroke-width=".8"/>
+      <path d="M178 208L158 336L166 216Z" fill="#B86A80" opacity=".2"/>
+      <path d="M260 192Q204 216 144 212L162 336Z" fill="url(#bqcream)" stroke="#DCC6AF" stroke-width=".8"/>
+      <path d="M144 212L162 336L152 218Z" fill="#9C7B5E" opacity=".14"/>
+      <path d="M62 199Q118 217 177 209" fill="none" stroke="#FFFFFF" stroke-width="1.6" opacity=".55"/>
+      <path d="M258 193Q204 217 145 213" fill="none" stroke="#FFFFFF" stroke-width="1.6" opacity=".7"/>
+
+      <!-- satin ribbon and bow -->
+      <path d="M116 272Q160 286 204 272L202 287Q160 300 118 287Z" fill="url(#bqrib)" stroke="#9E3956" stroke-width=".7"/>
+      <path d="M160 285C152 306 144 320 134 336L145 331L150 342C157 322 162 304 163 289Z" fill="#C85A77" stroke="#9E3956" stroke-width=".7"/>
+      <path d="M160 285C168 306 176 320 188 334L177 330L172 341C165 321 158 303 157 289Z" fill="#B94A68" stroke="#9E3956" stroke-width=".7"/>
+      <path d="M160 284C142 262 112 262 116 280C120 296 144 292 160 284Z" fill="url(#bqrib)" stroke="#9E3956" stroke-width=".7"/>
+      <path d="M160 284C178 262 208 262 204 280C200 296 176 292 160 284Z" fill="url(#bqrib)" stroke="#9E3956" stroke-width=".7"/>
+      <path d="M124 274Q136 270 148 280" fill="none" stroke="#FFFFFF" stroke-width="1.2" opacity=".45" stroke-linecap="round"/>
+      <path d="M196 274Q184 270 172 280" fill="none" stroke="#FFFFFF" stroke-width="1.2" opacity=".35" stroke-linecap="round"/>
+      <ellipse cx="160" cy="285" rx="7.5" ry="6.5" fill="#C85A77" stroke="#9E3956" stroke-width=".7"/>
+    </g>
+  </svg>
+  <span class="fall" style="left:30%;animation-delay:.6s"></span>
+  <span class="fall" style="left:58%;animation-delay:2.9s;animation-duration:8.2s"></span>
+  <span class="fall" style="left:44%;animation-delay:5.1s;animation-duration:7.4s"></span>
+  <span class="fall" style="left:70%;animation-delay:7.3s"></span>
+  <span class="fall" style="left:22%;animation-delay:9.4s;animation-duration:8.6s"></span>`;
+
+  host.querySelectorAll('.fall').forEach((el, i) => {
+    const c = ['#F6B9C7', '#F9D0D9', '#E995A9', '#FBE3E8', '#F3A9BA'][i];
+    el.innerHTML = `<svg viewBox="0 0 20 26"><path d="${petalD(24, 9)}" transform="translate(10 25)" fill="${c}" stroke="#E08EA2" stroke-width=".6"/></svg>`;
+  });
+}
+
+/* a pressed cosmos: flat, faded and a little translucent, the way a flower
+   looks after a week inside a heavy book */
+function buildPressed(host){
+  if (!host) return;
+  const P = 'pr', r = floraRand(1112);
+  let petals = '';
+  for (let i = 0; i < 8; i++){
+    const a = i * 45 + (r() - .5) * 14, h = 21 + r() * 4, w = 7.4;
+    petals += `<g transform="rotate(${f1(a)})"><path d="${notchD(h, w)}" fill="url(#prp)" stroke="#DE9AAB" stroke-width=".45"/>`
+            + `<path d="M0 -5L0 ${f1(-h*.85)}M-2.6 -6L-3.2 ${f1(-h*.78)}M2.6 -6L3.2 ${f1(-h*.78)}" stroke="#D88497" stroke-width=".4" opacity=".55" fill="none"/></g>`;
+  }
+  let dots = '';
+  for (let i = 0; i < 10; i++){
+    const a = r() * Math.PI * 2, d = r() * 4.4;
+    dots += `<circle cx="${f1(Math.cos(a)*d)}" cy="${f1(Math.sin(a)*d)}" r=".7" fill="#9C6420" opacity=".6"/>`;
+  }
   host.innerHTML = `
   <svg viewBox="0 0 90 150" xmlns="http://www.w3.org/2000/svg">
-    <g stroke="#4A3A33" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
-      <path d="M45 146 Q40 100 46 56" fill="none" stroke="#8FB092"/>
-      ${leaf(27, 108, -38, '#CFE0D2')}
-      ${leaf(63, 92,   38, '#B9D4BE')}
-      ${bloom(46, 44, 23, '#F7C9D3', '#FBEFC8', 6, 10)}
+    <defs>
+      ${lg('prp',  [['0','#E58FA5'],['.55','#F2BCCA'],['1','#FADDE4']])}
+      ${lg('prl',  [['0','#8DAE8A'],['1','#C2D7BC']])}
+      ${rg('prc',  [['0','#F3D27C'],['1','#C99038']])}
+    </defs>
+    <g opacity=".9">
+      <path d="M46 147Q41 102 46 60" fill="none" stroke="#93AE8E" stroke-width="1.5" stroke-linecap="round"/>
+      <g transform="translate(44 112) rotate(-48)"><path d="${leafD(30, 8)}" fill="url(#prl)" stroke="#86A483" stroke-width=".5"/><path d="M0 0L0 -27" stroke="#7E9C7B" stroke-width=".5" opacity=".6"/></g>
+      <g transform="translate(46 94) rotate(46)"><path d="${leafD(27, 7)}" fill="url(#prl)" stroke="#86A483" stroke-width=".5"/><path d="M0 0L0 -24" stroke="#7E9C7B" stroke-width=".5" opacity=".6"/></g>
+      <g transform="translate(46 44)">${petals}<circle r="6" fill="url(#prc)" stroke="#B88232" stroke-width=".5"/>${dots}</g>
     </g>
   </svg>`;
-})();
+}
+
+buildBouquet($('#bouquet'));
+buildPressed($('#pressedSprig'));
 
 /* ───────── the record: three taps ─────────
    Deliberately unlabelled. Each tap spins it a little so she knows it is
