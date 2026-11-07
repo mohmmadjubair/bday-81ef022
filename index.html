@@ -1006,6 +1006,7 @@ function go(id, instant){
   const next = document.getElementById(id);
   if (!next || cur === next) return;
   busy = true;
+  clearTimeout(dimTimer);                  // leaving early must not dim the next screen
   if (id !== 's-cake') lightsUp();          // never carry the dark to another screen
   cur.classList.remove('in');
   cur.classList.add('out');
@@ -1018,7 +1019,7 @@ function go(id, instant){
     window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
     busy = false;
     if (id === 's-final'){ rainHearts(); finaleConfetti(); }
-    if (id === 's-cake') setTimeout(lightsDown, 650);
+    if (id === 's-cake') dimTimer = setTimeout(lightsDown, 650);
   }, instant ? 120 : 300);
 }
 
@@ -1814,6 +1815,7 @@ function secretConfetti(){
   Sakura.shower({ count:40, over:3, delay:.4, blossoms:.3 });
 }
 /* ───────── lights down for the wish ───────── */
+var dimTimer = 0;
 function lightsDown(){
   if (blown || !$('#s-cake').classList.contains('active')) return;
   const o = flameOrigin();
