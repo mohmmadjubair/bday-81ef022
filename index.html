@@ -583,10 +583,10 @@ input,textarea,select{font-size:16px}
               <g transform="rotate(70 110 117)">
                 <ellipse cx="110" cy="117" rx="16" ry="22" fill="#FFFFFF"/>
                 <g clip-path="url(#kjShell)" stroke="none">
-                  <rect x="92" y="122.5" width="36" height="18" fill="#F6F2EC"/>
-                  <rect x="92" y="109.4" width="36" height="2.2" fill="#E2001A"/>
-                  <rect x="92" y="111.6" width="36" height="8.4" fill="#6B3A1A"/>
-                  <rect x="92" y="120.0" width="36" height="2.2" fill="#E2001A"/>
+                  <rect x="92" y="125.4" width="36" height="18" fill="#F6F2EC"/>
+                  <rect x="92" y="108.6" width="36" height="2.4" fill="#E2001A"/>
+                  <rect x="92" y="111.0" width="36" height="12" fill="#5C3317"/>
+                  <rect x="92" y="123.0" width="36" height="2.4" fill="#E2001A"/>
                   <ellipse cx="103.5" cy="106" rx="3.1" ry="5" fill="#FFFFFF" opacity=".85"
                            transform="rotate(-22 103.5 106)"/>
                 </g>
@@ -1166,6 +1166,38 @@ $('#player').addEventListener('click', () => {
   if (master) master.gain.linearRampToValueAtTime(muted ? 0.0001 : VOLUME, actx.currentTime + .35);
   if (fallbackEl) fallbackEl.muted = muted;
 });
+
+/* ───────── stop when she leaves the page ─────────
+   audioSession 'playback' is what lets the song through the iOS Ring/Silent
+   switch, but it also tells iOS this is background-worthy media — so the
+   song kept going after she switched apps. Suspending the context on hide
+   and resuming on return keeps the silent-switch fix without the music
+   following her around the phone. */
+let pausedByHide = false;
+
+function audioOnHide(){
+  if (actx && actx.state === 'running'){
+    pausedByHide = true;
+    actx.suspend().catch(() => {});
+  }
+  if (fallbackEl && !fallbackEl.paused){
+    pausedByHide = true;
+    fallbackEl.pause();
+  }
+}
+
+function audioOnShow(){
+  if (!pausedByHide) return;
+  pausedByHide = false;
+  // the context carries its own clock, so the crossfade picks up where it left off
+  if (actx && actx.state === 'suspended') actx.resume().catch(() => {});
+  if (fallbackEl && !muted) fallbackEl.play().catch(() => {});
+}
+
+document.addEventListener('visibilitychange',
+  () => document.hidden ? audioOnHide() : audioOnShow());
+window.addEventListener('pagehide', audioOnHide);
+window.addEventListener('pageshow',  audioOnShow);
 
 /* phones suspend audio when the tab goes to the background */
 document.addEventListener('visibilitychange', () => {
