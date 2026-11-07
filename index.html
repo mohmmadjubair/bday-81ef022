@@ -494,6 +494,118 @@ input,textarea,select{font-size:16px}
 @media (prefers-reduced-motion: reduce){
   .vinyl,.vinyl.hint{animation:none}
 }
+/* ───────── lights down for the wish ─────────
+   The one screen that changes the room. While the candle is lit the page
+   dims to a warm dark with a pool of light on the flame; blowing it out
+   brings the lights back up. Only opacity animates, so it stays smooth. */
+body::after{
+  content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;
+  background:radial-gradient(circle at var(--lx,50%) var(--ly,38%),
+    rgba(255,198,128,.14) 0, rgba(78,42,52,.55) 140px, rgba(28,16,24,.9) 400px);
+  transition:opacity 1.4s ease;
+}
+body.dim::after{opacity:1}
+#s-cake{position:relative}
+#s-cake > .stagger{position:relative;z-index:1}
+#s-cake .title{transition:color 1.2s ease,text-shadow 1.2s ease}
+body.dim #s-cake .title{color:#FFF1E4;text-shadow:0 0 18px rgba(255,190,120,.5)}
+.wish-hint{
+  font-family:'Caveat',cursive;font-size:1.36rem;color:#FBE6D6;text-align:center;
+  margin:0;min-height:1.5em;opacity:0;transition:opacity 1s ease .5s;
+}
+body.dim .wish-hint{opacity:1}
+body.dim #s-cake .tapme:not(.done){
+  background:rgba(255,240,228,.12);color:#FFF1E4;border-color:rgba(255,236,220,.7);
+  box-shadow:0 0 24px rgba(255,190,120,.35);
+}
+body.dim #s-cake .btn.ghost{
+  background:transparent;color:#FBE6D6;border-color:rgba(251,230,214,.55);box-shadow:none;
+}
+#s-cake .tapme,#s-cake .btn.ghost{transition:background .9s ease,color .9s ease,border-color .9s ease,box-shadow .9s ease}
+
+/* soft out-of-focus lights drifting in the dark */
+.bokeh{position:absolute;inset:-30px -20px;pointer-events:none;z-index:0;opacity:0;transition:opacity 1.3s ease}
+body.dim .bokeh{opacity:1}
+.bokeh i{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle, rgba(255,214,160,.5) 0, rgba(255,176,160,.16) 45%, rgba(255,176,160,0) 70%);
+  animation:bokeh 9s ease-in-out infinite;
+}
+@keyframes bokeh{0%,100%{transform:translateY(0) scale(1);opacity:.45}50%{transform:translateY(-20px) scale(1.14);opacity:1}}
+
+/* ───────── the camera actually takes a picture ───────── */
+.shutter{
+  position:absolute;z-index:4;border-radius:50%;cursor:pointer;
+  /* sits on the control wheel's centre: circle 630,214 r29 in a 720×400 drawing */
+  left:83.47%;top:46.25%;width:8.06%;height:14.5%;
+  background:transparent;border:0;padding:0;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+.shutter::before{
+  content:"";position:absolute;inset:-6px;border-radius:50%;
+  border:2.5px solid #E88BA2;animation:ripple 1.9s ease-out infinite;
+}
+.shutter.used::before{display:none}
+/* the drawn button is ~27px on a phone; this invisible ring makes the
+   tap target ~47px without changing how it looks */
+.shutter::after{content:"";position:absolute;inset:-10px;border-radius:50%}
+.shutter:active,.shutter.press{transform:scale(.86)}
+.shutter{transition:transform .12s ease}
+.lcd .flash{position:absolute;inset:0;background:#FFFFFF;opacity:0;pointer-events:none;z-index:3}
+.lcd .flash.go{animation:flash .5s ease-out}
+@keyframes flash{0%{opacity:1}100%{opacity:0}}
+.snap-hint{
+  text-align:center;font-family:'Caveat',cursive;font-size:1.18rem;color:var(--rose);
+  margin:18px 0 0;
+}
+.snap-hint b{font-weight:700}
+
+.prints{position:relative;height:0;margin:0 auto;max-width:330px;transition:height .6s cubic-bezier(.22,.9,.3,1)}
+.prints.has{height:214px;margin-top:14px}
+.print{
+  position:absolute;left:50%;top:0;width:140px;margin-left:-70px;
+  background:#FFFDF8;padding:9px 9px 0;border-radius:3px;
+  box-shadow:0 10px 22px rgba(120,84,72,.25),0 1px 0 rgba(0,0,0,.04);
+  transform:translateX(var(--x,0)) rotate(var(--r,0));
+  transition:transform .6s cubic-bezier(.22,.9,.3,1);
+  cursor:pointer;
+}
+.print.new{animation:eject .9s cubic-bezier(.22,.9,.3,1) both}
+@keyframes eject{
+  0%{transform:translateX(var(--x,0)) translateY(-70px) rotate(0) scale(.92);opacity:0}
+  35%{opacity:1}
+  100%{transform:translateX(var(--x,0)) rotate(var(--r,0)) scale(1);opacity:1}
+}
+.print .pic{aspect-ratio:1/1;overflow:hidden;background:#2A2328}
+.print .pic img{width:100%;height:100%;object-fit:cover;display:block;filter:var(--film,none);animation:develop 3.4s ease-out both}
+@keyframes develop{
+  0%  {filter:brightness(.12) sepia(1) contrast(.55)}
+  35% {filter:brightness(.5) sepia(.75) contrast(.75)}
+  100%{filter:var(--film,none)}
+}
+.print .pcap{font-family:'Caveat',cursive;font-size:1.12rem;color:var(--ink);text-align:center;padding:6px 0 9px;line-height:1}
+
+/* ───────── rating ───────── */
+.rate{position:relative;z-index:1;margin-top:6px}
+.rate-q{font-family:'Patrick Hand',cursive;font-size:1.08rem;color:var(--ink-soft);margin:4px 0 6px}
+.stars{display:flex;justify-content:center;gap:4px}
+.star{
+  width:46px;height:46px;padding:3px;background:none;border:0;cursor:pointer;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+.star svg{width:100%;height:100%;display:block;overflow:visible}
+.star path{fill:#FFF8F0;stroke:var(--ink);stroke-width:2.6;stroke-linejoin:round;transition:fill .2s ease}
+.star.on path{fill:url(#starfill)}
+.star.preview path{fill:#FBE0E6}
+.star.pop svg{animation:starpop .45s cubic-bezier(.34,1.6,.55,1)}
+@keyframes starpop{0%{transform:scale(.6) rotate(-12deg)}100%{transform:scale(1) rotate(0)}}
+.rate-say{min-height:1.6em;margin:6px 0 0;font-family:'Caveat',cursive;font-size:1.3rem;color:var(--rose)}
+.rate .btn{margin-top:10px}
+.rate .btn[hidden]{display:none}
+
+@media (prefers-reduced-motion: reduce){
+  .bokeh i,.shutter::before,.print.new,.print .pic img,.star.pop svg{animation:none}
+}
 </style>
 </head>
 <body>
@@ -609,6 +721,8 @@ input,textarea,select{font-size:16px}
             <!-- control wheel -->
             <circle cx="630" cy="214" r="66" fill="url(#dial)"/>
             <circle cx="630" cy="214" r="29" fill="#F2EBE1"/>
+            <circle cx="630" cy="214" r="16" fill="#F49AAE"/>
+            <circle cx="624" cy="208" r="4.5" fill="#FFFFFF" stroke="none" opacity=".7"/>
             <g fill="#A99C88" stroke="none">
               <circle cx="630" cy="166" r="5"/><circle cx="630" cy="262" r="5"/>
               <circle cx="582" cy="214" r="5"/><circle cx="678" cy="214" r="5"/>
@@ -636,8 +750,12 @@ input,textarea,select{font-size:16px}
           </div>
           <span class="rec"><b></b>PLAY</span>
           <span class="stamp">12 11 ✿</span>
+          <span class="flash" id="lcdFlash"></span>
         </div>
+        <button class="shutter" id="shutter" type="button" aria-label="take a photo"></button>
       </div>
+      <p class="snap-hint" id="snapHint">press the <b>pink button</b> to take a photo 📸</p>
+      <div class="prints" id="prints"></div>
       <div class="cap">saiyeda ✿ the birthday girl</div>
       <div class="notes">
         <div class="note a"><span class="tape tl butter" style="width:70px;height:22px"></span>
@@ -651,10 +769,12 @@ input,textarea,select{font-size:16px}
 
   <!-- ═══════════ GIFT 2 · CAKE ═══════════ -->
   <section class="screen" id="s-cake">
+    <div class="bokeh" aria-hidden="true"><i style="left:6%;top:10%;width:70px;height:70px;animation-delay:0s;animation-duration:9s"></i><i style="left:78%;top:6%;width:54px;height:54px;animation-delay:-2.2s;animation-duration:10.5s"></i><i style="left:14%;top:52%;width:46px;height:46px;animation-delay:-4.1s;animation-duration:8.2s"></i><i style="left:84%;top:44%;width:82px;height:82px;animation-delay:-1.3s;animation-duration:11s"></i><i style="left:46%;top:4%;width:36px;height:36px;animation-delay:-5.6s;animation-duration:7.6s"></i><i style="left:66%;top:70%;width:60px;height:60px;animation-delay:-3.3s;animation-duration:9.8s"></i><i style="left:4%;top:80%;width:58px;height:58px;animation-delay:-6.2s;animation-duration:10.2s"></i><i style="left:90%;top:84%;width:40px;height:40px;animation-delay:-0.7s;animation-duration:8.6s"></i><i style="left:34%;top:88%;width:50px;height:50px;animation-delay:-7.4s;animation-duration:9.4s"></i></div>
     <div class="stagger">
       <h2 class="title" style="font-size:1.5rem">MAKE A WISH 🕯️</h2>
+      <p class="wish-hint" id="wishHint">close your eyes and make a wish…</p>
       <div class="cake-stage" id="cakeStage" role="button" tabindex="0" aria-label="Blow out the candle">
-        <svg viewBox="0 0 300 268" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <clipPath id="kjShell"><ellipse cx="110" cy="109" rx="18" ry="25"/></clipPath>
           </defs>
@@ -678,6 +798,10 @@ input,textarea,select{font-size:16px}
             <rect x="141" y="90" width="18" height="44" rx="7" fill="#FFF3F5"/>
             <path d="M141 101 l18 -8 M141 115 l18 -8 M141 129 l18 -8" stroke="#F6AFC0" stroke-width="5" stroke-linecap="round"/>
             <rect x="141" y="90" width="18" height="44" rx="7" fill="none"/>
+            <!-- cake stand under the plate -->
+            <path d="M134 250 L124 284 h52 L166 250 Z" fill="#FBE1E7"/>
+            <ellipse cx="150" cy="287" rx="60" ry="9" fill="#F6CFD8"/>
+            <path d="M30 242 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 L270 234 L30 234 Z" fill="#FBE6EA"/>
             <!-- plate -->
             <ellipse cx="150" cy="238" rx="126" ry="17" fill="#FDEFE3"/>
             <!-- bottom tier -->
@@ -731,9 +855,8 @@ input,textarea,select{font-size:16px}
             </g>
           </g>
         </svg>
-        <span class="cake-cue" aria-hidden="true">👆</span>
       </div>
-      <div class="center"><button class="tapme" id="tapme" type="button">👆 tap the candle</button></div>
+      <div class="center"><button class="tapme" id="tapme" type="button">tap the flame to blow it out ✦</button></div>
       <div class="wish" id="wish">
         <div class="card">
           <span class="tape tl"></span><span class="tape br mint"></span>
@@ -826,6 +949,14 @@ input,textarea,select{font-size:16px}
         happy birthday, saiyeda<br><span class="kao" style="font-size:1.2rem">♡ (˶ᵔ ᵕ ᵔ˶) ♡</span>
       </p>
 
+      <div class="rate" id="rate">
+        <div class="hr"><span>✦ ✦ ✦</span></div>
+        <p class="rate-q">how was your birthday surprise?</p>
+        <div class="stars" id="stars"></div>
+        <p class="rate-say" id="rateSay" aria-live="polite"></p>
+        <button class="btn" id="rateSend" type="button" hidden>send it back 💌</button>
+      </div>
+
       <div class="credit">♪ Alfaaz · Hamza Malik × Zain Zohaib</div>
 
       <button class="btn ghost" style="margin-top:18px" onclick="go('s-gifts')">↺ open the gifts again</button>
@@ -873,6 +1004,7 @@ function go(id, instant){
   const next = document.getElementById(id);
   if (!next || cur === next) return;
   busy = true;
+  if (id !== 's-cake') lightsUp();          // never carry the dark to another screen
   cur.classList.remove('in');
   cur.classList.add('out');
   setTimeout(() => {
@@ -884,6 +1016,7 @@ function go(id, instant){
     window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
     busy = false;
     if (id === 's-final'){ rainHearts(); finaleConfetti(); }
+    if (id === 's-cake') setTimeout(lightsDown, 650);
   }, instant ? 120 : 300);
 }
 
@@ -1157,8 +1290,8 @@ function flameOrigin(){
   const r = svg.getBoundingClientRect();
   if (!r.width) return { x:.5, y:.4 };
   return {
-    x: (r.left + (150 / 300) * r.width)  / window.innerWidth,
-    y: (r.top  + ( 74 / 268) * r.height) / window.innerHeight
+    x: (r.left + (150 / svg.viewBox.baseVal.width)  * r.width)  / window.innerWidth,
+    y: (r.top  + ( 74 / svg.viewBox.baseVal.height) * r.height) / window.innerHeight
   };
 }
 
@@ -1202,8 +1335,10 @@ function blowOut(){
   $('#cakeStage').classList.add('blown');
   $('#tapme').textContent = '✧ poof ✧';
   $('#tapme').classList.add('done');
-  setTimeout(wishConfetti, 140);          // just after the flame fades
-  setTimeout(() => $('#wish').classList.add('show'), 520);
+  $('#wishHint').textContent = 'shh… it’s made';
+  setTimeout(lightsUp, 950);                       // a beat of dark, then the lights
+  setTimeout(wishConfetti, 1200);
+  setTimeout(() => $('#wish').classList.add('show'), 1550);
 }
 $('#cakeStage').addEventListener('click', blowOut);
 $('#tapme').addEventListener('click', blowOut);   // the pill works as well as the cake
@@ -1567,6 +1702,178 @@ function secretConfetti(){
     particleCount:30, spread:120, startVelocity:16, origin:{x:.5, y:-.05},
     scalar:1.25, gravity:.42, drift:.2, decay:.93, ticks:340 }), 420);
 }
+/* ───────── lights down for the wish ───────── */
+function lightsDown(){
+  if (blown || !$('#s-cake').classList.contains('active')) return;
+  const o = flameOrigin();
+  document.body.style.setProperty('--lx', (o.x * 100).toFixed(1) + '%');
+  document.body.style.setProperty('--ly', (o.y * 100).toFixed(1) + '%');
+  document.body.classList.add('dim');
+}
+function lightsUp(){ document.body.classList.remove('dim'); }
+
+/* ───────── the camera ─────────
+   The pink button on the wheel is a real shutter: a click, a flash on the
+   screen, and an instant print that slides out and develops from dark to
+   full colour. Each shot loads a different film, and the prints fan out. */
+const FILMS = [
+  { film:'none',                                                  cap:'saiyeda ✿' },
+  { film:'saturate(1.15) sepia(.2) brightness(1.05)',             cap:'golden hour' },
+  { film:'grayscale(1) contrast(1.06) brightness(1.04)',          cap:'a classic' },
+  { film:'saturate(.92) brightness(1.07) hue-rotate(-10deg)',     cap:'in pink ♡' }
+];
+const FANS = [[[0, -3]], [[-38, -6], [38, 4]], [[-74, -8], [0, 2], [74, 7]]];
+let shots = 0, snapping = false;
+
+function shutterSound(){
+  if (!actx || muted || actx.state !== 'running') return;
+  const t = actx.currentTime, len = Math.floor(actx.sampleRate * .09);
+  const buf = actx.createBuffer(1, len, actx.sampleRate), d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+  [[0, 1500, .55], [.075, 2600, .35]].forEach(([off, f, v]) => {      // the two halves of a shutter
+    const src = actx.createBufferSource(); src.buffer = buf;
+    const bp = actx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = f; bp.Q.value = .8;
+    const g = actx.createGain(); g.gain.value = v;
+    src.connect(bp); bp.connect(g); g.connect(actx.destination);
+    src.start(t + off);
+  });
+}
+
+function layoutPrints(){
+  const all = [...$$('#prints .print')];
+  const fan = FANS[all.length - 1] || FANS[2];
+  all.forEach((p, i) => {
+    p.style.setProperty('--x', fan[i][0] + 'px');
+    p.style.setProperty('--r', fan[i][1] + 'deg');
+    p.style.zIndex = i + 1;
+  });
+}
+
+function snap(){
+  if (snapping) return;
+  snapping = true;
+  const btn = $('#shutter');
+  btn.classList.add('press', 'used');
+  setTimeout(() => btn.classList.remove('press'), 140);
+  shutterSound();
+
+  const fl = $('#lcdFlash');
+  fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go');
+  const rec = $('.lcd .rec');
+  rec.innerHTML = '<b></b>SAVED';
+  setTimeout(() => { rec.innerHTML = '<b></b>PLAY'; }, 1300);
+
+  const tray = $('#prints');
+  const f = FILMS[shots % FILMS.length];
+  shots++;
+  const p = document.createElement('div');
+  p.className = 'print new';
+  p.style.setProperty('--film', f.film);
+  p.innerHTML = `<div class="pic"><img src="${$('#herPhoto').getAttribute('src')}" alt=""></div><div class="pcap">${f.cap}</div>`;
+  setTimeout(() => {
+    tray.classList.add('has');
+    tray.appendChild(p);
+    const all = $$('#prints .print');
+    if (all.length > 3) all[0].remove();                 // keep the fan to three
+    layoutPrints();
+    p.addEventListener('animationend', () => p.classList.remove('new'), { once:true });
+  }, 260);
+
+  $('#snapHint').innerHTML = shots < FILMS.length
+    ? 'developing… <b>press again</b> for a different film'
+    : 'all four films ✿ keep going if you like';
+  setTimeout(() => { snapping = false; }, 1100);
+}
+$('#shutter').addEventListener('click', snap);
+
+/* tap a print to bring it to the front */
+$('#prints').addEventListener('click', e => {
+  const p = e.target.closest('.print');
+  if (!p) return;
+  $('#prints').appendChild(p);
+  layoutPrints();
+});
+
+/* ───────── rating ─────────
+   There is no server, so the score can't arrive on its own: after she
+   picks, a button opens her share sheet with the rating written out, and
+   she sends it back however she likes. Remembered on her phone too. */
+const RATE_SAYS = [
+  'hmm, it was okay (｡•́︿•̀｡)',
+  'kinda cute, i guess',
+  'pretty sweet ✿',
+  'this made me smile (˶ᵔᵕᵔ˶)',
+  'best birthday surprise ever 💗'
+];
+const STAR_D = 'M20 3.5l4.9 10.3 11.3 1.5-8.3 7.8 2.1 11.2L20 28.9 9.9 34.3 12 23.1 3.7 15.3l11.3-1.5z';
+let rating = 0;
+
+$('#stars').innerHTML = `<svg width="0" height="0" style="position:absolute"><defs>
+    <linearGradient id="starfill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFB8C8"/><stop offset="1" stop-color="#E7718E"/>
+    </linearGradient></defs></svg>`
+  + [1, 2, 3, 4, 5].map(n => `<button class="star" type="button" data-n="${n}" role="radio"
+      aria-checked="false" aria-label="${n} star${n > 1 ? 's' : ''}">
+      <svg viewBox="0 0 40 40"><path d="${STAR_D}"/></svg></button>`).join('');
+
+function paintStars(n, cls){
+  $$('#stars .star').forEach(s => s.classList.toggle(cls, +s.dataset.n <= n));
+}
+
+function setRating(n, celebrate){
+  rating = n;
+  paintStars(n, 'on');
+  $$('#stars .star').forEach(s => {
+    s.setAttribute('aria-checked', String(+s.dataset.n === n));
+    if (celebrate && +s.dataset.n <= n){
+      s.classList.remove('pop'); void s.offsetWidth;
+      setTimeout(() => s.classList.add('pop'), (+s.dataset.n - 1) * 60);
+    }
+  });
+  $('#rateSay').textContent = RATE_SAYS[n - 1];
+  const send = $('#rateSend');
+  send.hidden = false;
+  send.textContent = 'send it back 💌';
+  try{ localStorage.setItem('bday-rating', String(n)); }catch(e){}
+  if (celebrate && n === 5){
+    const gun = confettiGun();
+    if (gun){
+      const r = $('#stars').getBoundingClientRect();
+      gun({ colors:PETALS, disableForReducedMotion:true, particleCount:40, spread:70,
+            startVelocity:28, scalar:.9, ticks:200,
+            origin:{ x:(r.left + r.width / 2) / innerWidth, y:(r.top + r.height / 2) / innerHeight } });
+    }
+  }
+}
+
+$('#stars').addEventListener('click', e => {
+  const s = e.target.closest('.star');
+  if (s) setRating(+s.dataset.n, true);
+});
+$('#stars').addEventListener('mouseover', e => {
+  const s = e.target.closest('.star');
+  if (s) paintStars(+s.dataset.n, 'preview');
+});
+$('#stars').addEventListener('mouseleave', () => paintStars(0, 'preview'));
+
+$('#rateSend').addEventListener('click', async () => {
+  if (!rating) return;
+  const text = `I rated my birthday surprise ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)} (${rating}/5) — ${RATE_SAYS[rating - 1]}`;
+  const sent = () => { $('#rateSend').textContent = 'sent ✓ thank you ♡'; };
+  if (navigator.share){
+    try{ await navigator.share({ text }); sent(); return; }
+    catch(e){ if (e && e.name === 'AbortError') return; }   // she closed the sheet
+  }
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener');
+  sent();
+});
+
+(function restoreRating(){
+  let n = 0;
+  try{ n = +localStorage.getItem('bday-rating') || 0; }catch(e){}
+  if (n >= 1 && n <= 5) setRating(n, false);
+})();
+
 /* ───────── music ─────────
    The clip is ~25s, so a plain loop would click back to the start every
    time. Instead each pass is scheduled to overlap the one before it by
