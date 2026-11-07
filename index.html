@@ -152,7 +152,7 @@ h1,h2,h3{margin:0;font-weight:600}
 .key:active,.key.down{transform:translateY(4px);box-shadow:0 0 0 var(--ink)}
 .key.alt{background:var(--butter);font-size:1.1rem}
 .shake{animation:shake .45s}
-@keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-11px)}30%{transform:translateX(10px)}45%{transform:translateX(-7px)}60%{transform:translateX(6px)}80%{transform:translateX(-3px)}}
+@keyframes shake{0%,100%{transform:translateX(0) rotate(0)}16%{transform:translateX(-6px) rotate(-.7deg)}34%{transform:translateX(5px) rotate(.6deg)}52%{transform:translateX(-3.5px) rotate(-.35deg)}72%{transform:translateX(2.5px) rotate(.2deg)}88%{transform:translateX(-1px) rotate(0)}}
 
 /* ───────── GIFTS ───────── */
 .gift-row{display:flex;justify-content:center;gap:4px;margin:14px 0 6px;flex-wrap:nowrap}
@@ -291,7 +291,7 @@ h1,h2,h3{margin:0;font-weight:600}
 }
 .player{
   /* top-right, clear of the keypad — bottom-right collides with ⌫ */
-  position:fixed;right:11px;top:11px;z-index:7;width:48px;height:48px;padding:4px;
+  position:fixed;right:calc(11px + env(safe-area-inset-right));top:calc(11px + env(safe-area-inset-top));z-index:7;width:48px;height:48px;padding:4px;
   border-radius:50%;border:2.5px solid var(--ink);background:var(--paper);
   box-shadow:0 4px 0 var(--ink);cursor:pointer;display:none;
   transition:transform .14s ease,box-shadow .14s ease;
@@ -318,6 +318,80 @@ h1,h2,h3{margin:0;font-weight:600}
 /* confetti canvas — the library's default canvas is appended with
    z-index:auto, which paints behind .stage; this one sits above it */
 #confettiCanvas{position:fixed;inset:0;width:100%;height:100%;z-index:20;pointer-events:none}
+/* ───────── mobile viewport ─────────
+   100dvh (with the 100vh fallback above) already keeps Safari's collapsing
+   URL bar from cutting the UI off. These add the rest of it: content clear
+   of the notch and home indicator, no iOS text inflation on rotate, and a
+   16px floor on form controls so iOS never auto-zooms. There are no text
+   inputs in the card today — the keypad is buttons — but the floor costs
+   nothing and holds if one is ever added. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.stage{
+  padding-top:calc(26px + env(safe-area-inset-top));
+  padding-bottom:calc(46px + env(safe-area-inset-bottom));
+}
+input,textarea,select{font-size:16px}
+
+/* ───────── unlocking state ───────── */
+.keypad-wrap{position:relative}
+.unlocking{
+  /* sits on top of the keypad, not under it — the card is tall enough on a
+     phone that anything below the keypad falls outside the viewport */
+  display:none;position:absolute;inset:0;z-index:5;
+  align-content:center;justify-items:center;text-align:center;
+}
+.card.unlocking-on .unlocking{display:grid}
+.card.unlocking-on .keypad,
+.card.unlocking-on .dots,
+.card.unlocking-on #lockHint,
+.card.unlocking-on #wrongHint{
+  /* animation:none matters — the .stagger entrance animation sets opacity,
+     and an animated value beats a plain declaration */
+  animation:none;opacity:.16;pointer-events:none;transition:opacity .35s ease;
+}
+.unlocking p{
+  font-family:'Caveat',cursive;font-size:1.58rem;color:var(--rose);
+  margin:10px 0 0;animation:pulse 1.15s ease-in-out infinite;
+}
+.unlock-dots{display:flex;gap:8px;justify-content:center}
+.unlock-dots i{
+  width:10px;height:10px;border-radius:50%;background:var(--pink-deep);
+  display:block;animation:bounce 1s ease-in-out infinite;
+}
+.unlock-dots i:nth-child(2){animation-delay:.16s}
+.unlock-dots i:nth-child(3){animation-delay:.32s}
+@keyframes pulse{0%,100%{opacity:.5;transform:scale(.985)}50%{opacity:1;transform:scale(1.02)}}
+@keyframes bounce{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(-8px);opacity:1}}
+
+/* ───────── wrong-code hint ───────── */
+.wrong-hint{
+  min-height:1.3em;margin:10px 0 0;text-align:center;
+  font-family:'Caveat',cursive;font-size:1.24rem;color:var(--rose);
+  opacity:0;transform:translateY(-4px);transition:opacity .28s ease,transform .28s ease;
+}
+.wrong-hint.show{opacity:1;transform:translateY(0)}
+
+/* ───────── locked gifts ───────── */
+.gift{position:relative}
+.gift .lockbadge{
+  position:absolute;right:2px;top:-2px;width:27px;height:27px;z-index:4;
+  display:none;place-items:center;border-radius:50%;
+  background:var(--butter);border:2.2px solid var(--ink);
+  box-shadow:0 2px 0 var(--ink);
+}
+.gift .lockbadge svg{width:15px;height:15px;display:block}
+.gift.locked .lockbadge{display:grid}
+.gift.locked .float{filter:grayscale(.72) opacity(.46);transition:filter .45s ease}
+.gift.locked .label{opacity:.45}
+.gift.locked{cursor:not-allowed}
+.gift.just-unlocked .float{animation:popin .55s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popin{0%{transform:scale(.82) rotate(-6deg)}60%{transform:scale(1.07) rotate(3deg)}100%{transform:scale(1) rotate(0)}}
+.gift.denied{animation:shake .45s}
+
+/* the confetti already honours this via the library; these are the CSS ones */
+@media (prefers-reduced-motion: reduce){
+  .shake,.gift.denied,.unlocking p,.unlock-dots i,.gift.just-unlocked .float{animation:none}
+}
 </style>
 </head>
 <body>
@@ -348,20 +422,18 @@ h1,h2,h3{margin:0;font-weight:600}
       <div class="dots" id="dots">
         <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
       </div>
-      <div class="keypad" id="keypad"></div>
+      <p class="wrong-hint" id="wrongHint" aria-live="polite"></p>
+      <div class="keypad-wrap">
+        <div class="keypad" id="keypad"></div>
+        <div class="unlocking" id="unlocking" aria-live="polite">
+          <div class="unlock-dots"><i></i><i></i><i></i></div>
+          <p>Unlocking your surprise…</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- ═══════════ SCREEN 1b · WRONG ═══════════ -->
-  <section class="screen" id="s-wrong">
-    <div class="card center stagger">
-      <span class="tape tl butter"></span><span class="tape br"></span>
-      <div id="sadBear" style="max-width:142px;margin:0 auto"></div>
-      <h1 class="title" style="font-size:1.42rem;margin-top:12px">WRONG PASSCODE 😅</h1>
-      <p class="sub" style="margin:10px 0 2px">that's not it, but respect for trying<br><span class="kao">( ˃̣̣̥⌓˂̣̣̥ )</span></p>
-      <button class="btn" style="margin-top:18px" onclick="go('s-lock',true)">TRY AGAIN</button>
-    </div>
-  </section>
 
   <!-- ═══════════ SCREEN 2 · GIFTS ═══════════ -->
   <section class="screen" id="s-gifts">
@@ -466,6 +538,9 @@ h1,h2,h3{margin:0;font-weight:600}
       <h2 class="title" style="font-size:1.5rem">MAKE A WISH 🕯️</h2>
       <div class="cake-stage" id="cakeStage" role="button" tabindex="0" aria-label="Blow out the candle">
         <svg viewBox="0 0 300 268" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="kjShell"><ellipse cx="110" cy="117" rx="16" ry="22"/></clipPath>
+          </defs>
           <g stroke="#4A3A33" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round">
             <!-- glow -->
             <circle id="glow" cx="150" cy="74" r="34" fill="#FFD98A" opacity=".4" stroke="none"/>
@@ -500,19 +575,23 @@ h1,h2,h3{margin:0;font-weight:600}
                   fill="#F9C6D3"/>
             <!-- strawberries on top -->
             <g>
-              <!-- an open cream-and-cocoa egg, drawn in the site's own hand
-                   rather than copied from any packaging -->
-              <ellipse cx="104" cy="135" rx="23" ry="4.5" fill="#E7C8B4" stroke="none" opacity=".45"/>
-              <path d="M82 112 q0 24 22 24 q22 0 22 -24 z" fill="#FFFAF2"/>
-              <ellipse cx="104" cy="112" rx="22" ry="7.6" fill="#FFFDF8"/>
-              <path d="M104 104.4 A22 7.6 0 0 1 104 119.6 Z" fill="#8C5A3C" stroke="none"/>
-              <ellipse cx="104" cy="112" rx="22" ry="7.6" fill="none"/>
-              <circle cx="96" cy="106.5" r="5.6" fill="#6B4226"/>
-              <circle cx="113" cy="107.5" r="5.6" fill="#6B4226"/>
-              <circle cx="94" cy="104.5" r="1.7" fill="#C2946F" stroke="none"/>
-              <circle cx="111" cy="105.5" r="1.7" fill="#C2946F" stroke="none"/>
-              <path d="M80 105 l-9 -15"/>
-              <ellipse cx="69" cy="86" rx="5.2" ry="7.4" fill="#FFF4DE" transform="rotate(-30 69 86)"/>
+              <!-- a sealed egg lying at 70 degrees on the top tier.
+                   White shell with the brown-and-red seam band: the colour
+                   scheme only, drawn in this card's own hand. No wordmark,
+                   logo or packaging artwork is reproduced. -->
+              <ellipse cx="110" cy="134.5" rx="18" ry="3.4" fill="#E0C0AC" stroke="none" opacity=".5"/>
+              <g transform="rotate(70 110 117)">
+                <ellipse cx="110" cy="117" rx="16" ry="22" fill="#FFFFFF"/>
+                <g clip-path="url(#kjShell)" stroke="none">
+                  <rect x="92" y="122.5" width="36" height="18" fill="#F6F2EC"/>
+                  <rect x="92" y="109.4" width="36" height="2.2" fill="#E2001A"/>
+                  <rect x="92" y="111.6" width="36" height="8.4" fill="#6B3A1A"/>
+                  <rect x="92" y="120.0" width="36" height="2.2" fill="#E2001A"/>
+                  <ellipse cx="103.5" cy="106" rx="3.1" ry="5" fill="#FFFFFF" opacity=".85"
+                           transform="rotate(-22 103.5 106)"/>
+                </g>
+                <ellipse cx="110" cy="117" rx="16" ry="22" fill="none"/>
+              </g>
               <path d="M184 117 a12 11 0 0 1 24 0 q0 13 -12 20 q-12 -7 -12 -20 z" fill="#F0607A"/>
               <g stroke="none" fill="#FFECB3">
                 <ellipse cx="191" cy="120" rx="1.7" ry="2.2"/><ellipse cx="201" cy="121" rx="1.7" ry="2.2"/>
@@ -664,7 +743,7 @@ function go(id, instant){
     if (st){ st.style.animation='none'; void st.offsetWidth; st.style.animation=''; }
     window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
     busy = false;
-    if (id === 's-final') rainHearts();
+    if (id === 's-final'){ rainHearts(); finaleConfetti(); }
   }, instant ? 120 : 300);
 }
 
@@ -734,7 +813,6 @@ const ITEM_LETTER = `
 
 /* ───────── render the bears ───────── */
 $('#lockBear').innerHTML = bear({ear:'#E7C7A8', mouth:'ooh'});
-$('#sadBear').innerHTML  = bear({ear:'#F6C6CE', mouth:'sad'});
 
 const GIFTS = [
   {id:'s-cake',     label:'cake',    item:ITEM_CAKE,   ear:'#FFFCF7', mouth:'smile'},
@@ -742,18 +820,62 @@ const GIFTS = [
   {id:'s-letter',   label:'letter',  item:ITEM_LETTER, ear:'#C8A382', mouth:'smile'}
 ];
 const opened = new Set();
-$('#giftRow').innerHTML = GIFTS.map(g => `
-  <button class="gift" data-id="${g.id}" aria-label="open the ${g.label}">
+let unlockedUpTo = 0;        // the highest gift index she's allowed to open
+
+const PADLOCK = `<span class="lockbadge" aria-hidden="true"><svg viewBox="0 0 24 24">
+  <g fill="none" stroke="#5E4A41" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7.7 10.6V7.9a4.3 4.3 0 0 1 8.6 0v2.7"/>
+    <rect x="4.6" y="10.6" width="14.8" height="9.8" rx="2.6" fill="#FFF3D0"/>
+    <path d="M12 14.4v2.4"/>
+  </g></svg></span>`;
+
+$('#giftRow').innerHTML = GIFTS.map((g, i) => `
+  <button class="gift${i ? ' locked' : ''}" data-id="${g.id}" data-idx="${i}"
+          aria-label="open the ${g.label}">
+    ${PADLOCK}
     <span class="float" style="display:block">${bear({ear:g.ear, item:g.item, mouth:g.mouth})}</span>
     <span class="label">${g.label}</span>
   </button>`).join('');
 
+function refreshLocks(){
+  $$('.gift').forEach(b => {
+    const i = +b.dataset.idx;
+    const locked = i > unlockedUpTo;
+    b.classList.toggle('locked', locked);
+    b.setAttribute('aria-disabled', locked ? 'true' : 'false');
+    b.setAttribute('aria-label', locked
+      ? `${GIFTS[i].label} - locked until you open the one before it`
+      : `open the ${GIFTS[i].label}`);
+  });
+}
+
+function nudgeLocked(b){
+  b.classList.remove('denied');
+  void b.offsetWidth;
+  b.classList.add('denied');
+  const sub = $('#s-gifts .sub');
+  sub.textContent = 'one at a time ✿ open the one before it first';
+  clearTimeout(nudgeLocked.t);
+  nudgeLocked.t = setTimeout(() => {
+    sub.innerHTML = 'three little things, all for you <span class="kao">(˶ᵔᵕᵔ˶)</span>';
+  }, 2600);
+}
+
 $$('.gift').forEach(b => b.addEventListener('click', () => {
+  const i = +b.dataset.idx;
+  if (i > unlockedUpTo){ nudgeLocked(b); return; }
   b.classList.add('opened');
   opened.add(b.dataset.id);
+  if (i + 1 > unlockedUpTo){
+    unlockedUpTo = i + 1;
+    refreshLocks();
+    const nxt = $(`.gift[data-idx="${unlockedUpTo}"]`);   // pops when she comes back
+    if (nxt){ nxt.classList.remove('just-unlocked'); void nxt.offsetWidth; nxt.classList.add('just-unlocked'); }
+  }
   if (opened.size === GIFTS.length) $('#allDone').style.display = 'block';
   go(b.dataset.id);
 }));
+refreshLocks();
 
 $('#finalBears').innerHTML =
   `<div style="width:116px">${bear({ear:'#E7C7A8', mouth:'w'})}</div>` +
@@ -784,6 +906,7 @@ function paintDots(){
   $$('#dots .dot').forEach((d,i) => d.classList.toggle('on', i < entry.length));
 }
 function press(k){
+  if (unlocking) return;        // ignore taps during the unlock animation
   startMusic();                 // her first tap is the gesture audio needs
   if (k === '✿'){ entry = ''; }
   else if (k === '⌫'){ entry = entry.slice(0,-1); }
@@ -791,18 +914,57 @@ function press(k){
   paintDots();
   if (entry.length === 4) setTimeout(check, 260);
 }
+/* there are only so many ways to get your own birthday wrong — the hints
+   get progressively less subtle, then give up entirely */
+const WRONG_HINTS = [
+  "not quite ✿ it's a date you know very well",
+  "nope — day first, then the month",
+  "think: the day people spam your phone with messages",
+  "it's the 12th of something. you were there.",
+  "Saiyeda. it is your own birthday. 1 2 1 1 😭"
+];
+let wrongTries = 0, unlocking = false;
+
+function showHint(){
+  const h = $('#wrongHint');
+  h.textContent = WRONG_HINTS[Math.min(wrongTries - 1, WRONG_HINTS.length - 1)];
+  h.classList.remove('show');
+  void h.offsetWidth;                 // restart the fade
+  h.classList.add('show');
+}
+
+function unlockConfetti(){
+  const gun = confettiGun();
+  if (!gun) return;
+  gun({ colors:PETALS, disableForReducedMotion:true, particleCount:38,
+        spread:78, startVelocity:34, origin:{x:.5, y:.46},
+        scalar:.9, gravity:.8, decay:.91, ticks:220 });
+}
+
 function check(){
   if (entry === PASSCODE){
+    unlocking = true;
     entry = ''; paintDots();
-    go('s-gifts');
+    const card = $('#s-lock .card');
+    $('#wrongHint').classList.remove('show');
+    card.classList.add('unlocking-on');
+    setTimeout(() => {              // 1.5s of pulsing, then the burst
+      unlockConfetti();
+      setTimeout(() => {
+        card.classList.remove('unlocking-on');
+        unlocking = false;
+        go('s-gifts');
+      }, 420);
+    }, 1500);
   } else {
+    wrongTries++;
     const card = $('#s-lock .card');
     card.classList.add('shake');
     setTimeout(() => {
       card.classList.remove('shake');
       entry = ''; paintDots();
-      go('s-wrong');
-    }, 480);
+      showHint();
+    }, 460);
   }
 }
 $('#keypad').addEventListener('click', e => {
@@ -869,6 +1031,26 @@ function wishConfetti(){
   setTimeout(() => gun({ ...common, particleCount:24, spread:95, startVelocity:19,
         decay:.9, scalar:1.1, gravity:.52, drift:.35, ticks:280,
         ...(petalShapes ? { shapes:petalShapes } : {}) }), 230);
+}
+
+function finaleConfetti(){
+  const gun = confettiGun();
+  if (!gun) return;
+  const base   = { colors:PETALS, disableForReducedMotion:true };
+  const petals = petalShapes ? { shapes:petalShapes } : {};
+  /* two cannons from the bottom corners, arcing inward over the bears */
+  gun({ ...base, particleCount:42, angle:62,  spread:62, startVelocity:52,
+        origin:{x:0, y:.84}, scalar:.95, gravity:.85, decay:.91, ticks:300 });
+  gun({ ...base, particleCount:42, angle:118, spread:62, startVelocity:52,
+        origin:{x:1, y:.84}, scalar:.95, gravity:.85, decay:.91, ticks:300 });
+  /* then blossoms drifting down from above — slow, so they linger with
+     the rising hearts instead of racing past them */
+  setTimeout(() => gun({ ...base, ...petals, particleCount:28, spread:140,
+        startVelocity:12, origin:{x:.5, y:-.08}, scalar:1.2,
+        gravity:.4, drift:.3, decay:.93, ticks:380 }), 330);
+  setTimeout(() => gun({ ...base, ...petals, particleCount:20, spread:150,
+        startVelocity:10, origin:{x:.5, y:-.08}, scalar:1.35,
+        gravity:.34, drift:-.3, decay:.93, ticks:420 }), 780);
 }
 
 function blowOut(){
