@@ -231,7 +231,7 @@ h1,h2,h3{margin:0;font-weight:600}
 /* ───────── CAKE ───────── */
 .cake-stage{position:relative;margin:4px auto 0;max-width:320px;cursor:pointer}
 .cake-stage svg{width:100%;height:auto;display:block}
-#flame{transform-origin:150px 74px;animation:flicker 1.1s ease-in-out infinite}
+#flame{transform-origin:79px 50px;animation:flicker 1.1s ease-in-out infinite}
 @keyframes flicker{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.11,.94) rotate(3deg)}}
 .blown #flame{animation:none;opacity:0;transform:scale(.2) translateY(6px);transition:all .45s ease}
 #glow{transition:opacity .5s ease}
@@ -244,7 +244,7 @@ h1,h2,h3{margin:0;font-weight:600}
 .cake-cue{position:absolute;left:57%;top:14%;font-size:30px;pointer-events:none;
   animation:tapbob 1.25s ease-in-out infinite;filter:drop-shadow(0 2px 3px rgba(150,110,95,.45))}
 @keyframes tapbob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-11px) scale(1.1)}}
-.ring{transform-origin:150px 74px;animation:ripple 1.9s ease-out infinite}
+.ring{transform-origin:79px 50px;animation:ripple 1.9s ease-out infinite}
 .ring.r2{animation-delay:.95s}
 @keyframes ripple{0%{transform:scale(.6);opacity:.9}70%{opacity:.22}100%{transform:scale(2.2);opacity:0}}
 .blown .cake-cue,.blown #cue{display:none}
@@ -414,39 +414,19 @@ input,textarea,select{font-size:16px}
 @media (prefers-reduced-motion: reduce){
   .shake,.gift.denied,.unlocking p,.unlock-dots i,.gift.just-unlocked .float{animation:none}
 }
-/* ───────── the record, and what it hides ─────────
-   No label on it: it is meant to be found, not advertised. It bobs like
-   the other doodles, so it reads as decoration until she taps it. */
-.secret-spot{display:flex;justify-content:center;margin-top:30px}
-.vinyl{
-  background:none;border:0;padding:0;line-height:0;cursor:pointer;
-  width:58px;opacity:.88;animation:bob 4.6s ease-in-out infinite;
-  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
-}
-.vinyl svg{width:100%;height:auto;display:block}
-.vinyl.turn svg{animation:spin .55s cubic-bezier(.3,.8,.4,1)}
-/* once all three gifts are open she has earned a nudge towards it */
-.vinyl.hint{opacity:1;animation:bob 4.6s ease-in-out infinite, glowpulse 2.3s ease-in-out infinite}
-@keyframes glowpulse{
-  0%,100%{filter:drop-shadow(0 0 0 rgba(232,139,162,0))}
-  50%{filter:drop-shadow(0 0 9px rgba(232,139,162,.85))}
-}
-
 /* ───────── bouquet ─────────
    Motion in three layers, each on its own clock so it never looks looped:
    the whole bouquet sways from the hand holding it, each flower nods on
-   its stem, and baby's breath shimmers. Petals bloom in one by one when
-   the screen opens, and a few drift down and away. No filters on anything
+   its stem, and baby's breath shimmers. The whole thing grows and blooms
+   in the dark when the screen opens (see below), and a few petals drift. No filters on anything
    that moves — they force a repaint every frame on a phone. */
 .bouquet{position:relative;max-width:300px;margin:2px auto 0}
 .bouquet svg{width:100%;height:auto;display:block;overflow:visible}
 .bouquet .sway{transform-box:fill-box;transform-origin:50% 100%;animation:bqsway 6s ease-in-out infinite}
 .bouquet .nod{transform-box:fill-box;transform-origin:50% 88%;animation:bqnod 3.6s ease-in-out infinite alternate}
-.bouquet .pop{transform-box:fill-box;transform-origin:50% 60%;animation:bqpop 1s cubic-bezier(.34,1.4,.55,1) both}
 .bouquet .twinkle{animation:bqtwinkle 2.8s ease-in-out infinite}
 @keyframes bqsway{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1.4deg)}}
 @keyframes bqnod{0%{transform:rotate(-3deg)}100%{transform:rotate(3deg)}}
-@keyframes bqpop{0%{transform:scale(.1) rotate(-25deg);opacity:0}60%{opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
 @keyframes bqtwinkle{0%,100%{opacity:.55}50%{opacity:1}}
 
 .bouquet .fall{
@@ -468,7 +448,7 @@ input,textarea,select{font-size:16px}
 @keyframes flutter{0%,100%{transform:rotate(11deg)}50%{transform:rotate(13.5deg) translateY(-1px)}}
 
 @media (prefers-reduced-motion: reduce){
-  .bouquet .sway,.bouquet .nod,.bouquet .pop,.bouquet .twinkle,.pressed{animation:none}
+  .bouquet .sway,.bouquet .nod,.bouquet .twinkle,.pressed{animation:none}
   .bouquet .fall{display:none}
 }
 .secret-line{
@@ -492,9 +472,6 @@ input,textarea,select{font-size:16px}
   background:rgba(251,239,200,.9);transform:rotate(-14deg);
   border-left:1.5px dashed rgba(255,255,255,.7);
   border-right:1.5px dashed rgba(255,255,255,.7);
-}
-@media (prefers-reduced-motion: reduce){
-  .vinyl,.vinyl.hint{animation:none}
 }
 /* ───────── lights down for the wish ─────────
    The one screen that changes the room. While the candle is lit the page
@@ -608,6 +585,88 @@ body.dim .bokeh{opacity:1}
 @media (prefers-reduced-motion: reduce){
   .bokeh i,.shutter::before,.print.new,.print .pic img,.star.pop svg{animation:none}
 }
+/* ───────── the bouquet blooms in the dark ─────────
+   The effect from her favourite kind of video: the night comes down, the
+   paper rises, stems and leaves grow up out of it, every flower appears
+   as a closed bud and then opens ring by ring from its centre, a glow
+   builds as they open and gold dust drifts. The bouquet itself is the
+   same drawing; only transform and opacity animate. */
+.night{
+  position:relative;margin:12px -8px 0;border-radius:20px;overflow:hidden;
+  padding:40px 6px 8px;cursor:pointer;isolation:isolate;
+  background:radial-gradient(120% 85% at 50% 52%, #3B1D26 0%, #1C0E14 46%, #080406 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07), 0 12px 26px rgba(70,30,42,.28);
+  -webkit-tap-highlight-color:transparent;
+}
+.night-label{
+  position:absolute;left:16px;right:16px;top:12px;margin:0;text-align:left;z-index:2;
+  font-family:'Fredoka',sans-serif;font-weight:600;font-size:.64rem;letter-spacing:.16em;
+  color:rgba(255,236,240,.8);line-height:1.5;animation:bqfade 1s ease .3s both;
+}
+.night-label small{
+  display:block;font-weight:400;font-size:.58rem;letter-spacing:.08em;color:rgba(255,236,240,.5);
+  border-bottom:1px solid rgba(255,236,240,.22);padding-bottom:5px;
+}
+.night-glow{
+  position:absolute;left:-5%;top:-4%;width:110%;aspect-ratio:1;pointer-events:none;z-index:-1;
+  background:radial-gradient(circle, rgba(255,196,212,.36) 0, rgba(255,170,196,.14) 32%, rgba(255,170,196,0) 62%);
+  opacity:0;animation:bqfade 4s ease-out 3.2s forwards, nbreathe 5s ease-in-out 7.2s infinite;
+}
+@keyframes nbreathe{0%,100%{opacity:1}50%{opacity:.72}}
+.dust{position:absolute;inset:0;pointer-events:none;z-index:1}
+.dust i{
+  position:absolute;border-radius:50%;opacity:0;
+  background:radial-gradient(circle, #FFF4CC 0, rgba(255,214,140,.75) 35%, rgba(255,214,140,0) 70%);
+  animation:mote 9s linear infinite;
+}
+@keyframes mote{
+  0%{transform:translate(0,0);opacity:0}
+  15%{opacity:1}
+  50%{opacity:.35}
+  72%{opacity:.95}
+  100%{transform:translate(var(--dx,8px),-96px);opacity:0}
+}
+.night .bouquet{margin-top:0}
+.night-tap{
+  position:relative;z-index:2;margin:0 0 2px;text-align:center;
+  font-family:'Caveat',cursive;font-size:1.06rem;color:rgba(255,226,234,.62);
+  opacity:0;animation:bqfade 1s ease 7.8s forwards;
+}
+
+.bouquet .wrapin{animation:bqrise .9s cubic-bezier(.2,.8,.3,1) .2s both}
+.bouquet .sp{animation:bqsprout 1.5s cubic-bezier(.2,.75,.3,1) both;animation-delay:var(--g,0s)}
+.bouquet .hd{animation:bqbud .8s cubic-bezier(.34,1.5,.55,1) both;animation-delay:var(--h,0s)}
+.bouquet .rg{animation:bqopen 1.7s cubic-bezier(.22,.8,.3,1) both;animation-delay:calc(var(--h,0s) + var(--r,0s))}
+.bouquet .bb{animation:bqfade 1.4s ease-out both;animation-delay:var(--b,0s)}
+@keyframes bqrise{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+@keyframes bqsprout{0%{transform:scale(.3,0);opacity:0}20%{opacity:1}100%{transform:none;opacity:1}}
+@keyframes bqbud{0%{transform:scale(.15);opacity:0}100%{transform:none;opacity:1}}
+@keyframes bqopen{0%{transform:scale(.24) rotate(-28deg);opacity:0}25%{opacity:1}100%{transform:none;opacity:1}}
+@keyframes bqfade{0%{opacity:0}100%{opacity:1}}
+
+/* ───────── the fourth gift ─────────
+   Hidden until the other three are open. Then, when she comes back to the
+   gifts, a fourth bear arrives with a posy and a little shower of petals,
+   so it is a surprise but one she can't miss. */
+.gift4{display:flex;flex-direction:column;align-items:center;margin-top:10px}
+.gift4[hidden]{display:none}
+.gift4 .psst{margin:0;font-family:'Caveat',cursive;font-size:1.32rem;color:var(--rose)}
+.gift4 .gift{flex:none;width:33%;max-width:134px;isolation:isolate}
+.gift4 .gift::before{
+  content:"";position:absolute;left:-14%;top:-8%;width:128%;aspect-ratio:1;border-radius:50%;z-index:-1;
+  background:radial-gradient(circle, rgba(255,222,232,.95) 0, rgba(255,222,232,0) 64%);
+  animation:halo 2.6s ease-in-out infinite;
+}
+@keyframes halo{0%,100%{opacity:.5;transform:scale(.92)}50%{opacity:1;transform:scale(1.04)}}
+.gift4.arrive .psst{animation:rise .6s ease .3s both}
+.gift4.arrive .gift .float{animation:popin .75s cubic-bezier(.34,1.56,.64,1), floaty 4.2s ease-in-out .75s infinite}
+
+@media (prefers-reduced-motion: reduce){
+  .bouquet .wrapin,.bouquet .sp,.bouquet .hd,.bouquet .rg,.bouquet .bb,.night-label,.night-glow,.night-tap,
+  .gift4 .gift::before,.gift4.arrive .psst,.gift4.arrive .gift .float{animation:none}
+  .night-glow,.night-tap{opacity:1}
+  .dust{display:none}
+}
 </style>
 </head>
 <body>
@@ -658,24 +717,16 @@ body.dim .bokeh{opacity:1}
       <h1 class="title" style="font-size:1.62rem;margin-bottom:2px">CLICK ON GIFTS TO OPEN ✿</h1>
       <p class="sub">three little things, all for you <span class="kao">(˶ᵔᵕᵔ˶)</span></p>
       <div class="gift-row" id="giftRow"></div>
+      <div class="gift4" id="gift4" hidden>
+        <p class="psst">it was hiding till you opened the others ✿</p>
+        <button class="gift" id="gift4Btn" type="button" aria-label="open the fourth gift">
+          <span class="float" style="display:block" id="gift4Bear"></span>
+          <span class="label">secret ✿</span>
+        </button>
+      </div>
       <div id="allDone" style="display:none" class="center">
         <div class="hr"><span>✦ ✦ ✦</span></div>
         <button class="btn" onclick="go('s-final')">one last thing ✿</button>
-      </div>
-      <div class="secret-spot">
-        <button class="vinyl" id="vinyl" type="button" aria-label="a little record">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <g stroke="#4A3A33" stroke-width="4" stroke-linejoin="round">
-              <circle cx="50" cy="50" r="44" fill="#3B3340"/>
-              <circle cx="50" cy="50" r="35" fill="none" stroke="#5B5162" stroke-width="1.8"/>
-              <circle cx="50" cy="50" r="28" fill="none" stroke="#5B5162" stroke-width="1.8"/>
-              <circle cx="50" cy="50" r="21" fill="none" stroke="#5B5162" stroke-width="1.8"/>
-              <circle cx="50" cy="50" r="14" fill="#F7C9D3"/>
-              <circle cx="50" cy="50" r="3" fill="#FFFCF8"/>
-              <path d="M26 28 a34 34 0 0 1 17 -11" fill="none" stroke="#7A7080" stroke-width="3"/>
-            </g>
-          </svg>
-        </button>
       </div>
     </div>
   </section>
@@ -777,52 +828,125 @@ body.dim .bokeh{opacity:1}
       <h2 class="title" style="font-size:1.5rem">MAKE A WISH 🕯️</h2>
       <p class="wish-hint" id="wishHint">close your eyes and make a wish…</p>
       <div class="cake-stage" id="cakeStage" role="button" tabindex="0" aria-label="Blow out the candle">
-        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 300 316" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <clipPath id="kjShell"><ellipse cx="110" cy="109" rx="18" ry="25"/></clipPath>
+            <clipPath id="ksEgg"><ellipse rx="15" ry="20"/></clipPath>
+            <clipPath id="kTier"><path d="M44 200V262A106 20 0 0 0 256 262V200Z"/></clipPath>
+            <linearGradient id="kgold" x1="0" x2="1"><stop offset="0" stop-color="#D9A23A"/><stop offset=".3" stop-color="#FFE69A"/><stop offset=".55" stop-color="#E2AE45"/><stop offset=".8" stop-color="#F9DC86"/><stop offset="1" stop-color="#CF9632"/></linearGradient>
+            <linearGradient id="kfond" x1="0" x2="1"><stop offset="0" stop-color="#E8E0DA"/><stop offset=".3" stop-color="#FFFFFF"/><stop offset=".72" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E3D9D2"/></linearGradient>
+            <radialGradient id="ktop" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1EBE6"/></radialGradient>
+            <radialGradient id="kegg" cx=".36" cy=".3" r=".78"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E6DFDC"/></radialGradient>
+            <linearGradient id="korange" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFAE45"/><stop offset="1" stop-color="#EF7F0C"/></linearGradient>
+            <linearGradient id="kfoil" x1="0" x2="1"><stop offset="0" stop-color="#C3C8CE"/><stop offset=".35" stop-color="#FFFFFF"/><stop offset=".7" stop-color="#E9ECEF"/><stop offset="1" stop-color="#B6BBC2"/></linearGradient>
+            <radialGradient id="kb1" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#FF8A8A"/><stop offset="1" stop-color="#E2001A"/></radialGradient>
+            <radialGradient id="kb2" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#FFF0A0"/><stop offset="1" stop-color="#F5B800"/></radialGradient>
+            <radialGradient id="kb3" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#A8E4FF"/><stop offset="1" stop-color="#1E96D0"/></radialGradient>
+            <radialGradient id="kb4" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#D2F5A8"/><stop offset="1" stop-color="#5FAE2E"/></radialGradient>
+            <radialGradient id="kb5" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#FFC6DE"/><stop offset="1" stop-color="#E2508E"/></radialGradient>
+            <path id="kName" d="M54 248Q150 276 246 248"/>
           </defs>
           <g stroke="#4A3A33" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round">
             <!-- glow -->
-            <circle id="glow" cx="150" cy="74" r="34" fill="#FFD98A" opacity=".4" stroke="none"/>
-            <!-- "tap me" ripples around the flame -->
-            <g id="cue" fill="none" stroke="#E07D96" stroke-width="2.6">
-              <circle class="ring r1" cx="150" cy="74" r="27"/>
-              <circle class="ring r2" cx="150" cy="74" r="27"/>
+            <circle id="glow" cx="79" cy="50" r="32" fill="#FFD98A" opacity=".4" stroke="none"/>
+
+            <!-- gold scalloped cake board -->
+            <path d="M290 284Q298.2 287.2 286.9 289.4Q291.7 293.6 277.9 294.6Q279 299.5 263.3 299.3Q260.7 304.7 243.7 303.3Q237.6 309.1 220 306.5Q210.6 312.3 193.3 308.7Q181 314.3 164.6 309.9Q150 315 135.4 309.9Q119 314.3 106.7 308.7Q89.4 312.3 80 306.5Q62.4 309.1 56.3 303.3Q39.3 304.7 36.7 299.3Q21 299.5 22.1 294.6Q8.3 293.6 13.1 289.4Q1.8 287.2 10 284Q1.8 280.8 13.1 278.6Q8.3 274.4 22.1 273.4Q21 268.5 36.7 268.7Q39.3 263.3 56.3 264.7Q62.4 258.9 80 261.5Q89.4 255.7 106.7 259.3Q119 253.7 135.4 258.1Q150 253 164.6 258.1Q181 253.7 193.3 259.3Q210.6 255.7 220 261.5Q237.6 258.9 243.7 264.7Q260.7 263.3 263.3 268.7Q279 268.5 277.9 273.4Q291.7 274.4 286.9 278.6Q298.2 280.8 290 284Z" fill="url(#kgold)"/>
+            <ellipse cx="150" cy="282" rx="122" ry="19" fill="#E9B54E" stroke="none" opacity=".55"/>
+
+            <!-- the tier: white fondant, an orange splash at its foot, her name -->
+            <path d="M44 200V262A106 20 0 0 0 256 262V200Z" fill="url(#kfond)"/>
+            <g clip-path="url(#kTier)" stroke="none">
+              <path d="M44 300L44 245L46 247.7L48 248.2L50 248.4L52 248.5L54 248.7L56 249L58 249.5L60 250.1L62 250.9L64 252L66 253.2L68 254.5L70 256L72 257.5L74 259L76 260.6L78 262L80 263.3L82 264.5L84 265.5L86 266.2L88 266.7L90 266.9L92 266.9L94 266.7L96 266.2L98 265.5L100 264.7L102 263.8L104 262.8L106 261.9L108 261L110 260.1L112 259.5L114 258.9L116 258.6L118 258.6L120 258.7L122 259.1L124 259.7L126 260.6L128 261.5L130 262.6L132 263.8L134 265L136 266.2L138 267.4L140 268.4L142 269.2L144 269.9L146 270.3L148 270.5L150 270.4L152 270.1L154 269.6L156 268.8L158 267.9L160 266.8L162 265.7L164 264.5L166 263.3L168 262.1L170 261.1L172 260.2L174 259.5L176 259L178 258.8L180 258.8L182 259L184 259.4L186 260L188 260.8L190 261.7L192 262.7L194 263.6L196 264.6L198 265.5L200 266.2L202 266.8L204 267.2L206 267.3L208 267.2L210 266.9L212 266.3L214 265.4L216 264.4L218 263.1L220 261.8L222 260.3L224 258.8L226 257.3L228 255.8L230 254.5L232 253.2L234 252.2L236 251.3L238 250.6L240 250.2L242 249.9L244 249.8L246 249.8L248 249.9L250 250L252 249.9L254 249.5L256 246.8L256 300Z" fill="url(#korange)"/>
+              <g fill="#FFFFFF" opacity=".85"><circle cx="70" cy="268" r="2.4"/><circle cx="118" cy="276" r="1.8"/><circle cx="182" cy="277" r="2.2"/><circle cx="231" cy="268" r="1.8"/></g>
+              <g>
+                <ellipse cx="58" cy="226" rx="4" ry="3" fill="#2BA6DE"/><ellipse cx="80" cy="244" rx="3.4" ry="2.6" fill="#E2001A"/>
+                <ellipse cx="96" cy="222" rx="3.6" ry="2.8" fill="#7DC242"/><ellipse cx="204" cy="222" rx="3.6" ry="2.8" fill="#FFC20E"/>
+                <ellipse cx="224" cy="244" rx="3.4" ry="2.6" fill="#E85A9B"/><ellipse cx="244" cy="226" rx="4" ry="3" fill="#F7931E"/>
+                <ellipse cx="128" cy="218" rx="3" ry="2.3" fill="#E2001A"/><ellipse cx="172" cy="218" rx="3" ry="2.3" fill="#2BA6DE"/>
+              </g>
             </g>
-            <!-- smoke -->
-            <path id="smoke" d="M150 66 q-9 -12 0 -22 q9 -10 0 -21" fill="none" stroke="#C9B6AB" stroke-width="3.2"/>
-            <!-- flame -->
-            <g id="flame">
-              <path d="M150 54 q13 13 13 23 a13 13 0 0 1 -26 0 q0 -10 13 -23 z" fill="#FBB040"/>
-              <path d="M150 65 q6 7 6 12 a6 6 0 0 1 -12 0 q0 -5 6 -12 z" fill="#FFE9A3" stroke="none"/>
+            <path d="M44 200V262A106 20 0 0 0 256 262V200" fill="none"/>
+            <text font-family="Fredoka, sans-serif" font-weight="700" font-size="31" letter-spacing="1.2"
+                  stroke-width="5" paint-order="stroke" text-anchor="middle"><textPath href="#kName" startOffset="50%"><tspan fill="#E2001A">S</tspan><tspan fill="#FFC20E">A</tspan><tspan fill="#2BA6DE">I</tspan><tspan fill="#7DC242">Y</tspan><tspan fill="#F7931E">E</tspan><tspan fill="#E85A9B">D</tspan><tspan fill="#8E5CC9">A</tspan></textPath></text>
+            <ellipse cx="150" cy="200" rx="106" ry="20" fill="url(#ktop)"/>
+
+            <!-- Kinder Surprise eggs and candy on the board -->
+            <g transform="translate(30 262) rotate(-16)">
+              <g clip-path="url(#ksEgg)" stroke="none">
+                <rect x="-16" y="-21" width="32" height="42" fill="url(#kfoil)"/>
+                <path d="M-16 3 q8 -5 16 0 t16 0 v20 h-32z" fill="#E2001A"/>
+                <path d="M-16 3 q8 -5 16 0 t16 0" fill="none" stroke="#F7931E" stroke-width="2.4"/>
+                <text x="0" y="-3" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="8.4"><tspan fill="#1A1A1A">k</tspan><tspan fill="#E2001A">inder</tspan></text>
+                <text x="0" y="12" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="5" fill="#FFFFFF">SURPRISE</text>
+                <ellipse cx="-6" cy="-11" rx="3" ry="5.5" fill="#FFFFFF" opacity=".8" transform="rotate(-20 -6 -11)"/>
+              </g>
+              <ellipse rx="15" ry="20" fill="none" stroke-width="2.6"/>
             </g>
-            <!-- candle -->
-            <path d="M150 90 v-7" stroke="#4A3A33"/>
-            <rect x="141" y="90" width="18" height="44" rx="7" fill="#FFF3F5"/>
-            <path d="M141 101 l18 -8 M141 115 l18 -8 M141 129 l18 -8" stroke="#F6AFC0" stroke-width="5" stroke-linecap="round"/>
-            <rect x="141" y="90" width="18" height="44" rx="7" fill="none"/>
-            <!-- cake stand under the plate -->
-            <path d="M134 250 L124 284 h52 L166 250 Z" fill="#FBE1E7"/>
-            <ellipse cx="150" cy="287" rx="60" ry="9" fill="#F6CFD8"/>
-            <path d="M30 242 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 a7.5 7 0 0 0 15 0 L270 234 L30 234 Z" fill="#FBE6EA"/>
-            <!-- plate -->
-            <ellipse cx="150" cy="238" rx="126" ry="17" fill="#FDEFE3"/>
-            <!-- bottom tier -->
-            <path d="M58 178 h184 v44 a16 16 0 0 1 -16 16 h-152 a16 16 0 0 1 -16 -16 z" fill="#FFF4E6"/>
-            <path d="M58 196 h184" stroke="#F3D7BE" stroke-width="2.4"/>
-            <!-- cream band -->
-            <path d="M58 166 h184 v14 h-184 z" fill="#FFE5EC"/>
-            <!-- top tier -->
-            <path d="M82 134 h136 v32 h-136 z" fill="#FFF4E6"/>
-            <!-- frosting drip over top tier -->
-            <path d="M82 134 h136 v12 q-11 0 -11 11 q0 -11 -11 -11 q-11 0 -11 13 q0 -13 -11 -13 q-11 0 -11 10 q0 -10 -11 -10 q-11 0 -11 12 q0 -12 -11 -12 q-11 0 -11 11 q0 -11 -11 -11 q-11 0 -11 9 q0 -9 -11 -9 z"
-                  fill="#F9C6D3"/>
-            <!-- strawberries on top -->
+            <g transform="translate(271 260) rotate(15)">
+              <g clip-path="url(#ksEgg)" stroke="none">
+                <rect x="-16" y="-21" width="32" height="42" fill="url(#kfoil)"/>
+                <path d="M-16 3 q8 -5 16 0 t16 0 v20 h-32z" fill="#E2001A"/>
+                <path d="M-16 3 q8 -5 16 0 t16 0" fill="none" stroke="#F7931E" stroke-width="2.4"/>
+                <text x="0" y="-3" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="8.4"><tspan fill="#1A1A1A">k</tspan><tspan fill="#E2001A">inder</tspan></text>
+                <text x="0" y="12" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="5" fill="#FFFFFF">SURPRISE</text>
+                <ellipse cx="-6" cy="-11" rx="3" ry="5.5" fill="#FFFFFF" opacity=".8" transform="rotate(-20 -6 -11)"/>
+              </g>
+              <ellipse rx="15" ry="20" fill="none" stroke-width="2.6"/>
+            </g>
+            <circle cx="56" cy="296" r="6.5" fill="url(#kb3)" stroke-width="2"/><circle cx="76" cy="304" r="5" fill="url(#kb2)" stroke-width="2"/><circle cx="246" cy="300" r="6.5" fill="url(#kb1)" stroke-width="2"/><circle cx="226" cy="306" r="5" fill="url(#kb4)" stroke-width="2"/>
+            <circle cx="18" cy="286" r="5" fill="url(#kb5)" stroke-width="2"/><circle cx="284" cy="286" r="5" fill="url(#kb2)" stroke-width="2"/><circle cx="118" cy="306" r="4.4" fill="url(#kb5)" stroke-width="2"/><circle cx="186" cy="307" r="4.4" fill="url(#kb3)" stroke-width="2"/>
+
+            <!-- candy on the tier top -->
+            <circle cx="68" cy="202" r="6" fill="url(#kb1)" stroke-width="2"/><circle cx="88" cy="211" r="5" fill="url(#kb2)" stroke-width="2"/><circle cx="236" cy="203" r="6" fill="url(#kb4)" stroke-width="2"/><circle cx="216" cy="212" r="5" fill="url(#kb3)" stroke-width="2"/><circle cx="60" cy="214" r="4.4" fill="url(#kb5)" stroke-width="2"/>
+
+            <!-- the Kinder egg himself: legs over the edge, then body -->
+            <path d="M137 190Q130 210 123 224M163 190Q170 210 177 224" fill="none" stroke-width="17"/>
+            <path d="M137 190Q130 210 123 224M163 190Q170 210 177 224" fill="none" stroke="#FFFFFF" stroke-width="10.6"/>
             <g>
-              <!-- sealed Kinder Joy egg on the top tier, drawn in this card's
-                   own hand. Tilted 25 rather than 70: at 70 the label runs
-                   sideways and can't be read, which defeats the point. -->
-              <ellipse cx="110" cy="132" rx="18" ry="3.4" fill="#E0C0AC" stroke="none" opacity=".5"/>
+              <path d="M104 230q2 -12 18 -12q14 0 14 10q0 8 -16 8h-12q-4 0 -4 -6z" fill="url(#korange)"/>
+              <path d="M104 236h32" stroke-width="2.6"/>
+              <path d="M196 230q-2 -12 -18 -12q-14 0 -14 10q0 8 16 8h12q4 0 4 -6z" fill="url(#korange)"/>
+              <path d="M164 236h32" stroke-width="2.6"/>
+              <path d="M110 224q4 -2 8 0M190 224q-4 -2 -8 0" stroke="#FFFFFF" stroke-width="2"/>
+            </g>
+            <!-- arms (behind the body at the shoulder) -->
+            <path d="M110 150Q88 140 81 114" fill="none" stroke-width="17"/>
+            <path d="M110 150Q88 140 81 114" fill="none" stroke="#FFFFFF" stroke-width="10.6"/>
+            <path d="M190 152Q214 152 224 138" fill="none" stroke-width="17"/>
+            <path d="M190 152Q214 152 224 138" fill="none" stroke="#FFFFFF" stroke-width="10.6"/>
+
+            <path d="M150 74C179 74 201 112 201 148C201 183 179 205 150 205C121 205 99 183 99 148C99 112 121 74 150 74Z" fill="url(#kegg)"/>
+
+            <!-- face -->
+            <path d="M127 96q9 -6 18 0M155 96q9 -6 18 0" fill="none" stroke-width="3"/>
+            <ellipse cx="137" cy="113" rx="10" ry="13" fill="#FFFFFF"/>
+            <ellipse cx="163" cy="113" rx="10" ry="13" fill="#FFFFFF"/>
+            <g stroke="none">
+              <circle cx="140" cy="117" r="5.2" fill="#2A211E"/><circle cx="160" cy="117" r="5.2" fill="#2A211E"/>
+              <circle cx="141.6" cy="114.6" r="1.7" fill="#FFFFFF"/><circle cx="161.6" cy="114.6" r="1.7" fill="#FFFFFF"/>
+              <ellipse cx="119" cy="139" rx="7" ry="4.4" fill="#F4AFBE" opacity=".75"/>
+              <ellipse cx="181" cy="139" rx="7" ry="4.4" fill="#F4AFBE" opacity=".75"/>
+            </g>
+            <path d="M126 137Q150 146 174 137Q172 167 150 169Q128 167 126 137Z" fill="#C8102E"/>
+            <path d="M136 159Q150 150 164 159Q160 167.5 150 168Q140 167.5 136 159Z" fill="#F48FA0" stroke="none"/>
+            <path d="M131 140.5Q150 147.5 169 140.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/>
+            <path d="M126 137Q150 146 174 137Q172 167 150 169Q128 167 126 137Z" fill="none"/>
+            <circle cx="150" cy="130" r="6.4" fill="#FFFFFF"/>
+            <!-- the kinder logo on his tummy -->
+            <text x="150" y="192" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700"
+                  font-size="20" letter-spacing="-.2" stroke="none"><tspan fill="#1A1A1A">k</tspan><tspan fill="#E2001A">inder</tspan></text>
+
+            <!-- orange cap, worn a little crooked -->
+            <g transform="rotate(9 150 80)">
+              <path d="M180 89q22 -1 31 7q-12 6 -32 3z" fill="#E7770A"/>
+              <path d="M113 92Q113 61 150 59Q187 61 187 92Q150 82 113 92Z" fill="url(#korange)"/>
+              <path d="M150 61Q145 74 147 87" fill="none" stroke-width="2.2"/>
+              <circle cx="150" cy="59" r="4.6" fill="#F28A12"/>
+            </g>
+
+            <!-- his right hand: the Kinder Joy egg -->
+            <g transform="translate(130 6)">
               <g transform="rotate(25 110 109)">
                 <ellipse cx="110" cy="109" rx="18" ry="25" fill="#FFFFFF"/>
                 <g clip-path="url(#kjShell)" stroke="none">
@@ -830,31 +954,32 @@ body.dim .bokeh{opacity:1}
                   <rect x="90" y="98" width="40" height="22" fill="#FFFDF8"/>
                   <rect x="90" y="98.4" width="40" height="1.4" fill="#5C3317"/>
                   <rect x="90" y="118.2" width="40" height="1.4" fill="#5C3317"/>
-                  <text x="110" y="107.2" text-anchor="middle"
-                        font-family="Caveat, cursive" font-size="10.4" font-weight="700"
-                        fill="#5C3317">Kinder</text>
-                  <text x="110" y="115.8" text-anchor="middle"
-                        font-family="Fredoka, sans-serif" font-size="7.6" font-weight="600"
-                        letter-spacing="0.6" fill="#E2001A">JOY</text>
-                  <ellipse cx="103" cy="92" rx="3.4" ry="5.4" fill="#FFFFFF" opacity=".9"
-                           transform="rotate(-22 103 92)"/>
+                  <text x="110" y="107.2" text-anchor="middle" font-family="Caveat, cursive" font-size="10.4" font-weight="700" fill="#5C3317">Kinder</text>
+                  <text x="110" y="115.8" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="7.6" font-weight="600" letter-spacing="0.6" fill="#E2001A">JOY</text>
+                  <ellipse cx="103" cy="92" rx="3.4" ry="5.4" fill="#FFFFFF" opacity=".9" transform="rotate(-22 103 92)"/>
                 </g>
                 <ellipse cx="110" cy="109" rx="18" ry="25" fill="none"/>
               </g>
-              <path d="M184 117 a12 11 0 0 1 24 0 q0 13 -12 20 q-12 -7 -12 -20 z" fill="#F0607A"/>
-              <g stroke="none" fill="#FFECB3">
-                <ellipse cx="191" cy="120" rx="1.7" ry="2.2"/><ellipse cx="201" cy="121" rx="1.7" ry="2.2"/>
-                <ellipse cx="196" cy="128" rx="1.7" ry="2.2"/>
-              </g>
-              <path d="M186 113 q4 -8 10 -5 q6 -3 10 5 q-10 4 -20 0 z" fill="#7FB47A"/>
             </g>
-            <!-- sprinkles -->
-            <g stroke-width="4" stroke-linecap="round">
-              <path d="M78 206 l0 8" stroke="#EFA2B5"/>
-              <path d="M110 212 l6 5" stroke="#9CC6E0"/>
-              <path d="M146 204 l0 8" stroke="#F3CE74"/>
-              <path d="M182 213 l6 -5" stroke="#A9CFAE"/>
-              <path d="M214 205 l0 8" stroke="#EFA2B5"/>
+            <circle cx="226" cy="136" r="9.5" fill="#FFFFFF"/>
+
+            <!-- his left hand holds the candle up -->
+            <path d="M79 64v-6" stroke="#4A3A33"/>
+            <rect x="72" y="64" width="14" height="56" rx="6" fill="#FFF3F5"/>
+            <path d="M72 76l14 -6M72 90l14 -6M72 104l14 -6M72 118l14 -6" stroke="#F6AFC0" stroke-width="4.4"/>
+            <rect x="72" y="64" width="14" height="56" rx="6" fill="none"/>
+            <circle cx="80" cy="113" r="9.5" fill="#FFFFFF"/>
+            <path d="M73 110q7 -4 14 0" fill="none" stroke-width="2.2"/>
+
+            <!-- smoke, flame and the tap-me ripples -->
+            <path id="smoke" d="M79 42q-9 -12 0 -22q9 -10 0 -21" fill="none" stroke="#C9B6AB" stroke-width="3.2"/>
+            <g id="flame">
+              <path d="M79 31q12 12 12 21a12 12 0 0 1 -24 0q0 -9 12 -21z" fill="#FBB040"/>
+              <path d="M79 42q5.5 6.5 5.5 11a5.5 5.5 0 0 1 -11 0q0 -4.5 5.5 -11z" fill="#FFE9A3" stroke="none"/>
+            </g>
+            <g id="cue" fill="none" stroke="#E07D96" stroke-width="2.6">
+              <circle class="ring r1" cx="79" cy="50" r="25"/>
+              <circle class="ring r2" cx="79" cy="50" r="25"/>
             </g>
           </g>
         </svg>
@@ -929,7 +1054,13 @@ body.dim .bokeh{opacity:1}
       <span class="tape tl"></span><span class="tape br mint"></span>
       <h2 class="title" style="font-size:1.3rem">✿ you found it ✿</h2>
       <p class="sub" style="margin:6px 0 2px">this one wasn't in the row</p>
-      <div class="bouquet" id="bouquet"></div>
+      <div class="night" id="night" role="button" tabindex="0" aria-label="watch the bouquet bloom again">
+        <div class="night-glow" aria-hidden="true"></div>
+        <div class="dust" id="dust" aria-hidden="true"></div>
+        <p class="night-label">FOR SAIYEDA // A BOUQUET<small>grown in the dark, just for you · 12.11</small></p>
+        <div class="bouquet" id="bouquet"></div>
+        <p class="night-tap">tap to watch it bloom again ✿</p>
+      </div>
       <p class="secret-name">for Saiyeda,</p>
       <p class="secret-line">
         flowers — because you like them,<br>
@@ -1019,6 +1150,7 @@ function go(id, instant){
     window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
     busy = false;
     if (id === 's-final'){ rainHearts(); finaleConfetti(); }
+    if (id === 's-gifts') giftsShown();
     if (id === 's-cake') dimTimer = setTimeout(lightsDown, 650);
   }, instant ? 120 : 300);
 }
@@ -1087,6 +1219,18 @@ const ITEM_LETTER = `
     <path d="M100 206 q-14 -10 -14 -19 a8 8 0 0 1 14 -5 a8 8 0 0 1 14 5 q0 9 -14 19 z" fill="#F0607A"/>
   </g>`;
 
+const ITEM_POSY = `
+  <g stroke="#4A3A33" stroke-width="3.4">
+    <path d="M72 160q-20 -6 -17 -27q15 1 20 16M128 160q20 -6 17 -27q-15 1 -20 16" fill="#A8CDA6"/>
+    <circle cx="80" cy="147" r="14.5" fill="#F6B09C"/>
+    <circle cx="120" cy="147" r="14.5" fill="#F7D27C"/>
+    <circle cx="100" cy="134" r="16.5" fill="#EC8AA4"/>
+    <path d="M94 134a6 6 0 1 1 7 5M75 146a4.4 4.4 0 1 1 5 4M115 146a4.4 4.4 0 1 1 5 4" fill="none" stroke-width="2.4"/>
+    <path d="M64 156Q100 170 136 156L100 222Z" fill="#FFF4E6"/>
+    <path d="M100 222L82 162" fill="none" stroke="#E8D6C4" stroke-width="2"/>
+    <path d="M83 190q17 7 34 0" fill="none" stroke="#E07D96" stroke-width="5.4"/>
+  </g>`;
+
 /* ───────── render the bears ───────── */
 $('#lockBear').innerHTML = bear({ear:'#E7C7A8', mouth:'ooh'});
 
@@ -1114,7 +1258,7 @@ $('#giftRow').innerHTML = GIFTS.map((g, i) => `
   </button>`).join('');
 
 function refreshLocks(){
-  $$('.gift').forEach(b => {
+  $$('#giftRow .gift').forEach(b => {
     const i = +b.dataset.idx;
     const locked = i > unlockedUpTo;
     b.classList.toggle('locked', locked);
@@ -1137,7 +1281,7 @@ function nudgeLocked(b){
   }, 2600);
 }
 
-$$('.gift').forEach(b => b.addEventListener('click', () => {
+$$('#giftRow .gift').forEach(b => b.addEventListener('click', () => {
   const i = +b.dataset.idx;
   if (i > unlockedUpTo){ nudgeLocked(b); return; }
   b.classList.add('opened');
@@ -1150,7 +1294,7 @@ $$('.gift').forEach(b => b.addEventListener('click', () => {
   }
   if (opened.size === GIFTS.length){
     $('#allDone').style.display = 'block';
-    $('#vinyl').classList.add('hint');      // she has earned the nudge
+    revealGift4();                          // a fourth bear turns up when she's back
   }
   go(b.dataset.id);
 }));
@@ -1262,25 +1406,137 @@ $('#lockHint').innerHTML = PASSCODE_HINT + ' <span class="kao">(◕‿◕)</span
 
 /* ───────── cake ───────── */
 let blown = false;
+/* ───────── sakura art ─────────
+   Petals and blossoms are painted once into small offscreen canvases —
+   veins, a blush at the base, light through the thin tip, stamens — and
+   only stamped with drawImage while animating. That keeps
+   the detail of a real Somei-Yoshino petal at almost no cost per frame. */
+const SakuraArt = (() => {
+  const cache = {};
+  const mk = (w, h) => { const c = document.createElement('canvas'); c.width = Math.ceil(w); c.height = Math.ceil(h); return c; };
+
+  /* one petal: base at 0,0, notched tip at 0,-1, about .8 wide.
+     `sk` leans it a little so no two look stamped from one cutter. */
+  function petalPath(sk, notch){
+    const p = new Path2D(), L = -.41 + sk * .07, R = .41 + sk * .07;
+    p.moveTo(0, 0);
+    p.bezierCurveTo(-.09, -.09, L - .03, -.38, L, -.68);
+    p.bezierCurveTo(L + .02, -.9, -.24, -1.02, -.1, -1);
+    p.quadraticCurveTo(-.035, -.985, sk * .02, -1 + notch);
+    p.quadraticCurveTo(.035, -.985, .1, -1);
+    p.bezierCurveTo(.24, -1.02, R - .02, -.9, R, -.68);
+    p.bezierCurveTo(R + .03, -.38, .09, -.09, 0, 0);
+    p.closePath();
+    return p;
+  }
+
+  const LOOKS = {
+    /* falling over the pink gingham: a soft shadow so a pale petal still reads */
+    day:   { stops:[[0,'#E7809C'],[.26,'#F4B3C4'],[.6,'#FBDCE4'],[1,'#FFF3F6']],
+             vein:'rgba(214,104,140,.28)', rim:'rgba(205,110,140,.5)', glow:.4,
+             shadow:'rgba(140,60,90,.32)' },
+    blush: { stops:[[0,'#DC6A8C'],[.3,'#F0A2B8'],[.66,'#F8CBD7'],[1,'#FDE6EC']],
+             vein:'rgba(196,84,122,.3)', rim:'rgba(190,92,126,.5)', glow:.3,
+             shadow:'rgba(140,60,90,.32)' }
+  };
+
+  function paintPetal(g, px, look, sk, notch){
+    const p = petalPath(sk, notch);
+    g.save();
+    g.scale(px, px);
+    if (look.shadow){
+      g.save();
+      g.shadowColor = look.shadow; g.shadowBlur = px * .1; g.shadowOffsetY = px * .045;
+      g.fillStyle = look.stops[1][1]; g.fill(p);
+      g.restore();
+    }
+    const rg = g.createRadialGradient(0, 0, 0, 0, -.12, 1.04);
+    look.stops.forEach(([s, c]) => rg.addColorStop(s, c));
+    g.fillStyle = rg; g.fill(p);
+    g.save(); g.clip(p);
+    g.strokeStyle = look.vein; g.lineWidth = 1.05 / px;
+    for (let i = -5; i <= 5; i++){
+      const a = i * .085;
+      g.beginPath(); g.moveTo(0, -.02);
+      g.quadraticCurveTo(Math.sin(a) * .62, -.52, Math.sin(a) * 1.1, -Math.cos(a) * 1.04);
+      g.stroke();
+    }
+    const tg = g.createLinearGradient(0, -1, 0, -.3);          // light through the thin tip
+    tg.addColorStop(0, `rgba(255,255,255,${look.glow})`); tg.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = tg; g.fill(p);
+    const sg = g.createLinearGradient(-.45, 0, .45, 0);         // one edge curls toward the light
+    sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(.3, 'rgba(255,255,255,.22)');
+    sg.addColorStop(.55, 'rgba(255,255,255,0)'); sg.addColorStop(1, 'rgba(120,40,70,.08)');
+    g.fillStyle = sg; g.fill(p);
+    g.restore();
+    g.strokeStyle = look.rim; g.lineWidth = 1.1 / px; g.stroke(p);
+    g.restore();
+  }
+
+  /* a lone petal sprite; ox,oy is its middle so it spins about its centre */
+  function petal(look, variant){
+    const key = 'p' + look + variant;
+    if (cache[key]) return cache[key];
+    const px = 64, pad = 12;
+    const c = mk(px * .95 + pad * 2, px + pad * 2), g = c.getContext('2d');
+    g.translate(c.width / 2, px + pad);
+    const sk = [0, -.6, .6, -.3, .35, .9][variant % 6];
+    paintPetal(g, px, LOOKS[look], sk, [.1, .13, .08, .11, .12, .09][variant % 6]);
+    return cache[key] = { img:c, ox:c.width / 2, oy:pad + px * .5, s:px };
+  }
+
+  /* stamens, a magenta blush and a green pistil at the heart of a flower */
+  function paintCentre(g, R, seed){
+    let r = seed || 7;
+    const rnd = () => (r = (r * 16807) % 2147483647) / 2147483647;
+    const blush = g.createRadialGradient(0, 0, 0, 0, 0, R * .5);
+    blush.addColorStop(0, 'rgba(206,58,108,.9)'); blush.addColorStop(.45, 'rgba(236,120,160,.45)');
+    blush.addColorStop(1, 'rgba(240,150,180,0)');
+    g.fillStyle = blush; g.beginPath(); g.arc(0, 0, R * .5, 0, 6.283); g.fill();
+    g.lineCap = 'round';
+    for (let i = 0; i < 26; i++){
+      const a = rnd() * 6.283, l = R * (.22 + rnd() * .2);
+      const x = Math.cos(a) * l, y = Math.sin(a) * l;
+      g.strokeStyle = 'rgba(255,232,238,.92)'; g.lineWidth = Math.max(.8, R * .018);
+      g.beginPath(); g.moveTo(0, 0); g.quadraticCurveTo(x * .5 + y * .08, y * .5 - x * .08, x, y); g.stroke();
+      g.fillStyle = '#F4C451'; g.beginPath(); g.arc(x, y, Math.max(1, R * .036), 0, 6.283); g.fill();
+      g.strokeStyle = 'rgba(176,122,30,.8)'; g.lineWidth = Math.max(.5, R * .01); g.stroke();
+    }
+    g.fillStyle = '#CFD76E'; g.beginPath(); g.arc(0, 0, R * .045, 0, 6.283); g.fill();
+  }
+
+  /* a whole open blossom — for the ones that fall */
+  function blossom(look, variant){
+    const key = 'b' + look + variant;
+    if (cache[key]) return cache[key];
+    const R = 34, pad = 14, c = mk(R * 2.2 + pad * 2, R * 2.2 + pad * 2), g = c.getContext('2d');
+    g.translate(c.width / 2, c.height / 2);
+    const turn = variant * .4;
+    for (let k = 0; k < 5; k++){
+      g.save(); g.rotate(turn + k * 1.2566 + (k % 2 ? .06 : -.05));
+      g.translate(0, -R * .08);
+      paintPetal(g, R, LOOKS[look], ((k * 37 + variant * 11) % 9 - 4) / 6, .1);
+      g.restore();
+    }
+    paintCentre(g, R, 5 + variant);
+    return cache[key] = { img:c, ox:c.width / 2, oy:c.height / 2, s:R * 2 };
+  }
+
+  return { petal, blossom };
+})();
+
 /* ───────── sakura ─────────
-   Cherry-blossom petals in place of confetti. Every petal is drawn
-   straight onto one canvas as a vector path: no bitmaps and no fill
+   Cherry-blossom petals in place of confetti, on one canvas. Each petal
+   is stamped from the painted sprites above with drawImage — no fill
    patterns, which is what turned the old library's ✿ and ♡ shapes into
    blank white boxes on iPhone. Petals launch, lose speed to the air,
-   then drift down turning over. About one in seven is a whole blossom. */
+   then drift down turning over in two directions, so you see their face,
+   their edge and their back. About one in seven is a whole blossom. */
 const Sakura = (() => {
-  /* [deep pink at the base, pale at the notched tip] */
-  const TINTS = [
-    ['#EC6C90', '#FFD3DE'],
-    ['#F283A2', '#FFDDE6'],
-    ['#E25D84', '#FDC4D3'],
-    ['#F496B0', '#FFE3EA'],
-    ['#E8799A', '#FBCAD7']
-  ];
   const reduce = window.matchMedia ? matchMedia('(prefers-reduced-motion: reduce)') : { matches:false };
   const MAX = 240;
-  let cv = null, ctx = null, W = 0, H = 0, dpr = 1, raf = 0, last = 0, PETAL = null, VEIN = null;
-  const live = [], grads = [];
+  let cv = null, ctx = null, W = 0, H = 0, dpr = 1, raf = 0, last = 0;
+  const live = [], petals = [], blooms = [];
 
   function size(){
     W = window.innerWidth; H = window.innerHeight;
@@ -1290,7 +1546,6 @@ const Sakura = (() => {
 
   function setup(){
     if (ctx) return true;
-    if (!window.Path2D) return false;
     cv = document.createElement('canvas');
     cv.id = 'sakuraCanvas';
     cv.setAttribute('aria-hidden', 'true');
@@ -1299,16 +1554,10 @@ const Sakura = (() => {
     document.body.appendChild(cv);
     size();
     window.addEventListener('resize', size);
-    /* one petal, 1 unit long, base at +.5 and notch at -.5 */
-    PETAL = new Path2D('M0 .5C-.44 .32-.47-.26-.17-.5L0-.37L.17-.5C.47-.26 .44 .32 0 .5Z');
-    VEIN  = new Path2D('M0 .42Q.035 .02 0-.3');
-    /* gradients live in that unit space, so each petal's transform
-       stretches them with it — five objects, reused every frame */
-    TINTS.forEach(([base, tip]) => {
-      const g = ctx.createLinearGradient(0, .5, 0, -.5);
-      g.addColorStop(0, base); g.addColorStop(.6, tip); g.addColorStop(1, tip);
-      grads.push(g);
-    });
+    for (let v = 0; v < 6; v++){
+      petals.push(SakuraArt.petal(v % 3 === 2 ? 'blush' : 'day', v));
+      if (v < 3) blooms.push(SakuraArt.blossom(v === 1 ? 'blush' : 'day', v));
+    }
     return true;
   }
 
@@ -1318,10 +1567,11 @@ const Sakura = (() => {
     const bloom = Math.random() < (o.blossoms == null ? .14 : o.blossoms);
     return {
       x, y, vx, vy, bloom,
-      s: (o.size || 1) * rnd(12, 19) * (bloom ? 1.45 : 1),     // length in px
-      g: grads[Math.random() * grads.length | 0],
+      s: (o.size || 1) * (bloom ? rnd(24, 32) : rnd(14, 21)),  // petal length / blossom width, px
+      sp: bloom ? blooms[Math.random() * blooms.length | 0] : petals[Math.random() * petals.length | 0],
       rot: rnd(0, 6.283), vr: rnd(-2.2, 2.2),                  // spin, rad/s
       flip: rnd(0, 6.283), vf: rnd(2.2, 5.2),                  // turning over
+      tilt: rnd(0, 6.283), vt: rnd(1.2, 2.6),                  // and end over end
       sway: rnd(0, 6.283), vs: rnd(1, 2.1), amp: rnd(16, 42),  // side to side
       fall: (o.fall || 1) * rnd(62, 118),                      // settled fall, px/s
       age: -(o.delay || 0), life: (o.life || 7) * rnd(.8, 1.25)
@@ -1330,32 +1580,14 @@ const Sakura = (() => {
 
   function draw(p, alpha){
     let fx = Math.cos(p.flip);                                 // edge-on at 0
-    if (Math.abs(fx) < .14) fx = fx < 0 ? -.14 : .14;
-    const c = Math.cos(p.rot) * p.s * dpr, s = Math.sin(p.rot) * p.s * dpr;
-    const X = p.x * dpr, Y = p.y * dpr;
-    ctx.globalAlpha = alpha * (.78 + .22 * Math.abs(fx));      // the far side reads a touch darker
-    ctx.fillStyle = p.g;
-    if (!p.bloom){
-      ctx.setTransform(c * fx, s * fx, -s, c, X, Y);
-      ctx.fill(PETAL);
-      ctx.stroke(VEIN);
-      return;
-    }
-    /* a whole blossom: five petals round a pale centre */
-    ctx.setTransform(c * fx, s * fx, -s, c, X, Y);
-    for (let k = 0; k < 5; k++){
-      ctx.rotate(1.2566);
-      ctx.translate(0, -.27); ctx.scale(.5, .56);
-      ctx.fill(PETAL);
-      ctx.scale(2, 1 / .56); ctx.translate(0, .27);
-    }
-    ctx.fillStyle = '#FFE9A8';
-    ctx.beginPath(); ctx.arc(0, 0, .085, 0, 6.283); ctx.fill();
-    ctx.fillStyle = '#D9507A';
-    for (let k = 0; k < 5; k++){
-      const a = k * 1.2566 + .6;
-      ctx.beginPath(); ctx.arc(Math.cos(a) * .13, Math.sin(a) * .13, .024, 0, 6.283); ctx.fill();
-    }
+    if (Math.abs(fx) < .12) fx = fx < 0 ? -.12 : .12;
+    if (p.bloom) fx = .55 + .45 * Math.abs(fx);                // a blossom never goes fully edge-on
+    const fy = .78 + .22 * Math.cos(p.tilt);
+    const k = p.s * dpr / p.sp.s;
+    const c = Math.cos(p.rot) * k, s = Math.sin(p.rot) * k;
+    ctx.globalAlpha = alpha * (.8 + .2 * Math.abs(fx));        // the far side reads a touch darker
+    ctx.setTransform(c * fx, s * fx, -s * fy, c * fy, p.x * dpr, p.y * dpr);
+    ctx.drawImage(p.sp.img, -p.sp.ox, -p.sp.oy);
   }
 
   function tick(now){
@@ -1363,8 +1595,6 @@ const Sakura = (() => {
     last = now;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, cv.width, cv.height);
-    ctx.strokeStyle = 'rgba(255,255,255,.5)';
-    ctx.lineWidth = .035;
     const drag = Math.exp(-2.3 * dt);
     for (let i = live.length - 1; i >= 0; i--){
       const p = live[i];
@@ -1376,6 +1606,7 @@ const Sakura = (() => {
       p.y += p.vy * dt;
       p.rot += p.vr * dt;
       p.flip += p.vf * dt;
+      p.tilt += p.vt * dt;
       const left = p.life - p.age;
       if (left <= 0 || p.y > H + 40 || p.x < -80 || p.x > W + 80){ live.splice(i, 1); continue; }
       draw(p, Math.min(1, left / 1.1, p.age / .12));
@@ -1420,15 +1651,15 @@ const Sakura = (() => {
   };
 })();
 
-/* the flame lives at 150,74 inside a 300×268 viewBox — measure it so the
-   burst starts at the wick on any screen size */
+/* the flame sits at 79,50 in the cake's viewBox, held up in the Kinder
+   egg's hand — measure it so the dimming and the puff start at the wick */
 function flameOrigin(){
   const svg = $('#cakeStage').querySelector('svg');
   const r = svg.getBoundingClientRect();
   if (!r.width) return { x:.5, y:.4 };
   return {
-    x: (r.left + (150 / svg.viewBox.baseVal.width)  * r.width)  / window.innerWidth,
-    y: (r.top  + ( 74 / svg.viewBox.baseVal.height) * r.height) / window.innerHeight
+    x: (r.left + ( 79 / svg.viewBox.baseVal.width)  * r.width)  / window.innerWidth,
+    y: (r.top  + ( 50 / svg.viewBox.baseVal.height) * r.height) / window.innerHeight
   };
 }
 
@@ -1572,12 +1803,16 @@ function rosette(P, pal, R, rand, rings, shape, spiral){
   let s = '';
   rings.forEach((ring, k) => {
     const tone = k === 0 ? 'o' : (k === rings.length - 1 ? 'i' : 'm');
+    /* the inner rings are the bud; the outer ones unfurl after it */
+    const n = rings.length, at = k >= n - 2 ? (n - 1 - k) * .14 : .55 + (n - 3 - k) * .22;
+    s += `<g class="rg" style="--r:${at.toFixed(2)}s">`;
     for (let i = 0; i < ring.n; i++){
       const a = ring.off + i * 360 / ring.n + (rand() - .5) * 16;
       const h = R * ring.h * (.9 + rand() * .16);
       const w = R * ring.w * (.92 + rand() * .14);
       s += `<path d="${shape(h, w)}" transform="rotate(${f1(a)})" fill="url(#${P}${pal}${tone})" stroke="${p.edge}" stroke-width=".6"/>`;
     }
+    s += '</g>';
   });
   s += `<circle r="${f1(R * .5)}" fill="url(#${P}${pal}c)"/>`;
   if (spiral){
@@ -1599,6 +1834,7 @@ const ranuncul = (P, pal, R, r) => rosette(P, pal, R, r, RANUN_RINGS, petalD,  t
 function cosmos(P, R, rand){
   let s = '';
   const n = 8;
+  s += '<g class="rg" style="--r:.35s">';
   for (let i = 0; i < n; i++){
     const a = i * 360 / n + (rand() - .5) * 12;
     const h = R * (.9 + rand() * .14), w = R * .3;
@@ -1606,6 +1842,7 @@ function cosmos(P, R, rand){
        + `<path d="M0 ${f1(-R*.3)}L0 ${f1(-h*.84)}M${f1(-w*.35)} ${f1(-R*.36)}L${f1(-w*.42)} ${f1(-h*.8)}M${f1(w*.35)} ${f1(-R*.36)}L${f1(w*.42)} ${f1(-h*.8)}"`
        + ` stroke="#E6DBD1" stroke-width=".5" fill="none"/></g>`;
   }
+  s += '</g>';
   s += `<circle r="${f1(R*.3)}" fill="url(#${P}dsyc)" stroke="#C98A2D" stroke-width=".6"/>`;
   for (let i = 0; i < 14; i++){
     const a = rand() * Math.PI * 2, d = rand() * R * .22;
@@ -1625,14 +1862,18 @@ function tulip(P, H){
     + `<path d="M${f1(-w*.1)} ${f1(-H*.2)}Q${f1(-w*.02)} ${f1(-H*.55)} ${f1(-w*.06)} ${f1(-H*.82)}" fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity=".35" stroke-linecap="round"/>`;
 }
 
+/* greens grow up out of the paper one after another */
+let floraG = 0, floraB = 0;
+const sproutAt = () => (.5 + (floraG++) * .11).toFixed(2);
+
 function leaf(P, x, y, rot, L, W, fill = 'lf'){
-  return `<g transform="translate(${x} ${y}) rotate(${rot})">`
+  return `<g transform="translate(${x} ${y}) rotate(${rot})"><g class="sp" style="--g:${sproutAt()}s">`
        + `<path d="${leafD(L, W)}" fill="url(#${P}${fill})" stroke="#5A8760" stroke-width=".6"/>`
-       + `<path d="M0 0Q${f1(W*.14)} ${f1(-L*.5)} 0 ${f1(-L*.92)}" fill="none" stroke="#4E7A55" stroke-width=".7" opacity=".5"/></g>`;
+       + `<path d="M0 0Q${f1(W*.14)} ${f1(-L*.5)} 0 ${f1(-L*.92)}" fill="none" stroke="#4E7A55" stroke-width=".7" opacity=".5"/></g></g>`;
 }
 
 function eucalyptus(P, x, y, rot, len){
-  let s = `<g transform="translate(${x} ${y}) rotate(${rot})">`
+  let s = `<g transform="translate(${x} ${y}) rotate(${rot})"><g class="sp" style="--g:${sproutAt()}s">`
         + `<path d="M0 0Q${f1(len*.07)} ${f1(-len*.5)} 0 ${f1(-len)}" fill="none" stroke="#7B978C" stroke-width="1.3"/>`;
   for (let i = 1; i <= 6; i++){
     const yy = -len * i / 6.4, r = 6.4 - i * .55;
@@ -1640,12 +1881,12 @@ function eucalyptus(P, x, y, rot, len){
       s += `<ellipse cx="${f1(side * r * .95)}" cy="${f1(yy + side * 1.2)}" rx="${f1(r)}" ry="${f1(r * .86)}" fill="url(#${P}euc)" stroke="#7B978C" stroke-width=".5"/>`;
     }
   }
-  return s + '</g>';
+  return s + '</g></g>';
 }
 
 function babysBreath(x, y, rand){
   /* the shimmer runs on the cluster, not each dot: ~10 animations, not ~110 */
-  let s = `<g transform="translate(${x} ${y})"><g class="twinkle" style="animation-delay:${f1(rand() * 3)}s">`;
+  let s = `<g transform="translate(${x} ${y})"><g class="bb" style="--b:${(5.2 + (floraB++ % 11) * .13).toFixed(2)}s"><g class="twinkle" style="animation-delay:${f1(rand() * 3)}s">`;
   const n = 8 + Math.floor(rand() * 5);
   for (let i = 0; i < n; i++){
     const a = rand() * Math.PI * 2, d = 4 + rand() * 11;
@@ -1653,22 +1894,23 @@ function babysBreath(x, y, rand){
     s += `<path d="M0 7L${f1(cx)} ${f1(cy)}" stroke="#A3BBA0" stroke-width=".5"/>`
        + `<circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(1.5 + rand() * 1.4)}" fill="#FFFFFF" stroke="#E4DAD2" stroke-width=".5"/>`;
   }
-  return s + '</g></g>';
+  return s + '</g></g></g>';
 }
 
 /* every head sways on its own clock and blooms in on its own beat */
 function head(x, y, rot, inner, k){
   const nodDelay = (-k * .63).toFixed(2), nodDur = (3.2 + (k % 4) * .45).toFixed(2);
-  const popDelay = (.12 + k * .09).toFixed(2);
+  const budAt = (1.6 + k * .28).toFixed(2);           // when its bud appears
   return `<g transform="translate(${x} ${y}) rotate(${rot})">`
        + `<g class="nod" style="animation-delay:${nodDelay}s;animation-duration:${nodDur}s">`
-       + `<g class="pop" style="animation-delay:${popDelay}s">${inner}</g></g></g>`;
+       + `<g class="hd" style="--h:${budAt}s">${inner}</g></g></g>`;
 }
 
 function buildBouquet(host){
   if (!host) return;
   const P = 'bq', r = floraRand(1211);
   let k = 0;
+  floraG = 0; floraB = 0;
 
   const greens =
       eucalyptus(P, 74, 196, -34, 96) + eucalyptus(P, 248, 190, 34, 92)
@@ -1712,17 +1954,20 @@ function buildBouquet(host){
 
     <g class="sway">
       <!-- paper behind the flowers -->
+      <g class="wrapin">
       <path d="M160 270L58 74Q160 26 262 74Z" fill="url(#bqtissue)" stroke="#EADFD6" stroke-width=".8"/>
       <path d="M156 270L14 124Q34 70 96 54Z" fill="url(#bqpink)"  stroke="#D6909F" stroke-width=".8"/>
       <path d="M164 270L306 122Q286 68 224 52Z" fill="url(#bqpink)" stroke="#D6909F" stroke-width=".8"/>
       <path d="M156 270L96 54L110 60Z" fill="#C97E90" opacity=".25"/>
       <path d="M164 270L224 52L210 58Z" fill="#C97E90" opacity=".25"/>
+      </g>
 
       ${greens}
       ${heads}
       ${gyp}
 
       <!-- paper in front, folded across the stems -->
+      <g class="wrapin">
       <path d="M60 198Q118 216 178 208L158 336Z" fill="url(#bqpink2)" stroke="#D6909F" stroke-width=".8"/>
       <path d="M178 208L158 336L166 216Z" fill="#B86A80" opacity=".2"/>
       <path d="M260 192Q204 216 144 212L162 336Z" fill="url(#bqcream)" stroke="#DCC6AF" stroke-width=".8"/>
@@ -1739,13 +1984,14 @@ function buildBouquet(host){
       <path d="M124 274Q136 270 148 280" fill="none" stroke="#FFFFFF" stroke-width="1.2" opacity=".45" stroke-linecap="round"/>
       <path d="M196 274Q184 270 172 280" fill="none" stroke="#FFFFFF" stroke-width="1.2" opacity=".35" stroke-linecap="round"/>
       <ellipse cx="160" cy="285" rx="7.5" ry="6.5" fill="#C85A77" stroke="#9E3956" stroke-width=".7"/>
+      </g>
     </g>
   </svg>
-  <span class="fall" style="left:30%;animation-delay:.6s"></span>
-  <span class="fall" style="left:58%;animation-delay:2.9s;animation-duration:8.2s"></span>
-  <span class="fall" style="left:44%;animation-delay:5.1s;animation-duration:7.4s"></span>
-  <span class="fall" style="left:70%;animation-delay:7.3s"></span>
-  <span class="fall" style="left:22%;animation-delay:9.4s;animation-duration:8.6s"></span>`;
+  <span class="fall" style="left:30%;animation-delay:7.2s"></span>
+  <span class="fall" style="left:58%;animation-delay:9.5s;animation-duration:8.2s"></span>
+  <span class="fall" style="left:44%;animation-delay:11.7s;animation-duration:7.4s"></span>
+  <span class="fall" style="left:70%;animation-delay:13.9s"></span>
+  <span class="fall" style="left:22%;animation-delay:16s;animation-duration:8.6s"></span>`;
 
   host.querySelectorAll('.fall').forEach((el, i) => {
     const c = ['#F6B9C7', '#F9D0D9', '#E995A9', '#FBE3E8', '#F3A9BA'][i];
@@ -1788,27 +2034,41 @@ function buildPressed(host){
 buildBouquet($('#bouquet'));
 buildPressed($('#pressedSprig'));
 
-/* ───────── the record: three taps ─────────
-   Deliberately unlabelled. Each tap spins it a little so she knows it is
-   doing something, and the third opens the bouquet. */
-let vinylTaps = 0, vinylTimer = null;
+/* ───────── the fourth gift ─────────
+   Once the other three are open a fourth bear turns up holding a posy.
+   It waits to arrive until she is back on the gifts, so she sees it. */
+let gift4State = 0;            // 0 hidden · 1 waiting for her to come back · 2 here
+function revealGift4(){ if (!gift4State) gift4State = 1; }
+function giftsShown(){
+  if (gift4State !== 1) return;
+  gift4State = 2;
+  const g = $('#gift4');
+  g.hidden = false;
+  g.classList.add('arrive');
+  $('#s-gifts .sub').innerHTML = 'wait… a fourth one just appeared <span class="kao">(⊙_⊙)</span>';
+  Sakura.shower({ count:22, over:1.6, delay:.25, blossoms:.25 });
+}
+$('#gift4Bear').innerHTML = bear({ ear:'#F4B6C6', item:ITEM_POSY, mouth:'w' });
+$('#gift4Btn').addEventListener('click', () => {
+  $('#gift4Btn').classList.add('opened');
+  go('s-secret');
+  secretConfetti();
+});
 
-$('#vinyl').addEventListener('click', () => {
-  const v = $('#vinyl');
-  v.classList.remove('turn');
-  void v.offsetWidth;
-  v.classList.add('turn');
-
-  vinylTaps++;
-  clearTimeout(vinylTimer);
-  vinylTimer = setTimeout(() => { vinylTaps = 0; }, 1600);   // taps must be in a row
-
-  if (vinylTaps >= 3){
-    vinylTaps = 0;
-    clearTimeout(vinylTimer);
-    v.classList.remove('hint');
-    setTimeout(() => { go('s-secret'); secretConfetti(); }, 240);
-  }
+/* the bouquet's night: gold dust, and a tap grows it all over again */
+$('#dust').innerHTML = Array.from({ length:22 }, () => {
+  const s = (2 + Math.random() * 3.2).toFixed(1);
+  return `<i style="left:${(4 + Math.random() * 92).toFixed(1)}%;top:${(18 + Math.random() * 80).toFixed(1)}%;`
+       + `width:${s}px;height:${s}px;--dx:${(Math.random() * 30 - 15).toFixed(0)}px;`
+       + `animation-duration:${(7 + Math.random() * 6).toFixed(1)}s;animation-delay:${(-Math.random() * 10).toFixed(1)}s"></i>`;
+}).join('');
+function regrow(){
+  const n = $('#night');
+  n.replaceWith(n.cloneNode(true));    // fresh nodes restart every animation from the dark
+}
+$('#s-secret').addEventListener('click', e => { if (e.target.closest('#night')) regrow(); });
+$('#s-secret').addEventListener('keydown', e => {
+  if (e.target.closest('#night') && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); regrow(); }
 });
 
 function secretConfetti(){
