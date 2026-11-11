@@ -43,8 +43,10 @@
   --pink-deep:#E88BA2;
   --pink-soft:#FFE6EC;
   --rose:#D96F8B;
+  --berry:#B4476A;   /* pink for words: 5:1 on the paper */
+  --plum:#7D4560;
   --ink:#5E4A41;
-  --ink-soft:#8A7267;
+  --ink-soft:#6E584E;
   --sage:#CFE0D2;
   --butter:#FBEFC8;
   --line:#E6D6C8;
@@ -135,13 +137,7 @@ h1,h2,h3{margin:0;font-weight:600}
 }
 .hand{font-family:'Caveat',cursive}
 .sub{font-family:'Caveat',cursive;color:var(--ink-soft);text-align:center;font-size:1.22rem;line-height:1.35}
-/* lift type off the gingham when it sits straight on the background */
-.screen > .stagger > .title,
-.screen > .stagger > .sub,
-.tapme,.cap,.gift .label{
-  text-shadow:0 0 10px rgba(255,252,246,.95), 0 0 20px rgba(255,252,246,.8), 0 1px 0 rgba(255,252,246,.9);
-}
-.kao{font-family:'Patrick Hand',monospace;color:var(--rose)}
+.kao{font-family:'Patrick Hand',monospace;color:var(--berry)}
 
 /* ───────── buttons ───────── */
 .btn{
@@ -189,7 +185,7 @@ h1,h2,h3{margin:0;font-weight:600}
 .gift .label{
   display:block;margin-top:4px;font-family:'Caveat',cursive;font-size:1.02rem;color:var(--ink-soft);
 }
-.gift.opened .label::after{content:" ✓";color:var(--rose)}
+.gift.opened .label::after{content:" ✓";color:var(--berry)}
 .gift.opened svg{opacity:.78}
 .float{animation:floaty 4.2s ease-in-out infinite}
 .gift:nth-child(2) .float{animation-delay:.5s}
@@ -258,7 +254,7 @@ h1,h2,h3{margin:0;font-weight:600}
 @keyframes nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 .tapme.done{
   animation:none;background:transparent;border-color:transparent;box-shadow:none;
-  color:var(--rose);font-family:'Caveat',cursive;font-size:1.2rem;cursor:default;
+  color:var(--berry);font-family:'Caveat',cursive;font-size:1.2rem;cursor:default;
 }
 .wish{display:none;margin-top:20px}
 .wish.show{display:block;animation:rise .7s cubic-bezier(.22,.9,.3,1) both}
@@ -292,7 +288,7 @@ h1,h2,h3{margin:0;font-weight:600}
 }
 .letter .ink{position:relative;z-index:3;padding:34px 26px 6px}
 .letter p{font-family:'Caveat',cursive;font-size:1.34rem;line-height:1.52;margin:0 0 20px;color:#54423A}
-.letter .sign{text-align:right;font-size:1.2rem;color:#7B6558;line-height:1.5;margin-bottom:4px}
+.letter .sign{text-align:right;font-size:1.2rem;color:#6B564B;line-height:1.5;margin-bottom:4px}
 /* wax seal, sitting on the bottom edge of the sheet */
 .letter .seal{
   position:absolute;z-index:4;left:50%;bottom:-6px;width:96px;margin-left:-48px;
@@ -328,7 +324,7 @@ h1,h2,h3{margin:0;font-weight:600}
 .player .xmark{
   display:none;position:absolute;inset:0;align-items:center;justify-content:center;
   font-family:'Fredoka',system-ui,sans-serif;font-weight:600;font-size:1.4rem;
-  color:var(--rose);text-shadow:0 0 7px #FFF,0 0 7px #FFF;
+  color:var(--berry);text-shadow:0 0 7px #FFF,0 0 7px #FFF;
 }
 .player:not(.on) .xmark{display:flex}
 
@@ -372,7 +368,7 @@ input,textarea,select{font-size:16px}
   animation:none;opacity:.16;pointer-events:none;transition:opacity .35s ease;
 }
 .unlocking p{
-  font-family:'Caveat',cursive;font-size:1.58rem;color:var(--rose);
+  font-family:'Caveat',cursive;font-size:1.58rem;color:var(--berry);
   margin:10px 0 0;animation:pulse 1.15s ease-in-out infinite;
 }
 .unlock-dots{display:flex;gap:8px;justify-content:center}
@@ -388,7 +384,7 @@ input,textarea,select{font-size:16px}
 /* ───────── wrong-code hint ───────── */
 .wrong-hint{
   min-height:1.3em;margin:10px 0 0;text-align:center;
-  font-family:'Caveat',cursive;font-size:1.24rem;color:var(--rose);
+  font-family:'Caveat',cursive;font-size:1.24rem;color:var(--berry);
   opacity:0;transform:translateY(-4px);transition:opacity .28s ease,transform .28s ease;
 }
 .wrong-hint.show{opacity:1;transform:translateY(0)}
@@ -452,7 +448,7 @@ input,textarea,select{font-size:16px}
   .bouquet .fall{display:none}
 }
 .secret-line{
-  font-family:'Caveat',cursive;font-size:1.34rem;color:var(--rose);
+  font-family:'Caveat',cursive;font-size:1.34rem;color:var(--berry);
   margin:14px 0 0;line-height:1.45;
 }
 .secret-name{
@@ -534,7 +530,7 @@ body.dim .bokeh{opacity:1}
 .lcd .flash.go{animation:flash .5s ease-out}
 @keyframes flash{0%{opacity:1}100%{opacity:0}}
 .snap-hint{
-  text-align:center;font-family:'Caveat',cursive;font-size:1.18rem;color:var(--rose);
+  text-align:center;font-family:'Caveat',cursive;font-size:1.18rem;color:var(--berry);
   margin:18px 0 0;
 }
 .snap-hint b{font-weight:700}
@@ -564,93 +560,16 @@ body.dim .bokeh{opacity:1}
 }
 .print .pcap{font-family:'Caveat',cursive;font-size:1.12rem;color:var(--ink);text-align:center;padding:6px 0 9px;line-height:1}
 
-/* ───────── rating ───────── */
-.rate{position:relative;z-index:1;margin-top:6px}
-.rate-q{font-family:'Patrick Hand',cursive;font-size:1.08rem;color:var(--ink-soft);margin:4px 0 6px}
-.stars{display:flex;justify-content:center;gap:4px}
-.star{
-  width:46px;height:46px;padding:3px;background:none;border:0;cursor:pointer;
-  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
-}
-.star svg{width:100%;height:100%;display:block;overflow:visible}
-.star path{fill:#FFF8F0;stroke:var(--ink);stroke-width:2.6;stroke-linejoin:round;transition:fill .2s ease}
-.star.on path{fill:url(#starfill)}
-.star.preview path{fill:#FBE0E6}
-.star.pop svg{animation:starpop .45s cubic-bezier(.34,1.6,.55,1)}
-@keyframes starpop{0%{transform:scale(.6) rotate(-12deg)}100%{transform:scale(1) rotate(0)}}
-.rate-say{min-height:1.6em;margin:6px 0 0;font-family:'Caveat',cursive;font-size:1.3rem;color:var(--rose)}
-.rate .btn{margin-top:10px}
-.rate .btn[hidden]{display:none}
-
 @media (prefers-reduced-motion: reduce){
-  .bokeh i,.shutter::before,.print.new,.print .pic img,.star.pop svg{animation:none}
+  .bokeh i,.shutter::before,.print.new,.print .pic img{animation:none}
 }
-/* ───────── the bouquet blooms in the dark ─────────
-   The effect from her favourite kind of video: the night comes down, the
-   paper rises, stems and leaves grow up out of it, every flower appears
-   as a closed bud and then opens ring by ring from its centre, a glow
-   builds as they open and gold dust drifts. The bouquet itself is the
-   same drawing; only transform and opacity animate. */
-.night{
-  position:relative;margin:12px -8px 0;border-radius:20px;overflow:hidden;
-  padding:40px 6px 8px;cursor:pointer;isolation:isolate;
-  background:radial-gradient(120% 85% at 50% 52%, #3B1D26 0%, #1C0E14 46%, #080406 100%);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07), 0 12px 26px rgba(70,30,42,.28);
-  -webkit-tap-highlight-color:transparent;
-}
-.night-label{
-  position:absolute;left:16px;right:16px;top:12px;margin:0;text-align:left;z-index:2;
-  font-family:'Fredoka',sans-serif;font-weight:600;font-size:.64rem;letter-spacing:.16em;
-  color:rgba(255,236,240,.8);line-height:1.5;animation:bqfade 1s ease .3s both;
-}
-.night-label small{
-  display:block;font-weight:400;font-size:.58rem;letter-spacing:.08em;color:rgba(255,236,240,.5);
-  border-bottom:1px solid rgba(255,236,240,.22);padding-bottom:5px;
-}
-.night-glow{
-  position:absolute;left:-5%;top:-4%;width:110%;aspect-ratio:1;pointer-events:none;z-index:-1;
-  background:radial-gradient(circle, rgba(255,196,212,.36) 0, rgba(255,170,196,.14) 32%, rgba(255,170,196,0) 62%);
-  opacity:0;animation:bqfade 4s ease-out 3.2s forwards, nbreathe 5s ease-in-out 7.2s infinite;
-}
-@keyframes nbreathe{0%,100%{opacity:1}50%{opacity:.72}}
-.dust{position:absolute;inset:0;pointer-events:none;z-index:1}
-.dust i{
-  position:absolute;border-radius:50%;opacity:0;
-  background:radial-gradient(circle, #FFF4CC 0, rgba(255,214,140,.75) 35%, rgba(255,214,140,0) 70%);
-  animation:mote 9s linear infinite;
-}
-@keyframes mote{
-  0%{transform:translate(0,0);opacity:0}
-  15%{opacity:1}
-  50%{opacity:.35}
-  72%{opacity:.95}
-  100%{transform:translate(var(--dx,8px),-96px);opacity:0}
-}
-.night .bouquet{margin-top:0}
-.night-tap{
-  position:relative;z-index:2;margin:0 0 2px;text-align:center;
-  font-family:'Caveat',cursive;font-size:1.06rem;color:rgba(255,226,234,.62);
-  opacity:0;animation:bqfade 1s ease 7.8s forwards;
-}
-
-.bouquet .wrapin{animation:bqrise .9s cubic-bezier(.2,.8,.3,1) .2s both}
-.bouquet .sp{animation:bqsprout 1.5s cubic-bezier(.2,.75,.3,1) both;animation-delay:var(--g,0s)}
-.bouquet .hd{animation:bqbud .8s cubic-bezier(.34,1.5,.55,1) both;animation-delay:var(--h,0s)}
-.bouquet .rg{animation:bqopen 1.7s cubic-bezier(.22,.8,.3,1) both;animation-delay:calc(var(--h,0s) + var(--r,0s))}
-.bouquet .bb{animation:bqfade 1.4s ease-out both;animation-delay:var(--b,0s)}
-@keyframes bqrise{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
-@keyframes bqsprout{0%{transform:scale(.3,0);opacity:0}20%{opacity:1}100%{transform:none;opacity:1}}
-@keyframes bqbud{0%{transform:scale(.15);opacity:0}100%{transform:none;opacity:1}}
-@keyframes bqopen{0%{transform:scale(.24) rotate(-28deg);opacity:0}25%{opacity:1}100%{transform:none;opacity:1}}
-@keyframes bqfade{0%{opacity:0}100%{opacity:1}}
-
 /* ───────── the fourth gift ─────────
    Hidden until the other three are open. Then, when she comes back to the
    gifts, a fourth bear arrives with a posy and a little shower of petals,
    so it is a surprise but one she can't miss. */
 .gift4{display:flex;flex-direction:column;align-items:center;margin-top:10px}
 .gift4[hidden]{display:none}
-.gift4 .psst{margin:0;font-family:'Caveat',cursive;font-size:1.32rem;color:var(--rose)}
+.gift4 .psst{margin:0;font-family:'Caveat',cursive;font-size:1.32rem;color:var(--berry)}
 .gift4 .gift{flex:none;width:33%;max-width:134px;isolation:isolate}
 .gift4 .gift::before{
   content:"";position:absolute;left:-14%;top:-8%;width:128%;aspect-ratio:1;border-radius:50%;z-index:-1;
@@ -661,11 +580,182 @@ body.dim .bokeh{opacity:1}
 .gift4.arrive .psst{animation:rise .6s ease .3s both}
 .gift4.arrive .gift .float{animation:popin .75s cubic-bezier(.34,1.56,.64,1), floaty 4.2s ease-in-out .75s infinite}
 
+/* ───────── paper labels ─────────
+   Handwriting straight on the gingham has to fight the checks, and pink
+   ink on pink cloth loses. So anything small that sits on the background
+   rides on a strip of paper, the way a label does in a scrapbook. The
+   tilt uses `rotate`, not `transform`, so entrance animations (which end
+   on transform:none) can't flatten it. */
+.chip,
+.screen > .stagger:not(.card) > .sub,
+.snap-hint,.cap,.gift4 .psst{
+  display:block;width:fit-content;max-width:100%;margin-left:auto;margin-right:auto;
+  padding:4px 16px 6px;background:var(--paper);border-radius:8px;
+  box-shadow:0 3px 9px rgba(150,104,96,.17), inset 0 0 0 1px rgba(214,188,170,.4);
+  rotate:var(--tilt,-1deg);
+}
+.screen > .stagger:not(.card) > .sub{margin-top:10px;color:var(--ink)}
+.snap-hint{--tilt:.8deg;color:var(--plum)}
+.cap{--tilt:-1.4deg}
+.gift4 .psst{--tilt:1.2deg;margin-bottom:6px}
+.gift .label{
+  width:fit-content;margin:7px auto 0;padding:1px 11px 3px;background:var(--paper);border-radius:6px;
+  box-shadow:0 2px 6px rgba(150,104,96,.16);font-size:1.1rem;font-weight:600;color:var(--ink);
+  rotate:-2deg;text-shadow:none;
+}
+.gift:nth-child(2) .label{rotate:1.6deg}
+.gift:nth-child(3) .label{rotate:-1deg}
+.gift.locked .label{opacity:.62}
+.tapme.done{
+  background:var(--paper);border-color:transparent;padding:4px 16px 6px;border-radius:8px;
+  box-shadow:0 3px 9px rgba(150,104,96,.17), inset 0 0 0 1px rgba(214,188,170,.4);rotate:-1deg;
+}
+/* titles are big enough to carry a halo instead */
+.screen > .stagger > .title{
+  text-shadow:0 0 3px rgba(255,252,246,.95), 0 0 10px rgba(255,252,246,.95), 0 0 20px rgba(255,252,246,.85), 0 1px 0 rgba(255,252,246,.9);
+}
+
+/* ───────── motion polish ─────────
+   Pages settle onto the table like a card being put down; things you can
+   press answer the press; the bears blink. */
+.screen.in{animation:slideIn .6s cubic-bezier(.2,.85,.25,1) both}
+.screen.out{animation:slideOut .28s cubic-bezier(.5,0,.8,.4) both}
+@keyframes slideIn{from{opacity:0;transform:translateY(30px) rotate(-.9deg) scale(.975)}to{opacity:1;transform:none}}
+@keyframes slideOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-20px) rotate(.7deg) scale(.985)}}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(4px)}
+.btn:focus-visible,.key:focus-visible,.gift:focus-visible,.tapme:focus-visible,.player:focus-visible,
+.shutter:focus-visible,.lcd:focus-visible,.bloom:focus-visible,.cake-stage:focus-visible{
+  outline:3px solid rgba(180,71,106,.55);outline-offset:4px;
+}
+.gift.pressed .float{animation:giftpress .24s ease both}
+@keyframes giftpress{0%{transform:scale(1)}45%{transform:scale(.9) rotate(-3deg)}100%{transform:scale(1.07)}}
+.eyes{transform-box:fill-box;transform-origin:center;animation:blink 5.4s ease-in-out infinite}
+.gift:nth-child(2) .eyes{animation-delay:1.7s}
+.gift:nth-child(3) .eyes{animation-delay:3.1s}
+#finalBears > div:nth-child(2) .eyes,.gift4 .eyes{animation-delay:2.3s}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96.5%{transform:scaleY(.08)}}
+/* the Kinder egg waves with his free hand */
+.wave{transform-origin:190px 152px;animation:wave 1.7s ease-in-out infinite}
+@keyframes wave{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(9deg)}}
+.wave-lines{animation:wavelines 1.7s ease-in-out infinite}
+@keyframes wavelines{0%,100%{opacity:.15}50%{opacity:.9}}
+
+/* ───────── the camera roll ───────── */
+.cam-wrap{transform:none;rotate:-1.6deg}
+.cam-wrap.kick{animation:kick .3s ease}
+@keyframes kick{0%{scale:1;translate:0 0}30%{scale:.985;translate:0 3px}100%{scale:1;translate:0 0}}
+.lcd{cursor:pointer}
+.lcd .shot{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+  opacity:0;transform:translateX(16%) scale(1.04);
+  transition:opacity .5s ease, transform .72s cubic-bezier(.22,.9,.3,1);
+}
+.lcd .shot.on{opacity:1;transform:none}
+.lcd .shot.was{opacity:0;transform:translateX(-16%) scale(1.04)}
+.lcd .rec,.lcd .stamp,.lcd .count{z-index:2}
+.lcd .count{
+  position:absolute;right:7px;top:5px;font-family:'Patrick Hand',monospace;font-size:.58rem;
+  letter-spacing:1px;color:#FFF;text-shadow:0 0 5px rgba(0,0,0,.85);
+}
+.print.gone{opacity:0;transition:opacity .3s ease, transform .6s cubic-bezier(.22,.9,.3,1)}
+.print:hover{box-shadow:0 14px 26px rgba(120,84,72,.3),0 1px 0 rgba(0,0,0,.04)}
+
+/* ───────── the secret bouquet ─────────
+   No box and no dark room: the flowers grow straight out of the page. A
+   feathered pool of light (it has no edge) lifts them off the gingham;
+   the paper rises, stems and leaves grow up out of it, every flower
+   appears as a bud and opens ring by ring, and little gold sparkles
+   drift round it. The bouquet is the same drawing as before; only
+   transform and opacity animate. */
+.secret{text-align:center}
+.secret .secret-tag{
+  font-family:'Fredoka',system-ui,sans-serif;font-weight:700;font-size:1.14rem;color:var(--ink);
+  margin-top:0;padding:8px 20px 9px;--tilt:-1.5deg;
+}
+.secret-tag small{display:block;font-family:'Caveat',cursive;font-weight:500;font-size:1.1rem;color:var(--ink-soft);margin-top:1px}
+.bloom{position:relative;margin:10px auto 0;max-width:330px;cursor:pointer;border-radius:50%}
+.bloom-light{
+  position:absolute;left:-6%;top:-7%;width:112%;aspect-ratio:1;pointer-events:none;
+  background:radial-gradient(closest-side, rgba(255,253,248,.98) 0, rgba(255,251,245,.92) 44%, rgba(255,250,244,.5) 74%, rgba(255,250,244,0) 100%);
+  animation:bloomlight 2.2s cubic-bezier(.2,.8,.3,1) both, lightbreathe 6s ease-in-out 2.4s infinite;
+}
+@keyframes bloomlight{0%{opacity:0;transform:scale(.45)}100%{opacity:1;transform:none}}
+@keyframes lightbreathe{0%,100%{opacity:1}50%{opacity:.84}}
+.bloom .bouquet{position:relative;z-index:1;margin-top:0}
+.sparkles{position:absolute;inset:-3% -5%;pointer-events:none;z-index:2}
+.sparkles i{
+  position:absolute;width:var(--s,12px);height:var(--s,12px);background:var(--c,#E9B345);opacity:0;
+  clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);
+  animation:twinkle var(--t,3.2s) ease-in-out var(--d,0s) infinite;
+}
+@keyframes twinkle{
+  0%,100%{opacity:0;transform:scale(.2) rotate(0)}
+  45%{opacity:1;transform:scale(1) rotate(40deg)}
+  62%{opacity:.85;transform:scale(.8) rotate(62deg)}
+}
+.secret .bloom-tap{
+  font-family:'Caveat',cursive;font-size:1.08rem;color:var(--ink-soft);margin-top:2px;--tilt:.8deg;
+  opacity:0;animation:bqfade 1s ease 7.8s forwards;
+}
+.secret-note{
+  position:relative;margin:20px auto 0;max-width:296px;padding:18px 18px 14px;background:var(--paper);
+  border-radius:10px;box-shadow:0 8px 18px rgba(150,104,96,.18);rotate:1.2deg;
+  border:1px solid rgba(214,188,170,.5);
+}
+.secret-note .secret-line{margin-top:6px}
+
+.bouquet .wrapin{animation:bqrise .9s cubic-bezier(.2,.8,.3,1) .2s both}
+.bouquet .sp{animation:bqsprout 1.5s cubic-bezier(.2,.75,.3,1) both;animation-delay:var(--g,0s)}
+.bouquet .hd{animation:bqbud .8s cubic-bezier(.34,1.5,.55,1) both;animation-delay:var(--h,0s)}
+.bouquet .rg{animation:bqopen 1.8s cubic-bezier(.2,.85,.28,1) both;animation-delay:calc(var(--h,0s) + var(--r,0s))}
+.bouquet .bb{animation:bqfade 1.4s ease-out both;animation-delay:var(--b,0s)}
+@keyframes bqrise{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+@keyframes bqsprout{0%{transform:scale(.3,0);opacity:0}20%{opacity:1}100%{transform:none;opacity:1}}
+@keyframes bqbud{0%{transform:scale(.15);opacity:0}100%{transform:none;opacity:1}}
+@keyframes bqopen{
+  0%{transform:scale(.22) rotate(var(--tw,-28deg));opacity:0}
+  25%{opacity:1}
+  78%{transform:scale(1.035) rotate(0)}
+  100%{transform:none;opacity:1}
+}
+@keyframes bqfade{0%{opacity:0}100%{opacity:1}}
+
+/* ───────── the ending ─────────
+   A postmark for the day, stamped onto the last card. */
+.postmark{
+  width:112px;margin:12px auto 0;color:var(--berry);opacity:.86;rotate:-9deg;
+  animation:sealIn .7s cubic-bezier(.3,1.5,.5,1) .9s both;
+}
+.postmark svg{width:100%;height:auto;display:block;overflow:visible}
+.closing{
+  font-family:'Caveat',cursive;font-size:1.3rem;line-height:1.4;color:var(--ink);
+  margin:12px 0 0;text-align:center;
+}
+#s-letter .letter{margin-top:34px}
+/* keep headings clear of the music button in the top corner */
+#s-gifts > .stagger,#s-secret > .stagger{padding-top:36px}
+/* slimmer prints overlap less, so more of each photo shows in the fan */
+.print{width:128px;margin-left:-64px}
+.prints.has{height:200px}
+
+/* ───────── tablets and tall desktop windows ─────────
+   The card is drawn at phone size. Where there is room to spare, the
+   whole stage is enlarged in one go so nothing has to be re-laid-out. */
+/* off a phone the glow can spill past the column instead of being cut square */
+@media (min-width:560px){.bokeh{overflow:visible}}
+@media (min-width:740px) and (min-height:940px){
+  .stage{zoom:1.18;min-height:calc(100vh / 1.18);min-height:calc(100dvh / 1.18)}
+}
+.letter .ink::before{content:"";float:right;width:40px;height:124px;margin:40px -6px 0 4px}
+
 @media (prefers-reduced-motion: reduce){
-  .bouquet .wrapin,.bouquet .sp,.bouquet .hd,.bouquet .rg,.bouquet .bb,.night-label,.night-glow,.night-tap,
-  .gift4 .gift::before,.gift4.arrive .psst,.gift4.arrive .gift .float{animation:none}
-  .night-glow,.night-tap{opacity:1}
-  .dust{display:none}
+  .bouquet .wrapin,.bouquet .sp,.bouquet .hd,.bouquet .rg,.bouquet .bb,.bloom-light,.secret .bloom-tap,
+  .gift4 .gift::before,.gift4.arrive .psst,.gift4.arrive .gift .float,
+  .eyes,.wave,.wave-lines,.postmark,.cam-wrap.kick,.gift.pressed .float{animation:none}
+  .secret .bloom-tap{opacity:1}
+  .sparkles{display:none}
+  .lcd .shot{transition:opacity .2s ease;transform:none}
 }
 </style>
 </head>
@@ -794,8 +884,8 @@ body.dim .bokeh{opacity:1}
             </g>
           </g>
         </svg>
-        <div class="lcd">
-          <img id="herPhoto" src="photo.jpg" alt="">
+        <div class="lcd" id="lcd" role="button" tabindex="0" aria-label="show the next photo">
+          <img class="shot on" id="herPhoto" src="photo.jpg" alt="Saiyeda">
           <div id="photoFallback" style="display:none;text-align:center;padding:14px">
             <div style="font-size:1.8rem">🌷</div>
             <div class="hand" style="font-size:1rem;color:#C9BCA8;line-height:1.25;margin-top:4px">
@@ -803,12 +893,13 @@ body.dim .bokeh{opacity:1}
             </div>
           </div>
           <span class="rec"><b></b>PLAY</span>
+          <span class="count" id="lcdCount"></span>
           <span class="stamp">12 11 ✿</span>
           <span class="flash" id="lcdFlash"></span>
         </div>
         <button class="shutter" id="shutter" type="button" aria-label="take a photo"></button>
       </div>
-      <p class="snap-hint" id="snapHint">press the <b>pink button</b> to take a photo 📸</p>
+      <p class="snap-hint" id="snapHint">tap the <b>pink button</b>, a new photo every time</p>
       <div class="prints" id="prints"></div>
       <div class="cap">saiyeda ✿ the birthday girl</div>
       <div class="notes">
@@ -830,103 +921,161 @@ body.dim .bokeh{opacity:1}
       <div class="cake-stage" id="cakeStage" role="button" tabindex="0" aria-label="Blow out the candle">
         <svg viewBox="0 0 300 316" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <clipPath id="kjShell"><ellipse cx="110" cy="109" rx="18" ry="25"/></clipPath>
-            <clipPath id="ksEgg"><ellipse rx="15" ry="20"/></clipPath>
+            <clipPath id="kjEgg"><ellipse rx="18" ry="25"/></clipPath>
             <clipPath id="kTier"><path d="M44 200V262A106 20 0 0 0 256 262V200Z"/></clipPath>
-            <linearGradient id="kgold" x1="0" x2="1"><stop offset="0" stop-color="#D9A23A"/><stop offset=".3" stop-color="#FFE69A"/><stop offset=".55" stop-color="#E2AE45"/><stop offset=".8" stop-color="#F9DC86"/><stop offset="1" stop-color="#CF9632"/></linearGradient>
-            <linearGradient id="kfond" x1="0" x2="1"><stop offset="0" stop-color="#E8E0DA"/><stop offset=".3" stop-color="#FFFFFF"/><stop offset=".72" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E3D9D2"/></linearGradient>
-            <radialGradient id="ktop" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1EBE6"/></radialGradient>
-            <radialGradient id="kegg" cx=".36" cy=".3" r=".78"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E6DFDC"/></radialGradient>
-            <linearGradient id="korange" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFAE45"/><stop offset="1" stop-color="#EF7F0C"/></linearGradient>
-            <linearGradient id="kfoil" x1="0" x2="1"><stop offset="0" stop-color="#C3C8CE"/><stop offset=".35" stop-color="#FFFFFF"/><stop offset=".7" stop-color="#E9ECEF"/><stop offset="1" stop-color="#B6BBC2"/></linearGradient>
-            <radialGradient id="kb1" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#FF8A8A"/><stop offset="1" stop-color="#E2001A"/></radialGradient>
-            <radialGradient id="kb2" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#FFF0A0"/><stop offset="1" stop-color="#F5B800"/></radialGradient>
-            <radialGradient id="kb3" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#A8E4FF"/><stop offset="1" stop-color="#1E96D0"/></radialGradient>
-            <radialGradient id="kb4" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#D2F5A8"/><stop offset="1" stop-color="#5FAE2E"/></radialGradient>
-            <radialGradient id="kb5" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#FFC6DE"/><stop offset="1" stop-color="#E2508E"/></radialGradient>
-            <path id="kName" d="M54 248Q150 276 246 248"/>
+            <linearGradient id="kfond" x1="0" x2="1"><stop offset="0" stop-color="#F3E5DA"/><stop offset=".3" stop-color="#FFFDF9"/><stop offset=".72" stop-color="#FFFDF9"/><stop offset="1" stop-color="#EFDFD3"/></linearGradient>
+            <linearGradient id="kglaze" x1="0" x2="1"><stop offset="0" stop-color="#EE8FA6"/><stop offset=".32" stop-color="#F9B9C7"/><stop offset=".7" stop-color="#F7AEBE"/><stop offset="1" stop-color="#EA839C"/></linearGradient>
+            <radialGradient id="kglazetop" cx=".42" cy=".36" r=".75"><stop offset="0" stop-color="#FCCBD6"/><stop offset="1" stop-color="#F5A5B8"/></radialGradient>
+            <radialGradient id="kegg" cx=".36" cy=".3" r=".78"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EBE2DE"/></radialGradient>
+            <radialGradient id="kberry" cx=".34" cy=".26" r=".85"><stop offset="0" stop-color="#FF93A7"/><stop offset=".55" stop-color="#F0607A"/><stop offset="1" stop-color="#DE4868"/></radialGradient>
+            <linearGradient id="kjfoot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F7931E"/><stop offset="1" stop-color="#E2001A"/></linearGradient>
+            <path id="kName" d="M54 252Q150 280 246 252"/>
           </defs>
           <g stroke="#4A3A33" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round">
             <!-- glow -->
             <circle id="glow" cx="79" cy="50" r="32" fill="#FFD98A" opacity=".4" stroke="none"/>
 
-            <!-- gold scalloped cake board -->
-            <path d="M290 284Q298.2 287.2 286.9 289.4Q291.7 293.6 277.9 294.6Q279 299.5 263.3 299.3Q260.7 304.7 243.7 303.3Q237.6 309.1 220 306.5Q210.6 312.3 193.3 308.7Q181 314.3 164.6 309.9Q150 315 135.4 309.9Q119 314.3 106.7 308.7Q89.4 312.3 80 306.5Q62.4 309.1 56.3 303.3Q39.3 304.7 36.7 299.3Q21 299.5 22.1 294.6Q8.3 293.6 13.1 289.4Q1.8 287.2 10 284Q1.8 280.8 13.1 278.6Q8.3 274.4 22.1 273.4Q21 268.5 36.7 268.7Q39.3 263.3 56.3 264.7Q62.4 258.9 80 261.5Q89.4 255.7 106.7 259.3Q119 253.7 135.4 258.1Q150 253 164.6 258.1Q181 253.7 193.3 259.3Q210.6 255.7 220 261.5Q237.6 258.9 243.7 264.7Q260.7 263.3 263.3 268.7Q279 268.5 277.9 273.4Q291.7 274.4 286.9 278.6Q298.2 280.8 290 284Z" fill="url(#kgold)"/>
-            <ellipse cx="150" cy="282" rx="122" ry="19" fill="#E9B54E" stroke="none" opacity=".55"/>
+            <!-- a scalloped paper doily under the cake -->
+            <path d="M290 284Q298.2 287.2 286.9 289.4Q291.7 293.6 277.9 294.6Q279 299.5 263.3 299.3Q260.7 304.7 243.7 303.3Q237.6 309.1 220 306.5Q210.6 312.3 193.3 308.7Q181 314.3 164.6 309.9Q150 315 135.4 309.9Q119 314.3 106.7 308.7Q89.4 312.3 80 306.5Q62.4 309.1 56.3 303.3Q39.3 304.7 36.7 299.3Q21 299.5 22.1 294.6Q8.3 293.6 13.1 289.4Q1.8 287.2 10 284Q1.8 280.8 13.1 278.6Q8.3 274.4 22.1 273.4Q21 268.5 36.7 268.7Q39.3 263.3 56.3 264.7Q62.4 258.9 80 261.5Q89.4 255.7 106.7 259.3Q119 253.7 135.4 258.1Q150 253 164.6 258.1Q181 253.7 193.3 259.3Q210.6 255.7 220 261.5Q237.6 258.9 243.7 264.7Q260.7 263.3 263.3 268.7Q279 268.5 277.9 273.4Q291.7 274.4 286.9 278.6Q298.2 280.8 290 284Z" fill="#FFF6F1"/>
+            <ellipse cx="150" cy="283" rx="124" ry="20" fill="#FBE3E8" stroke="none"/>
+            <ellipse cx="150" cy="283" rx="124" ry="20" fill="none" stroke="#F2BFCB" stroke-width="1.6" stroke-dasharray="1 5.4"/>
 
-            <!-- the tier: white fondant, an orange splash at its foot, her name -->
+            <!-- the tier: cream fondant, strawberry glaze dripping over it, her name -->
             <path d="M44 200V262A106 20 0 0 0 256 262V200Z" fill="url(#kfond)"/>
-            <g clip-path="url(#kTier)" stroke="none">
-              <path d="M44 300L44 245L46 247.7L48 248.2L50 248.4L52 248.5L54 248.7L56 249L58 249.5L60 250.1L62 250.9L64 252L66 253.2L68 254.5L70 256L72 257.5L74 259L76 260.6L78 262L80 263.3L82 264.5L84 265.5L86 266.2L88 266.7L90 266.9L92 266.9L94 266.7L96 266.2L98 265.5L100 264.7L102 263.8L104 262.8L106 261.9L108 261L110 260.1L112 259.5L114 258.9L116 258.6L118 258.6L120 258.7L122 259.1L124 259.7L126 260.6L128 261.5L130 262.6L132 263.8L134 265L136 266.2L138 267.4L140 268.4L142 269.2L144 269.9L146 270.3L148 270.5L150 270.4L152 270.1L154 269.6L156 268.8L158 267.9L160 266.8L162 265.7L164 264.5L166 263.3L168 262.1L170 261.1L172 260.2L174 259.5L176 259L178 258.8L180 258.8L182 259L184 259.4L186 260L188 260.8L190 261.7L192 262.7L194 263.6L196 264.6L198 265.5L200 266.2L202 266.8L204 267.2L206 267.3L208 267.2L210 266.9L212 266.3L214 265.4L216 264.4L218 263.1L220 261.8L222 260.3L224 258.8L226 257.3L228 255.8L230 254.5L232 253.2L234 252.2L236 251.3L238 250.6L240 250.2L242 249.9L244 249.8L246 249.8L248 249.9L250 250L252 249.9L254 249.5L256 246.8L256 300Z" fill="url(#korange)"/>
-              <g fill="#FFFFFF" opacity=".85"><circle cx="70" cy="268" r="2.4"/><circle cx="118" cy="276" r="1.8"/><circle cx="182" cy="277" r="2.2"/><circle cx="231" cy="268" r="1.8"/></g>
-              <g>
-                <ellipse cx="58" cy="226" rx="4" ry="3" fill="#2BA6DE"/><ellipse cx="80" cy="244" rx="3.4" ry="2.6" fill="#E2001A"/>
-                <ellipse cx="96" cy="222" rx="3.6" ry="2.8" fill="#7DC242"/><ellipse cx="204" cy="222" rx="3.6" ry="2.8" fill="#FFC20E"/>
-                <ellipse cx="224" cy="244" rx="3.4" ry="2.6" fill="#E85A9B"/><ellipse cx="244" cy="226" rx="4" ry="3" fill="#F7931E"/>
-                <ellipse cx="128" cy="218" rx="3" ry="2.3" fill="#E2001A"/><ellipse cx="172" cy="218" rx="3" ry="2.3" fill="#2BA6DE"/>
-              </g>
-            </g>
+            <g clip-path="url(#kTier)"><path d="M44 200L44 205L46 208.9L48 210.4L50 211.6L52 215.2L54 218.7L56 221L58 221.7L60 220.8L62 218.7L64 216.7L66 217.2L68 220.8L70 224.8L72 227.7L74 228.9L76 228.5L78 226.4L80 223.2L82 220.3L84 220.7L86 221.9L88 224.7L90 226.8L92 227.7L94 227.3L96 225.7L98 223.4L100 222.6L102 222.8L104 225.8L106 229.2L108 231.6L110 232.5L112 231.9L114 229.8L116 226.8L118 224.1L120 224.2L122 224.3L124 225.2L126 227.4L128 229L130 229.6L132 229.1L134 227.6L136 225.6L138 224.9L140 224.9L142 224.9L144 227.5L146 230.3L148 232.3L150 233L152 232.3L154 230.3L156 227.5L158 224.9L160 224.9L162 224.9L164 225.6L166 227.6L168 229.1L170 229.6L172 229L174 227.4L176 225.2L178 224.3L180 224.2L182 224.1L184 226.8L186 229.8L188 231.9L190 232.5L192 231.6L194 229.2L196 225.8L198 222.8L200 222.6L202 223.4L204 225.7L206 227.3L208 227.7L210 226.8L212 224.7L214 221.9L216 220.7L218 220.3L220 223.2L222 226.4L224 228.5L226 228.9L228 227.7L230 224.8L232 220.8L234 217.2L236 216.7L238 218.7L240 220.8L242 221.7L244 221L246 218.7L248 215.2L250 211.6L252 210.4L254 208.9L256 205L256 200Z" fill="url(#kglaze)" stroke-width="3"/></g>
             <path d="M44 200V262A106 20 0 0 0 256 262V200" fill="none"/>
-            <text font-family="Fredoka, sans-serif" font-weight="700" font-size="31" letter-spacing="1.2"
-                  stroke-width="5" paint-order="stroke" text-anchor="middle"><textPath href="#kName" startOffset="50%"><tspan fill="#E2001A">S</tspan><tspan fill="#FFC20E">A</tspan><tspan fill="#2BA6DE">I</tspan><tspan fill="#7DC242">Y</tspan><tspan fill="#F7931E">E</tspan><tspan fill="#E85A9B">D</tspan><tspan fill="#8E5CC9">A</tspan></textPath></text>
-            <ellipse cx="150" cy="200" rx="106" ry="20" fill="url(#ktop)"/>
+            <text font-family="Fredoka, sans-serif" font-weight="700" font-size="30" letter-spacing="1.4"
+                  stroke-width="5" paint-order="stroke" text-anchor="middle"><textPath href="#kName" startOffset="50%"><tspan fill="#F27A93">S</tspan><tspan fill="#F6C453">A</tspan><tspan fill="#7FC3E8">I</tspan><tspan fill="#8FD08A">Y</tspan><tspan fill="#F9A26C">E</tspan><tspan fill="#F27A93">D</tspan><tspan fill="#B79AE6">A</tspan></textPath></text>
+            <g fill="#FFFDF9" stroke-width="2.4"><circle cx="50" cy="266.1" r="5.3"/><circle cx="60.5" cy="270.2" r="5.3"/><circle cx="71" cy="272.8" r="5.3"/><circle cx="81.6" cy="274.8" r="5.3"/><circle cx="92.1" cy="276.3" r="5.3"/><circle cx="102.6" cy="277.4" r="5.3"/><circle cx="113.1" cy="278.3" r="5.3"/><circle cx="123.6" cy="278.9" r="5.3"/><circle cx="134.2" cy="279.3" r="5.3"/><circle cx="144.7" cy="279.5" r="5.3"/><circle cx="155.2" cy="279.5" r="5.3"/><circle cx="165.7" cy="279.3" r="5.3"/><circle cx="176.2" cy="278.9" r="5.3"/><circle cx="186.8" cy="278.3" r="5.3"/><circle cx="197.3" cy="277.4" r="5.3"/><circle cx="207.8" cy="276.3" r="5.3"/><circle cx="218.3" cy="274.8" r="5.3"/><circle cx="228.8" cy="272.9" r="5.3"/><circle cx="239.4" cy="270.3" r="5.3"/><circle cx="249.9" cy="266.2" r="5.3"/></g>
+            <ellipse cx="150" cy="200" rx="106" ry="20" fill="url(#kglazetop)"/>
+            <path d="M70 193Q104 184 142 184" fill="none" stroke="#FFFFFF" stroke-width="3" opacity=".6"/>
 
-            <!-- Kinder Surprise eggs and candy on the board -->
-            <g transform="translate(30 262) rotate(-16)">
-              <g clip-path="url(#ksEgg)" stroke="none">
-                <rect x="-16" y="-21" width="32" height="42" fill="url(#kfoil)"/>
-                <path d="M-16 3 q8 -5 16 0 t16 0 v20 h-32z" fill="#E2001A"/>
-                <path d="M-16 3 q8 -5 16 0 t16 0" fill="none" stroke="#F7931E" stroke-width="2.4"/>
-                <text x="0" y="-3" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="8.4"><tspan fill="#1A1A1A">k</tspan><tspan fill="#E2001A">inder</tspan></text>
-                <text x="0" y="12" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="5" fill="#FFFFFF">SURPRISE</text>
-                <ellipse cx="-6" cy="-11" rx="3" ry="5.5" fill="#FFFFFF" opacity=".8" transform="rotate(-20 -6 -11)"/>
+            <!-- Kinder Joy eggs and strawberries on the doily -->
+            <g transform="translate(31 262) rotate(-16) scale(1)" stroke-width="3.2">
+              <ellipse rx="18" ry="25" fill="#FFFFFF"/>
+              <g clip-path="url(#kjEgg)" stroke="none">
+                <path d="M-20 12q10 -6 20 0t20 0v16h-40z" fill="url(#kjfoot)"/>
+                <rect x="-20" y="-11.6" width="40" height="22" fill="#FFFDF8"/>
+                <rect x="-20" y="-11.6" width="40" height="1.4" fill="#5C3317"/>
+                <rect x="-20" y="9" width="40" height="1.4" fill="#5C3317"/>
+                <text x="0" y="-1.8" text-anchor="middle" font-family="Caveat, cursive" font-size="10.4" font-weight="700" fill="#5C3317">Kinder</text>
+                <text x="0" y="6.9" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="7.6" font-weight="600" letter-spacing=".6" fill="#E2001A">JOY</text>
+                <ellipse cx="-7" cy="-17.4" rx="3.2" ry="5.2" fill="#FFFFFF" opacity=".9" transform="rotate(-22 -7 -17.4)"/>
               </g>
-              <ellipse rx="15" ry="20" fill="none" stroke-width="2.6"/>
+              <ellipse rx="18" ry="25" fill="none"/>
             </g>
-            <g transform="translate(271 260) rotate(15)">
-              <g clip-path="url(#ksEgg)" stroke="none">
-                <rect x="-16" y="-21" width="32" height="42" fill="url(#kfoil)"/>
-                <path d="M-16 3 q8 -5 16 0 t16 0 v20 h-32z" fill="#E2001A"/>
-                <path d="M-16 3 q8 -5 16 0 t16 0" fill="none" stroke="#F7931E" stroke-width="2.4"/>
-                <text x="0" y="-3" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="8.4"><tspan fill="#1A1A1A">k</tspan><tspan fill="#E2001A">inder</tspan></text>
-                <text x="0" y="12" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="5" fill="#FFFFFF">SURPRISE</text>
-                <ellipse cx="-6" cy="-11" rx="3" ry="5.5" fill="#FFFFFF" opacity=".8" transform="rotate(-20 -6 -11)"/>
+            <g transform="translate(269 260) rotate(15) scale(1)" stroke-width="3.2">
+              <ellipse rx="18" ry="25" fill="#FFFFFF"/>
+              <g clip-path="url(#kjEgg)" stroke="none">
+                <path d="M-20 12q10 -6 20 0t20 0v16h-40z" fill="url(#kjfoot)"/>
+                <rect x="-20" y="-11.6" width="40" height="22" fill="#FFFDF8"/>
+                <rect x="-20" y="-11.6" width="40" height="1.4" fill="#5C3317"/>
+                <rect x="-20" y="9" width="40" height="1.4" fill="#5C3317"/>
+                <text x="0" y="-1.8" text-anchor="middle" font-family="Caveat, cursive" font-size="10.4" font-weight="700" fill="#5C3317">Kinder</text>
+                <text x="0" y="6.9" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="7.6" font-weight="600" letter-spacing=".6" fill="#E2001A">JOY</text>
+                <ellipse cx="-7" cy="-17.4" rx="3.2" ry="5.2" fill="#FFFFFF" opacity=".9" transform="rotate(-22 -7 -17.4)"/>
               </g>
-              <ellipse rx="15" ry="20" fill="none" stroke-width="2.6"/>
+              <ellipse rx="18" ry="25" fill="none"/>
             </g>
-            <circle cx="56" cy="296" r="6.5" fill="url(#kb3)" stroke-width="2"/><circle cx="76" cy="304" r="5" fill="url(#kb2)" stroke-width="2"/><circle cx="246" cy="300" r="6.5" fill="url(#kb1)" stroke-width="2"/><circle cx="226" cy="306" r="5" fill="url(#kb4)" stroke-width="2"/>
-            <circle cx="18" cy="286" r="5" fill="url(#kb5)" stroke-width="2"/><circle cx="284" cy="286" r="5" fill="url(#kb2)" stroke-width="2"/><circle cx="118" cy="306" r="4.4" fill="url(#kb5)" stroke-width="2"/><circle cx="186" cy="307" r="4.4" fill="url(#kb3)" stroke-width="2"/>
+            <g transform="translate(66 295) rotate(-14) scale(0.9)" stroke-width="3.3">
+              <path d="M-12 -6a12 11 0 0 1 24 0q0 13 -12 21q-12 -8 -12 -21z" fill="url(#kberry)"/>
+              <g stroke="none" fill="#FFE9A8"><ellipse cx="-5" cy="-2" rx="1.4" ry="2"/><ellipse cx="4.6" cy="-3" rx="1.4" ry="2"/><ellipse cx="0" cy="4" rx="1.4" ry="2"/><ellipse cx="-4.4" cy="7.4" rx="1.2" ry="1.8"/><ellipse cx="5" cy="5.6" rx="1.2" ry="1.8"/></g>
+              <ellipse cx="-6.4" cy="-8.6" rx="1.8" ry="3" fill="#FFFFFF" opacity=".5" stroke="none" transform="rotate(28 -6.4 -8.6)"/>
+              <path d="M-10 -10q4 -8 10 -5q6 -3 10 5q-10 4 -20 0z" fill="#86BD7F"/>
+              <path d="M0 -14v-4.4" fill="none"/>
+            </g>
+            <g transform="translate(236 296) rotate(12) scale(0.9)" stroke-width="3.3">
+              <path d="M-12 -6a12 11 0 0 1 24 0q0 13 -12 21q-12 -8 -12 -21z" fill="url(#kberry)"/>
+              <g stroke="none" fill="#FFE9A8"><ellipse cx="-5" cy="-2" rx="1.4" ry="2"/><ellipse cx="4.6" cy="-3" rx="1.4" ry="2"/><ellipse cx="0" cy="4" rx="1.4" ry="2"/><ellipse cx="-4.4" cy="7.4" rx="1.2" ry="1.8"/><ellipse cx="5" cy="5.6" rx="1.2" ry="1.8"/></g>
+              <ellipse cx="-6.4" cy="-8.6" rx="1.8" ry="3" fill="#FFFFFF" opacity=".5" stroke="none" transform="rotate(28 -6.4 -8.6)"/>
+              <path d="M-10 -10q4 -8 10 -5q6 -3 10 5q-10 4 -20 0z" fill="#86BD7F"/>
+              <path d="M0 -14v-4.4" fill="none"/>
+            </g>
+            <g transform="translate(103 301) rotate(16) scale(0.8)" stroke-width="3.8">
+              <path d="M-12 -6a12 11 0 0 1 24 0q0 13 -12 21q-12 -8 -12 -21z" fill="#F0607A"/>
+              <path d="M-8.4 -5.4a8.4 7.6 0 0 1 16.8 0q0 9.6 -8.4 15.6q-8.4 -6 -8.4 -15.6z" fill="#FCC9D3" stroke="none"/>
+              <path d="M0 -8.6q-4.6 3.2 -4 8q.8 4 4 6q3.2 -2 4 -6q.6 -4.8 -4 -8z" fill="#FFF3F5" stroke="none"/>
+              <g stroke="#F49AAE" stroke-width="1" fill="none"><path d="M-6.4 -3.6l2.4 1.6M6.4 -3.6l-2.4 1.6M-5.4 3l2 -1M5.4 3l-2 -1"/></g>
+              <path d="M-9 -11q4 -6 9 -4q5 -2 9 4q-9 3 -18 0z" fill="#86BD7F"/>
+            </g>
+            <g transform="translate(199 302) rotate(-14) scale(0.8)" stroke-width="3.8">
+              <path d="M-12 -6a12 11 0 0 1 24 0q0 13 -12 21q-12 -8 -12 -21z" fill="#F0607A"/>
+              <path d="M-8.4 -5.4a8.4 7.6 0 0 1 16.8 0q0 9.6 -8.4 15.6q-8.4 -6 -8.4 -15.6z" fill="#FCC9D3" stroke="none"/>
+              <path d="M0 -8.6q-4.6 3.2 -4 8q.8 4 4 6q3.2 -2 4 -6q.6 -4.8 -4 -8z" fill="#FFF3F5" stroke="none"/>
+              <g stroke="#F49AAE" stroke-width="1" fill="none"><path d="M-6.4 -3.6l2.4 1.6M6.4 -3.6l-2.4 1.6M-5.4 3l2 -1M5.4 3l-2 -1"/></g>
+              <path d="M-9 -11q4 -6 9 -4q5 -2 9 4q-9 3 -18 0z" fill="#86BD7F"/>
+            </g>
+            <g fill="#FFFDF9" stroke-width="2.2"><circle cx="128" cy="307" r="3.6"/><circle cx="172" cy="308" r="3.6"/><circle cx="16" cy="287" r="3.4"/><circle cx="285" cy="286" r="3.4"/></g>
 
-            <!-- candy on the tier top -->
-            <circle cx="68" cy="202" r="6" fill="url(#kb1)" stroke-width="2"/><circle cx="88" cy="211" r="5" fill="url(#kb2)" stroke-width="2"/><circle cx="236" cy="203" r="6" fill="url(#kb4)" stroke-width="2"/><circle cx="216" cy="212" r="5" fill="url(#kb3)" stroke-width="2"/><circle cx="60" cy="214" r="4.4" fill="url(#kb5)" stroke-width="2"/>
+            <!-- on the tier: strawberries one side, a Kinder Joy egg the other -->
+            <g transform="translate(68 195) rotate(-10) scale(1)" stroke-width="3">
+              <path d="M-12 -6a12 11 0 0 1 24 0q0 13 -12 21q-12 -8 -12 -21z" fill="url(#kberry)"/>
+              <g stroke="none" fill="#FFE9A8"><ellipse cx="-5" cy="-2" rx="1.4" ry="2"/><ellipse cx="4.6" cy="-3" rx="1.4" ry="2"/><ellipse cx="0" cy="4" rx="1.4" ry="2"/><ellipse cx="-4.4" cy="7.4" rx="1.2" ry="1.8"/><ellipse cx="5" cy="5.6" rx="1.2" ry="1.8"/></g>
+              <ellipse cx="-6.4" cy="-8.6" rx="1.8" ry="3" fill="#FFFFFF" opacity=".5" stroke="none" transform="rotate(28 -6.4 -8.6)"/>
+              <path d="M-10 -10q4 -8 10 -5q6 -3 10 5q-10 4 -20 0z" fill="#86BD7F"/>
+              <path d="M0 -14v-4.4" fill="none"/>
+            </g>
+            <g transform="translate(233 187) rotate(12) scale(0.88)" stroke-width="3.6">
+              <ellipse rx="18" ry="25" fill="#FFFFFF"/>
+              <g clip-path="url(#kjEgg)" stroke="none">
+                <path d="M-20 12q10 -6 20 0t20 0v16h-40z" fill="url(#kjfoot)"/>
+                <rect x="-20" y="-11.6" width="40" height="22" fill="#FFFDF8"/>
+                <rect x="-20" y="-11.6" width="40" height="1.4" fill="#5C3317"/>
+                <rect x="-20" y="9" width="40" height="1.4" fill="#5C3317"/>
+                <text x="0" y="-1.8" text-anchor="middle" font-family="Caveat, cursive" font-size="10.4" font-weight="700" fill="#5C3317">Kinder</text>
+                <text x="0" y="6.9" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="7.6" font-weight="600" letter-spacing=".6" fill="#E2001A">JOY</text>
+                <ellipse cx="-7" cy="-17.4" rx="3.2" ry="5.2" fill="#FFFFFF" opacity=".9" transform="rotate(-22 -7 -17.4)"/>
+              </g>
+              <ellipse rx="18" ry="25" fill="none"/>
+            </g>
+            <g transform="translate(91 206) rotate(8) scale(0.82)" stroke-width="3.7">
+              <path d="M-12 -6a12 11 0 0 1 24 0q0 13 -12 21q-12 -8 -12 -21z" fill="url(#kberry)"/>
+              <g stroke="none" fill="#FFE9A8"><ellipse cx="-5" cy="-2" rx="1.4" ry="2"/><ellipse cx="4.6" cy="-3" rx="1.4" ry="2"/><ellipse cx="0" cy="4" rx="1.4" ry="2"/><ellipse cx="-4.4" cy="7.4" rx="1.2" ry="1.8"/><ellipse cx="5" cy="5.6" rx="1.2" ry="1.8"/></g>
+              <ellipse cx="-6.4" cy="-8.6" rx="1.8" ry="3" fill="#FFFFFF" opacity=".5" stroke="none" transform="rotate(28 -6.4 -8.6)"/>
+              <path d="M-10 -10q4 -8 10 -5q6 -3 10 5q-10 4 -20 0z" fill="#86BD7F"/>
+              <path d="M0 -14v-4.4" fill="none"/>
+            </g>
+            <g transform="translate(209 207) rotate(-8) scale(0.82)" stroke-width="3.7">
+              <path d="M-12 -6a12 11 0 0 1 24 0q0 13 -12 21q-12 -8 -12 -21z" fill="url(#kberry)"/>
+              <g stroke="none" fill="#FFE9A8"><ellipse cx="-5" cy="-2" rx="1.4" ry="2"/><ellipse cx="4.6" cy="-3" rx="1.4" ry="2"/><ellipse cx="0" cy="4" rx="1.4" ry="2"/><ellipse cx="-4.4" cy="7.4" rx="1.2" ry="1.8"/><ellipse cx="5" cy="5.6" rx="1.2" ry="1.8"/></g>
+              <ellipse cx="-6.4" cy="-8.6" rx="1.8" ry="3" fill="#FFFFFF" opacity=".5" stroke="none" transform="rotate(28 -6.4 -8.6)"/>
+              <path d="M-10 -10q4 -8 10 -5q6 -3 10 5q-10 4 -20 0z" fill="#86BD7F"/>
+              <path d="M0 -14v-4.4" fill="none"/>
+            </g>
 
             <!-- the Kinder egg himself: legs over the edge, then body -->
             <path d="M137 190Q130 210 123 224M163 190Q170 210 177 224" fill="none" stroke-width="17"/>
             <path d="M137 190Q130 210 123 224M163 190Q170 210 177 224" fill="none" stroke="#FFFFFF" stroke-width="10.6"/>
             <g>
-              <path d="M104 230q2 -12 18 -12q14 0 14 10q0 8 -16 8h-12q-4 0 -4 -6z" fill="url(#korange)"/>
+              <path d="M104 230q2 -12 18 -12q14 0 14 10q0 8 -16 8h-12q-4 0 -4 -6z" fill="url(#kberry)"/>
               <path d="M104 236h32" stroke-width="2.6"/>
-              <path d="M196 230q-2 -12 -18 -12q-14 0 -14 10q0 8 16 8h12q4 0 4 -6z" fill="url(#korange)"/>
+              <path d="M196 230q-2 -12 -18 -12q-14 0 -14 10q0 8 16 8h12q4 0 4 -6z" fill="url(#kberry)"/>
               <path d="M164 236h32" stroke-width="2.6"/>
               <path d="M110 224q4 -2 8 0M190 224q-4 -2 -8 0" stroke="#FFFFFF" stroke-width="2"/>
             </g>
-            <!-- arms (behind the body at the shoulder) -->
+            <!-- his right arm holds the candle up -->
             <path d="M110 150Q88 140 81 114" fill="none" stroke-width="17"/>
             <path d="M110 150Q88 140 81 114" fill="none" stroke="#FFFFFF" stroke-width="10.6"/>
-            <path d="M190 152Q214 152 224 138" fill="none" stroke-width="17"/>
-            <path d="M190 152Q214 152 224 138" fill="none" stroke="#FFFFFF" stroke-width="10.6"/>
+            <!-- his left hand is free now, so he waves with it -->
+            <g class="wave">
+              <path d="M190 152Q212 148 222 128" fill="none" stroke-width="17"/>
+              <path d="M190 152Q212 148 222 128" fill="none" stroke="#FFFFFF" stroke-width="10.6"/>
+              <circle cx="224" cy="122" r="10" fill="#FFFFFF"/>
+              <path d="M218 116q2 -7 6 -2M224 114q3 -7 6 -1M230 117q4 -5 5 1" fill="none" stroke-width="2.2"/>
+            </g>
+            <path class="wave-lines" d="M243 106q6 7 5 16M251 100q9 11 7 25" fill="none" stroke="#E88BA2" stroke-width="2.6"/>
 
             <path d="M150 74C179 74 201 112 201 148C201 183 179 205 150 205C121 205 99 183 99 148C99 112 121 74 150 74Z" fill="url(#kegg)"/>
 
             <!-- face -->
-            <path d="M127 96q9 -6 18 0M155 96q9 -6 18 0" fill="none" stroke-width="3"/>
-            <ellipse cx="137" cy="113" rx="10" ry="13" fill="#FFFFFF"/>
-            <ellipse cx="163" cy="113" rx="10" ry="13" fill="#FFFFFF"/>
+            <path d="M127 98q9 -6 18 0M155 98q9 -6 18 0" fill="none" stroke-width="3"/>
+            <ellipse cx="137" cy="114" rx="10" ry="12.6" fill="#FFFFFF"/>
+            <ellipse cx="163" cy="114" rx="10" ry="12.6" fill="#FFFFFF"/>
             <g stroke="none">
-              <circle cx="140" cy="117" r="5.2" fill="#2A211E"/><circle cx="160" cy="117" r="5.2" fill="#2A211E"/>
-              <circle cx="141.6" cy="114.6" r="1.7" fill="#FFFFFF"/><circle cx="161.6" cy="114.6" r="1.7" fill="#FFFFFF"/>
-              <ellipse cx="119" cy="139" rx="7" ry="4.4" fill="#F4AFBE" opacity=".75"/>
-              <ellipse cx="181" cy="139" rx="7" ry="4.4" fill="#F4AFBE" opacity=".75"/>
+              <circle cx="140" cy="118" r="5.2" fill="#2A211E"/><circle cx="160" cy="118" r="5.2" fill="#2A211E"/>
+              <circle cx="141.6" cy="115.6" r="1.7" fill="#FFFFFF"/><circle cx="161.6" cy="115.6" r="1.7" fill="#FFFFFF"/>
+              <ellipse cx="119" cy="139" rx="7" ry="4.4" fill="#F4AFBE" opacity=".8"/>
+              <ellipse cx="181" cy="139" rx="7" ry="4.4" fill="#F4AFBE" opacity=".8"/>
             </g>
             <path d="M126 137Q150 146 174 137Q172 167 150 169Q128 167 126 137Z" fill="#C8102E"/>
             <path d="M136 159Q150 150 164 159Q160 167.5 150 168Q140 167.5 136 159Z" fill="#F48FA0" stroke="none"/>
@@ -937,33 +1086,20 @@ body.dim .bokeh{opacity:1}
             <text x="150" y="192" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700"
                   font-size="20" letter-spacing="-.2" stroke="none"><tspan fill="#1A1A1A">k</tspan><tspan fill="#E2001A">inder</tspan></text>
 
-            <!-- orange cap, worn a little crooked -->
-            <g transform="rotate(9 150 80)">
-              <path d="M180 89q22 -1 31 7q-12 6 -32 3z" fill="#E7770A"/>
-              <path d="M113 92Q113 61 150 59Q187 61 187 92Q150 82 113 92Z" fill="url(#korange)"/>
-              <path d="M150 61Q145 74 147 87" fill="none" stroke-width="2.2"/>
-              <circle cx="150" cy="59" r="4.6" fill="#F28A12"/>
-            </g>
-
-            <!-- his right hand: the Kinder Joy egg -->
-            <g transform="translate(130 6)">
-              <g transform="rotate(25 110 109)">
-                <ellipse cx="110" cy="109" rx="18" ry="25" fill="#FFFFFF"/>
-                <g clip-path="url(#kjShell)" stroke="none">
-                  <rect x="90" y="115" width="40" height="25" fill="#F6F2EC"/>
-                  <rect x="90" y="98" width="40" height="22" fill="#FFFDF8"/>
-                  <rect x="90" y="98.4" width="40" height="1.4" fill="#5C3317"/>
-                  <rect x="90" y="118.2" width="40" height="1.4" fill="#5C3317"/>
-                  <text x="110" y="107.2" text-anchor="middle" font-family="Caveat, cursive" font-size="10.4" font-weight="700" fill="#5C3317">Kinder</text>
-                  <text x="110" y="115.8" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="7.6" font-weight="600" letter-spacing="0.6" fill="#E2001A">JOY</text>
-                  <ellipse cx="103" cy="92" rx="3.4" ry="5.4" fill="#FFFFFF" opacity=".9" transform="rotate(-22 103 92)"/>
-                </g>
-                <ellipse cx="110" cy="109" rx="18" ry="25" fill="none"/>
+            <!-- a strawberry for a hat, worn a little crooked -->
+            <g transform="rotate(7 150 84)">
+              <path d="M111 95Q107 60 150 56Q193 60 189 95Q150 80 111 95Z" fill="url(#kberry)"/>
+              <g stroke="none" fill="#FFE9A8">
+                <ellipse cx="127" cy="80" rx="1.7" ry="2.5" transform="rotate(-18 127 80)"/><ellipse cx="141" cy="72" rx="1.7" ry="2.5"/>
+                <ellipse cx="159" cy="72" rx="1.7" ry="2.5"/><ellipse cx="173" cy="80" rx="1.7" ry="2.5" transform="rotate(18 173 80)"/>
+                <ellipse cx="150" cy="80" rx="1.7" ry="2.5"/><ellipse cx="134" cy="66" rx="1.5" ry="2.2" transform="rotate(-14 134 66)"/>
+                <ellipse cx="166" cy="66" rx="1.5" ry="2.2" transform="rotate(14 166 66)"/>
               </g>
+              <path d="M150 59q-13 -9 -24 -1q10 0 15 8zM150 59q13 -9 24 -1q-10 0 -15 8zM150 60q-7 -11 0 -17q7 6 0 17z" fill="#86BD7F" stroke-width="2.6"/>
+              <path d="M150 44v-5" fill="none" stroke-width="3"/>
             </g>
-            <circle cx="226" cy="136" r="9.5" fill="#FFFFFF"/>
 
-            <!-- his left hand holds the candle up -->
+            <!-- the candle in his right hand -->
             <path d="M79 64v-6" stroke="#4A3A33"/>
             <rect x="72" y="64" width="14" height="56" rx="6" fill="#FFF3F5"/>
             <path d="M72 76l14 -6M72 90l14 -6M72 104l14 -6M72 118l14 -6" stroke="#F6AFC0" stroke-width="4.4"/>
@@ -977,7 +1113,7 @@ body.dim .bokeh{opacity:1}
               <path d="M79 31q12 12 12 21a12 12 0 0 1 -24 0q0 -9 12 -21z" fill="#FBB040"/>
               <path d="M79 42q5.5 6.5 5.5 11a5.5 5.5 0 0 1 -11 0q0 -4.5 5.5 -11z" fill="#FFE9A3" stroke="none"/>
             </g>
-            <g id="cue" fill="none" stroke="#E07D96" stroke-width="2.6">
+            <g id="cue" fill="none" stroke="#D96F8B" stroke-width="2.6">
               <circle class="ring r1" cx="79" cy="50" r="25"/>
               <circle class="ring r2" cx="79" cy="50" r="25"/>
             </g>
@@ -1001,7 +1137,6 @@ body.dim .bokeh{opacity:1}
   <!-- ═══════════ GIFT 3 · LETTER ═══════════ -->
   <section class="screen" id="s-letter">
     <div class="stagger">
-      <h2 class="title" style="font-size:1.42rem">a little note for you… ✎</h2>
       <div class="letter">
         <div class="sheet"></div>
         <div class="grain"></div>
@@ -1050,24 +1185,24 @@ body.dim .bokeh{opacity:1}
   <!-- ═══════════ FINAL ═══════════ -->
   <!-- ═══════════ HIDDEN · BOUQUET ═══════════ -->
   <section class="screen" id="s-secret">
-    <div class="card center stagger">
-      <span class="tape tl"></span><span class="tape br mint"></span>
-      <h2 class="title" style="font-size:1.3rem">✿ you found it ✿</h2>
-      <p class="sub" style="margin:6px 0 2px">this one wasn't in the row</p>
-      <div class="night" id="night" role="button" tabindex="0" aria-label="watch the bouquet bloom again">
-        <div class="night-glow" aria-hidden="true"></div>
-        <div class="dust" id="dust" aria-hidden="true"></div>
-        <p class="night-label">FOR SAIYEDA // A BOUQUET<small>grown in the dark, just for you · 12.11</small></p>
+    <div class="stagger secret">
+      <p class="chip secret-tag">✿ you found the secret one ✿<small>this one wasn't in the row</small></p>
+      <div class="bloom" id="bloom" role="button" tabindex="0" aria-label="watch the bouquet bloom again">
+        <div class="bloom-light" aria-hidden="true"></div>
         <div class="bouquet" id="bouquet"></div>
-        <p class="night-tap">tap to watch it bloom again ✿</p>
+        <div class="sparkles" id="sparkles" aria-hidden="true"></div>
       </div>
-      <p class="secret-name">for Saiyeda,</p>
-      <p class="secret-line">
-        flowers — because you like them,<br>
-        and because I couldn't hand you<br>
-        real ones today <span class="kao">(˶ᵔᵕᵔ˶)</span>
-      </p>
-      <button class="btn ghost" style="margin-top:20px" onclick="go('s-gifts')">↺ back to the gifts</button>
+      <p class="chip bloom-tap">tap the flowers to watch them bloom again</p>
+      <div class="secret-note">
+        <span class="tape tl butter" style="width:74px;height:22px"></span>
+        <p class="secret-name">for Saiyeda,</p>
+        <p class="secret-line">
+          flowers — because you like them,<br>
+          and because I couldn't hand you<br>
+          real ones today <span class="kao">(˶ᵔᵕᵔ˶)</span>
+        </p>
+      </div>
+      <button class="btn ghost back" onclick="go('s-gifts')">↺ back to the gifts</button>
     </div>
   </section>
 
@@ -1083,13 +1218,23 @@ body.dim .bokeh{opacity:1}
         happy birthday, saiyeda<br><span class="kao" style="font-size:1.2rem">♡ (˶ᵔ ᵕ ᵔ˶) ♡</span>
       </p>
 
-      <div class="rate" id="rate">
-        <div class="hr"><span>✦ ✦ ✦</span></div>
-        <p class="rate-q">how was your birthday surprise?</p>
-        <div class="stars" id="stars"></div>
-        <p class="rate-say" id="rateSay" aria-live="polite"></p>
-        <button class="btn" id="rateSend" type="button" hidden>send it back 💌</button>
+      <div class="hr"><span>✦ ✦ ✦</span></div>
+      <div class="postmark" aria-hidden="true">
+        <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+          <defs><path id="pmArc" d="M21 70a49 49 0 1 1 98 0a49 49 0 1 1 -98 0"/></defs>
+          <g fill="none" stroke="currentColor">
+            <circle cx="70" cy="70" r="65" stroke-width="2.6"/>
+            <circle cx="70" cy="70" r="35" stroke-width="1.6"/>
+          </g>
+          <text font-family="Fredoka, sans-serif" font-weight="600" font-size="11" letter-spacing="4.3"
+                fill="currentColor"><textPath href="#pmArc">HAPPY BIRTHDAY ✿ SAIYEDA ✿</textPath></text>
+          <text x="70" y="74" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700"
+                font-size="19" fill="currentColor">12·11</text>
+          <text x="71" y="89" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="600"
+                font-size="8.5" letter-spacing="2" fill="currentColor">2026</text>
+        </svg>
       </div>
+      <p class="closing">that's everything, made just for you.<br>have the loveliest day <span class="kao">(◕‿◕)</span></p>
 
       <div class="credit">♪ Alfaaz · Hamza Malik × Zain Zohaib</div>
 
@@ -1176,10 +1321,12 @@ function bear({coat='#FFFCF7', ear='#FFFCF7', item='', mouth='smile', cls=''} = 
       <ellipse cx="140" cy="54" rx="11" ry="10" fill="#F6C6CE" stroke="none" opacity=".75"/>
       <ellipse cx="100" cy="92" rx="59" ry="51"/>
       <g stroke="none">
-        <ellipse cx="78" cy="90" rx="7" ry="7.6" fill="${S}"/>
-        <ellipse cx="122" cy="90" rx="7" ry="7.6" fill="${S}"/>
-        <ellipse cx="80" cy="87" rx="2.4" ry="2.4" fill="#fff"/>
-        <ellipse cx="124" cy="87" rx="2.4" ry="2.4" fill="#fff"/>
+        <g class="eyes">
+          <ellipse cx="78" cy="90" rx="7" ry="7.6" fill="${S}"/>
+          <ellipse cx="122" cy="90" rx="7" ry="7.6" fill="${S}"/>
+          <ellipse cx="80" cy="87" rx="2.4" ry="2.4" fill="#fff"/>
+          <ellipse cx="124" cy="87" rx="2.4" ry="2.4" fill="#fff"/>
+        </g>
         <ellipse cx="56" cy="107" rx="12" ry="7.4" fill="#F4AFBE" opacity=".85"/>
         <ellipse cx="144" cy="107" rx="12" ry="7.4" fill="#F4AFBE" opacity=".85"/>
       </g>
@@ -1216,7 +1363,8 @@ const ITEM_LETTER = `
   <g stroke="#4A3A33" stroke-width="3.4">
     <rect x="60" y="162" width="80" height="56" rx="7" fill="#FFFCF8"/>
     <path d="M60 167 L100 197 L140 167" fill="none"/>
-    <path d="M100 206 q-14 -10 -14 -19 a8 8 0 0 1 14 -5 a8 8 0 0 1 14 5 q0 9 -14 19 z" fill="#F0607A"/>
+    <circle cx="100" cy="198" r="9.5" fill="#EFA2B5"/>
+    <circle cx="100" cy="198" r="4.2" fill="none" stroke="#C9627F" stroke-width="2.2"/>
   </g>`;
 
 const ITEM_POSY = `
@@ -1296,7 +1444,8 @@ $$('#giftRow .gift').forEach(b => b.addEventListener('click', () => {
     $('#allDone').style.display = 'block';
     revealGift4();                          // a fourth bear turns up when she's back
   }
-  go(b.dataset.id);
+  b.classList.add('pressed');                 // the bear answers the tap before the page turns
+  setTimeout(() => { b.classList.remove('pressed'); go(b.dataset.id); }, 170);
 }));
 refreshLocks();
 
@@ -1805,7 +1954,7 @@ function rosette(P, pal, R, rand, rings, shape, spiral){
     const tone = k === 0 ? 'o' : (k === rings.length - 1 ? 'i' : 'm');
     /* the inner rings are the bud; the outer ones unfurl after it */
     const n = rings.length, at = k >= n - 2 ? (n - 1 - k) * .14 : .55 + (n - 3 - k) * .22;
-    s += `<g class="rg" style="--r:${at.toFixed(2)}s">`;
+    s += `<g class="rg" style="--r:${at.toFixed(2)}s;--tw:${k % 2 ? 26 : -30}deg">`;
     for (let i = 0; i < ring.n; i++){
       const a = ring.off + i * 360 / ring.n + (rand() - .5) * 16;
       const h = R * ring.h * (.9 + rand() * .16);
@@ -2050,29 +2199,31 @@ function giftsShown(){
 }
 $('#gift4Bear').innerHTML = bear({ ear:'#F4B6C6', item:ITEM_POSY, mouth:'w' });
 $('#gift4Btn').addEventListener('click', () => {
-  $('#gift4Btn').classList.add('opened');
-  go('s-secret');
-  secretConfetti();
+  const b = $('#gift4Btn');
+  b.classList.add('opened', 'pressed');
+  setTimeout(() => { b.classList.remove('pressed'); go('s-secret'); secretConfetti(); }, 170);
 });
 
-/* the bouquet's night: gold dust, and a tap grows it all over again */
-$('#dust').innerHTML = Array.from({ length:22 }, () => {
-  const s = (2 + Math.random() * 3.2).toFixed(1);
-  return `<i style="left:${(4 + Math.random() * 92).toFixed(1)}%;top:${(18 + Math.random() * 80).toFixed(1)}%;`
-       + `width:${s}px;height:${s}px;--dx:${(Math.random() * 30 - 15).toFixed(0)}px;`
-       + `animation-duration:${(7 + Math.random() * 6).toFixed(1)}s;animation-delay:${(-Math.random() * 10).toFixed(1)}s"></i>`;
+/* gold sparkles round the bouquet: most sit in a ring just outside the
+   flowers, a few drift across them. A tap grows it all over again. */
+$('#sparkles').innerHTML = Array.from({ length:18 }, (_, i) => {
+  const a = Math.random() * Math.PI * 2, d = i < 13 ? 40 + Math.random() * 12 : 8 + Math.random() * 26;
+  const c = ['#E9B345', '#F2CB6A', '#E88BA2', '#E9B345', '#F6DC9A'][i % 5];
+  return `<i style="left:${(50 + Math.cos(a) * d).toFixed(1)}%;top:${(44 + Math.sin(a) * d * .92).toFixed(1)}%;`
+       + `--s:${(9 + Math.random() * 10).toFixed(0)}px;--c:${c};`
+       + `--t:${(2.4 + Math.random() * 2.4).toFixed(1)}s;--d:${(1.2 + Math.random() * 5).toFixed(1)}s"></i>`;
 }).join('');
 function regrow(){
-  const n = $('#night');
-  n.replaceWith(n.cloneNode(true));    // fresh nodes restart every animation from the dark
+  const n = $('#bloom');
+  n.replaceWith(n.cloneNode(true));    // fresh nodes restart every animation from the start
 }
-$('#s-secret').addEventListener('click', e => { if (e.target.closest('#night')) regrow(); });
+$('#s-secret').addEventListener('click', e => { if (e.target.closest('#bloom')) regrow(); });
 $('#s-secret').addEventListener('keydown', e => {
-  if (e.target.closest('#night') && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); regrow(); }
+  if (e.target.closest('#bloom') && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); regrow(); }
 });
 
 function secretConfetti(){
-  Sakura.shower({ count:40, over:3, delay:.4, blossoms:.3 });
+  Sakura.shower({ count:26, over:3, delay:.5, blossoms:.3 });
 }
 /* ───────── lights down for the wish ───────── */
 var dimTimer = 0;
@@ -2086,17 +2237,59 @@ function lightsDown(){
 function lightsUp(){ document.body.classList.remove('dim'); }
 
 /* ───────── the camera ─────────
-   The pink button on the wheel is a real shutter: a click, a flash on the
-   screen, and an instant print that slides out and develops from dark to
-   full colour. Each shot loads a different film, and the prints fan out. */
-const FILMS = [
-  { film:'none',                                                  cap:'saiyeda ✿' },
-  { film:'saturate(1.15) sepia(.2) brightness(1.05)',             cap:'golden hour' },
-  { film:'grayscale(1) contrast(1.06) brightness(1.04)',          cap:'a classic' },
-  { film:'saturate(.92) brightness(1.07) hue-rotate(-10deg)',     cap:'in pink ♡' }
+   Three photos are on the roll. Every press of the pink button takes the
+   one on the screen — a click, a flash, an instant print that develops
+   from dark — and the screen rolls on to the next, so the fan of prints
+   is always three different pictures. Tapping the screen flips through
+   the roll without printing. After a full roll the film changes. */
+const ROLL = [
+  { src:'photo.jpg',  at:'50% 30%', crop:'50% 30%', cap:'saiyeda ✿' },
+  { src:'photo2.jpg', at:'50% 76%', crop:'50% 92%', cap:'under the tree' },
+  { src:'photo3.jpg', at:'50% 6%',  crop:'50% 18%', cap:'the birthday girl' }
 ];
-const FANS = [[[0, -3]], [[-38, -6], [38, 4]], [[-74, -8], [0, 2], [74, 7]]];
-let shots = 0, snapping = false;
+const FILMS = [
+  { film:'none',                                              name:'' },
+  { film:'saturate(1.15) sepia(.2) brightness(1.05)',         name:'golden hour' },
+  { film:'grayscale(1) contrast(1.06) brightness(1.04)',      name:'a classic' },
+  { film:'saturate(.92) brightness(1.07) hue-rotate(-10deg)', name:'in pink' }
+];
+const FANS = [[[0, -3]], [[-52, -6], [52, 4]], [[-98, -7], [0, 2], [98, 6]]];
+let shots = 0, snapping = false, frame = 0;
+
+/* load the rest of the roll onto the camera's screen, behind the first shot */
+const lcd = $('#lcd');
+ROLL.forEach((p, i) => {
+  let img = $('#herPhoto');
+  if (i){
+    img = document.createElement('img');
+    img.className = 'shot'; img.alt = ''; img.decoding = 'async';
+    img.addEventListener('error', () => { p.dead = true; img.remove(); paintCount(); });
+    img.src = p.src;
+    lcd.insertBefore(img, $('#photoFallback'));
+  }
+  img.style.objectPosition = p.at;
+  p.el = img;
+});
+const liveRoll = () => ROLL.filter(p => !p.dead);
+function paintCount(){
+  const n = liveRoll().length;
+  $('#lcdCount').textContent = n > 1 ? (frame % n + 1) + '/' + n : '';
+}
+paintCount();
+
+/* slide the next photo onto the screen, the way a camera roll scrolls */
+function showFrame(n){
+  const roll = liveRoll();
+  if (roll.length < 2) return;
+  const from = roll[frame % roll.length];
+  frame = n % roll.length;
+  const to = roll[frame];
+  if (from === to) return;
+  from.el.classList.remove('on'); from.el.classList.add('was');
+  to.el.classList.remove('was');  to.el.classList.add('on');
+  setTimeout(() => from.el.classList.remove('was'), 720);
+  paintCount();
+}
 
 function shutterSound(){
   if (!actx || muted || actx.state !== 'running') return;
@@ -2113,7 +2306,7 @@ function shutterSound(){
 }
 
 function layoutPrints(){
-  const all = [...$$('#prints .print')];
+  const all = $$('#prints .print:not(.gone)');
   const fan = FANS[all.length - 1] || FANS[2];
   all.forEach((p, i) => {
     p.style.setProperty('--x', fan[i][0] + 'px');
@@ -2125,10 +2318,18 @@ function layoutPrints(){
 function snap(){
   if (snapping) return;
   snapping = true;
+  const roll = liveRoll();
+  const photo = roll[frame % roll.length];
+  const f = FILMS[Math.floor(shots / roll.length) % FILMS.length];
+  shots++;
+
   const btn = $('#shutter');
-  btn.classList.add('press', 'used');
+  btn.classList.add('press');
   setTimeout(() => btn.classList.remove('press'), 140);
+  if (shots >= roll.length) btn.classList.add('used');     // she has the idea by now
   shutterSound();
+  const cam = $('.cam-wrap');
+  cam.classList.remove('kick'); void cam.offsetWidth; cam.classList.add('kick');
 
   const fl = $('#lcdFlash');
   fl.classList.remove('go'); void fl.offsetWidth; fl.classList.add('go');
@@ -2137,111 +2338,49 @@ function snap(){
   setTimeout(() => { rec.innerHTML = '<b></b>PLAY'; }, 1300);
 
   const tray = $('#prints');
-  const f = FILMS[shots % FILMS.length];
-  shots++;
   const p = document.createElement('div');
   p.className = 'print new';
   p.style.setProperty('--film', f.film);
-  p.innerHTML = `<div class="pic"><img src="${$('#herPhoto').getAttribute('src')}" alt=""></div><div class="pcap">${f.cap}</div>`;
+  p.innerHTML = `<div class="pic"><img src="${photo.src}" alt="" style="object-position:${photo.crop}"></div>`
+              + `<div class="pcap">${f.name || photo.cap}</div>`;
   setTimeout(() => {
     tray.classList.add('has');
     tray.appendChild(p);
-    const all = $$('#prints .print');
-    if (all.length > 3) all[0].remove();                 // keep the fan to three
+    const all = $$('#prints .print:not(.gone)');
+    if (all.length > 3){                                   // the oldest slips out of the fan
+      const old = all[0];
+      old.classList.add('gone');
+      setTimeout(() => old.remove(), 340);
+    }
     layoutPrints();
     p.addEventListener('animationend', () => p.classList.remove('new'), { once:true });
   }, 260);
+  setTimeout(() => showFrame(frame + 1), 520);             // the roll moves on to the next photo
 
-  $('#snapHint').innerHTML = shots < FILMS.length
-    ? 'developing… <b>press again</b> for a different film'
-    : 'all four films ✿ keep going if you like';
-  setTimeout(() => { snapping = false; }, 1100);
+  const left = roll.length - shots;
+  $('#snapHint').innerHTML =
+      left > 1   ? 'developing… <b>press again</b> for the next photo'
+    : left === 1 ? 'one more on the roll, <b>press again</b> ✿'
+    : left === 0 ? 'all three ✿ <b>keep going</b> for a different film'
+    : f.name     ? `<b>${f.name}</b> film ✧ keep going if you like`
+    :              'back to plain film ✧ keep going if you like';
+  setTimeout(() => { snapping = false; }, 1000);
 }
 $('#shutter').addEventListener('click', snap);
+
+/* tapping the screen flips through the roll without taking a picture */
+lcd.addEventListener('click', () => { if (!snapping) showFrame(frame + 1); });
+lcd.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); if (!snapping) showFrame(frame + 1); }
+});
 
 /* tap a print to bring it to the front */
 $('#prints').addEventListener('click', e => {
   const p = e.target.closest('.print');
-  if (!p) return;
+  if (!p || p.classList.contains('gone')) return;
   $('#prints').appendChild(p);
   layoutPrints();
 });
-
-/* ───────── rating ─────────
-   There is no server, so the score can't arrive on its own: after she
-   picks, a button opens her share sheet with the rating written out, and
-   she sends it back however she likes. Remembered on her phone too. */
-const RATE_SAYS = [
-  'hmm, it was okay (｡•́︿•̀｡)',
-  'kinda cute, i guess',
-  'pretty sweet ✿',
-  'this made me smile (˶ᵔᵕᵔ˶)',
-  'best birthday surprise ever 💗'
-];
-const STAR_D = 'M20 3.5l4.9 10.3 11.3 1.5-8.3 7.8 2.1 11.2L20 28.9 9.9 34.3 12 23.1 3.7 15.3l11.3-1.5z';
-let rating = 0;
-
-$('#stars').innerHTML = `<svg width="0" height="0" style="position:absolute"><defs>
-    <linearGradient id="starfill" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#FFB8C8"/><stop offset="1" stop-color="#E7718E"/>
-    </linearGradient></defs></svg>`
-  + [1, 2, 3, 4, 5].map(n => `<button class="star" type="button" data-n="${n}" role="radio"
-      aria-checked="false" aria-label="${n} star${n > 1 ? 's' : ''}">
-      <svg viewBox="0 0 40 40"><path d="${STAR_D}"/></svg></button>`).join('');
-
-function paintStars(n, cls){
-  $$('#stars .star').forEach(s => s.classList.toggle(cls, +s.dataset.n <= n));
-}
-
-function setRating(n, celebrate){
-  rating = n;
-  paintStars(n, 'on');
-  $$('#stars .star').forEach(s => {
-    s.setAttribute('aria-checked', String(+s.dataset.n === n));
-    if (celebrate && +s.dataset.n <= n){
-      s.classList.remove('pop'); void s.offsetWidth;
-      setTimeout(() => s.classList.add('pop'), (+s.dataset.n - 1) * 60);
-    }
-  });
-  $('#rateSay').textContent = RATE_SAYS[n - 1];
-  const send = $('#rateSend');
-  send.hidden = false;
-  send.textContent = 'send it back 💌';
-  try{ localStorage.setItem('bday-rating', String(n)); }catch(e){}
-  if (celebrate && n === 5){
-    const r = $('#stars').getBoundingClientRect();
-    Sakura.burst({ x:(r.left + r.width / 2) / innerWidth, y:(r.top + r.height / 2) / innerHeight,
-                   count:34, angle:90, spread:300, power:.5 });
-  }
-}
-
-$('#stars').addEventListener('click', e => {
-  const s = e.target.closest('.star');
-  if (s) setRating(+s.dataset.n, true);
-});
-$('#stars').addEventListener('mouseover', e => {
-  const s = e.target.closest('.star');
-  if (s) paintStars(+s.dataset.n, 'preview');
-});
-$('#stars').addEventListener('mouseleave', () => paintStars(0, 'preview'));
-
-$('#rateSend').addEventListener('click', async () => {
-  if (!rating) return;
-  const text = `I rated my birthday surprise ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)} (${rating}/5) — ${RATE_SAYS[rating - 1]}`;
-  const sent = () => { $('#rateSend').textContent = 'sent ✓ thank you ♡'; };
-  if (navigator.share){
-    try{ await navigator.share({ text }); sent(); return; }
-    catch(e){ if (e && e.name === 'AbortError') return; }   // she closed the sheet
-  }
-  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener');
-  sent();
-});
-
-(function restoreRating(){
-  let n = 0;
-  try{ n = +localStorage.getItem('bday-rating') || 0; }catch(e){}
-  if (n >= 1 && n <= 5) setRating(n, false);
-})();
 
 /* ───────── music ─────────
    The clip is ~25s, so a plain loop would click back to the start every
@@ -2372,7 +2511,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 /* ───────── background doodles ───────── */
-const MOTIFS = ['☕','✿','♡','✧','🌷','🍓','✦','🎵','☁','🧁','★','🪩'];
+const MOTIFS = ['☕','✿','♡','✧','🌷','🍓','✦','🎵','☁','🧁','★','🪐','🌙','🪩'];
 const dz = $('#doodles');
 for (let i = 0; i < 16; i++){
   const s = document.createElement('span');
