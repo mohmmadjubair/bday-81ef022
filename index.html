@@ -1323,6 +1323,47 @@ const PASSCODE_HINT = "psst, it's your birthday (day, then month)";   // shown u
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
+/* ───────── a quiet heads-up for the sender ─────────
+   The card has no server, so it cannot tell him anything by itself. This
+   posts a short note to a private ntfy.sh channel his phone listens to:
+   the link was opened, the code was entered, the last page was reached.
+   Only those words are sent, nothing about her or her phone. A browser
+   that has ever opened the ?preview link is his, and stays silent. If a
+   send fails, nothing happens and the card carries on. */
+const NTFY_TOPIC = 'card-1ba37a59483cf498';
+const mine = (() => {
+  try{
+    if (new URLSearchParams(location.search).get('preview') === 'jubair') localStorage.setItem('card-owner', '1');
+    return localStorage.getItem('card-owner') === '1';
+  }catch(e){ return false; }
+})();
+const told = new Set();
+function tell(key, message, tag, evenIfMine){
+  if ((mine && !evenIfMine) || told.has(key)) return;
+  told.add(key);
+  try{
+    fetch('https://ntfy.sh', { method:'POST', keepalive:true,
+      body:JSON.stringify({ topic:NTFY_TOPIC, title:'Birthday card', message, tags:[tag] }) }).catch(() => {});
+  }catch(e){}
+}
+/* "opened" waits until the page has really been on screen for a few
+   seconds, so link-preview robots and prefetchers don't count, and it
+   stays quiet if she reloads within ten minutes */
+function tellOpened(){
+  let last = 0;
+  try{ last = +localStorage.getItem('card-opened-at') || 0; }catch(e){}
+  if (mine || Date.now() - last < 10 * 60 * 1000) return;
+  const send = () => {
+    if (document.visibilityState !== 'visible') return;
+    document.removeEventListener('visibilitychange', arm);
+    try{ localStorage.setItem('card-opened-at', String(Date.now())); }catch(e){}
+    tell('open', window.__opens ? 'She opened the link. It is showing the countdown.' : 'She opened the link.', 'eyes');
+  };
+  const arm = () => { if (document.visibilityState === 'visible') setTimeout(send, 3000); };
+  document.addEventListener('visibilitychange', arm);
+  arm();
+}
+
 /* ───────── screen transitions ───────── */
 let busy = false;
 function go(id, instant){
@@ -1343,7 +1384,7 @@ function go(id, instant){
     if (st){ st.style.animation='none'; void st.offsetWidth; st.style.animation=''; }
     window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
     busy = false;
-    if (id === 's-final'){ rainHearts(); finaleConfetti(); }
+    if (id === 's-final'){ rainHearts(); finaleConfetti(); tell('end', 'She reached the last page.', 'tada'); }
     if (id === 's-gifts') giftsShown();
     if (id === 's-cake') dimTimer = setTimeout(lightsDown, 650);
   }, instant ? 120 : 300);
@@ -1563,6 +1604,7 @@ function unlockConfetti(){
 function check(){
   if (entry === PASSCODE){
     unlocking = true;
+    tell('unlock', 'She entered the code and unlocked it.', 'unlock');
     entry = ''; paintDots();
     const card = $('#s-lock .card');
     $('#wrongHint').classList.remove('show');
@@ -2585,6 +2627,7 @@ document.addEventListener('visibilitychange', () => {
     if (left <= 0){
       done = true;
       clearInterval(timer);
+      tell('midnight', 'The countdown just reached zero on her screen.', 'alarm_clock');
       put('#cdH', '00'); put('#cdM', '00'); put('#cdS', '00');
       $('#waitTitle').textContent = 'it\u2019s time ✿';
       Sakura.burst({ x:.5, y:.42, count:44, angle:90, spread:330, power:.6 });
@@ -2600,6 +2643,11 @@ document.addEventListener('visibilitychange', () => {
   timer = setInterval(tick, 250);
   document.addEventListener('visibilitychange', tick);     // catch up at once when she comes back to the tab
 })();
+
+tellOpened();
+/* his own check that the channel works: ?preview=jubair&ping=test */
+if (mine && new URLSearchParams(location.search).get('ping') === 'test')
+  tell('test', 'Test: notifications are working.', 'white_check_mark', true);
 
 /* ───────── background doodles ───────── */
 const MOTIFS = ['☕','✿','♡','✧','🌷','🍓','✦','🎵','☁','🧁','★','🪐','🌙','🪩'];
