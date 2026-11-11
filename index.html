@@ -14,7 +14,7 @@
 <meta property="og:type"        content="website">
 <meta property="og:url"         content="https://mohmmadjubair.github.io/bday-81ef022/">
 <meta property="og:title"       content="something for you ✿">
-<meta property="og:description" content="it's locked — but you already know the code.">
+<meta property="og:description" content="it's locked, but you already know the code.">
 <meta property="og:image"       content="https://mohmmadjubair.github.io/bday-81ef022/preview.jpg">
 <meta property="og:image:type"  content="image/jpeg">
 <meta property="og:image:width" content="800">
@@ -22,7 +22,7 @@
 <meta property="og:image:alt"   content="A sealed envelope on a pink gingham card reading: something for you">
 <meta name="twitter:card"        content="summary_large_image">
 <meta name="twitter:title"       content="something for you ✿">
-<meta name="twitter:description" content="it's locked — but you already know the code.">
+<meta name="twitter:description" content="it's locked, but you already know the code.">
 <meta name="twitter:image"       content="https://mohmmadjubair.github.io/bday-81ef022/preview.jpg">
 <meta name="theme-color"         content="#F7C9D3">
 <title>happy birthday, saiyeda ✿</title>
@@ -757,7 +757,40 @@ body.dim .bokeh{opacity:1}
   .sparkles{display:none}
   .lcd .shot{transition:opacity .2s ease;transform:none}
 }
+
+/* ───────── not before midnight ─────────
+   Until the day begins the card shows a countdown where the lock would
+   be. The <head> script adds .waiting before the first paint. */
+html.waiting #s-lock{display:none}
+html.waiting #s-wait{display:block}
+.countdown{display:flex;justify-content:center;gap:10px;margin:20px 0 4px}
+.countdown span{
+  width:78px;padding:11px 0 8px;border-radius:14px;border:2.5px solid var(--ink);background:var(--paper);
+  box-shadow:0 4px 0 var(--ink);display:flex;flex-direction:column;align-items:center;
+}
+.countdown b{
+  font-family:'Fredoka',system-ui,sans-serif;font-weight:700;font-size:1.9rem;line-height:1;
+  color:var(--ink);font-variant-numeric:tabular-nums;
+}
+.countdown b.tick{animation:cdtick .28s ease}
+@keyframes cdtick{0%{transform:translateY(-4px);opacity:.4}100%{transform:none;opacity:1}}
+.countdown i{font-style:normal;font-family:'Caveat',cursive;font-size:1.04rem;color:var(--ink-soft);margin-top:3px}
+.wait-note{font-family:'Caveat',cursive;font-size:1.18rem;color:var(--berry);margin:16px 0 4px;text-align:center}
 </style>
+<script>
+/* Decide before the first paint whether the card is still waiting for
+   midnight, so the lock never flashes up early. The moment is one fixed
+   instant: 12 November 2026, 00:00 in Dhaka (UTC+6, no daylight saving).
+   Testing: ?preview=jubair skips the wait, and ?preview=jubair&in=20
+   rehearses the last 20 seconds of the countdown. */
+(function(){
+  var q = new URLSearchParams(location.search), mine = q.get('preview') === 'jubair';
+  var rehearse = mine && q.has('in') ? Math.max(3, Math.min(3600, +q.get('in') || 20)) : 0;
+  var opens = rehearse ? Date.now() + rehearse * 1000 : Date.parse('2026-11-12T00:00:00+06:00');
+  window.__opens = (mine && !rehearse) || Date.now() >= opens ? 0 : opens;
+  if (window.__opens) document.documentElement.classList.add('waiting');
+})();
+</script>
 </head>
 <body>
 
@@ -778,13 +811,29 @@ body.dim .bokeh{opacity:1}
 
 <main class="stage">
 
+  <!-- ═══════════ BEFORE MIDNIGHT · COUNTDOWN ═══════════ -->
+  <section class="screen" id="s-wait">
+    <div class="card grid-paper lock-wrap stagger">
+      <span class="tape tl butter"></span><span class="tape tr"></span>
+      <div id="waitBear" style="max-width:150px;margin:0 auto"></div>
+      <h1 class="title lock-title" id="waitTitle">almost time ✿</h1>
+      <p class="sub">this opens at midnight,<br>the moment it turns 12 November <span class="kao">(◕‿◕)</span></p>
+      <div class="countdown" role="timer" aria-label="time left until it opens">
+        <span><b id="cdH">00</b><i>hours</i></span>
+        <span><b id="cdM">00</b><i>minutes</i></span>
+        <span><b id="cdS">00</b><i>seconds</i></span>
+      </div>
+      <p class="wait-note">no peeking, the bear is keeping watch</p>
+    </div>
+  </section>
+
   <!-- ═══════════ SCREEN 1 · LOCK ═══════════ -->
   <section class="screen active in" id="s-lock">
     <div class="card grid-paper lock-wrap stagger">
       <span class="tape tl"></span><span class="tape tr mint"></span>
       <div id="lockBear" style="max-width:150px;margin:0 auto"></div>
       <h1 class="title lock-title">Enter a passcode 🎀</h1>
-      <p class="sub" id="lockHint">psst — it's your birthday <span class="kao">(◕‿◕)</span></p>
+      <p class="sub" id="lockHint">psst, it's your birthday <span class="kao">(◕‿◕)</span></p>
       <div class="dots" id="dots">
         <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
       </div>
@@ -901,12 +950,11 @@ body.dim .bokeh{opacity:1}
       </div>
       <p class="snap-hint" id="snapHint">tap the <b>pink button</b>, a new photo every time</p>
       <div class="prints" id="prints"></div>
-      <div class="cap">saiyeda ✿ the birthday girl</div>
       <div class="notes">
         <div class="note a"><span class="tape tl butter" style="width:70px;height:22px"></span>
-          Happiest of birthdays to the person with the best taste in aesthetics 🌸</div>
+          May your heart find peace and endless cheer,<br>And love and mercy grow each year.</div>
         <div class="note b"><span class="tape tr mint" style="width:70px;height:22px"></span>
-          Your pinterest boards were not supposed to be this cute.</div>
+          May Allah fulfill the dreams you hold,<br>And bless your life far more than gold.</div>
       </div>
       <button class="btn ghost back" onclick="go('s-gifts')">← back to the gifts</button>
     </div>
@@ -1125,7 +1173,7 @@ body.dim .bokeh{opacity:1}
         <div class="card">
           <span class="tape tl"></span><span class="tape br mint"></span>
           <p class="hand" style="font-size:1.42rem;line-height:1.38;margin:0;text-align:center">
-            I hope this year is as soft and sweet as you are<br>(and full of good food, obviously).
+            May Allah bless your year with gentle peace, soft like spring petals, sweet with His Barakah, and overflowing with delicious food, of course!
           </p>
           <p class="sub" style="margin:14px 0 0">✧ wish made ✧ <span class="kao">(ノ◕ヮ◕)ノ*:･ﾟ✧</span></p>
         </div>
@@ -1143,10 +1191,10 @@ body.dim .bokeh{opacity:1}
         <div class="folds"></div>
         <span class="tape tl butter" style="z-index:5"></span><span class="tape tr" style="z-index:5"></span>
         <div class="ink">
-          <p>Happy birthday, Saiyeda ✿ I'm not very good at saying things out loud, so I built you a whole little website instead. Seemed easier. Hopefully it counts.</p>
-          <p>You have this way of making ordinary things feel considered — a good café, a good song, a tidy page of notes, a tiny doodle in the corner. Caring about small beautiful things is rarer than people think, and honestly the world is nicer because you do.</p>
-          <p>So here's to a year that's kind to you. Slow mornings, strawberry season, music a bit too loud, and people who notice how lovely you are.</p>
-          <p class="sign">Happy birthday, Saiyeda.<br>I'm really glad I know you 🎂<br>— from someone who noticed you a while ago <span class="kao">(˶ᵔᵕᵔ˶)</span></p>
+          <p>Barakallah Fii Umrik, Saiyeda ✿<br>I'm not very good at saying things out loud so I built this instead. Hopefully it counts.</p>
+          <p>I actually got curious and looked up your full name meaning recently. 'Noble, everlasting, and guided.' It honestly makes perfect sense for a soul with such serene, effortless grace. You have this way of making ordinary things feel considered like a good cafe, a good song, a tidy page of notes. Plus, your Pin boards and Insta feed were not supposed to be this cute. Caring about small beautiful things is rarer than people think, and honestly the world is nicer because you do.</p>
+          <p>So here's to a year that's kind to you. Slow mornings, strawberry season, and people who notice how lovely you are.</p>
+          <p class="sign">enjoy your day, Saiyeda.<br>i'm really glad i know you<br>from someone who noticed you recently</p>
         </div>
         <span class="pressed" id="pressedSprig" aria-hidden="true"></span>
         <div class="seal" aria-hidden="true">
@@ -1197,9 +1245,10 @@ body.dim .bokeh{opacity:1}
         <span class="tape tl butter" style="width:74px;height:22px"></span>
         <p class="secret-name">for Saiyeda,</p>
         <p class="secret-line">
-          flowers — because you like them,<br>
-          and because I couldn't hand you<br>
-          real ones today <span class="kao">(˶ᵔᵕᵔ˶)</span>
+          Flowers because you like them,<br>
+          and as I couldn't hand you<br>
+          real ones today.<br>
+          these ones get to last forever <span class="kao">(◕‿◕)</span>
         </p>
       </div>
       <button class="btn ghost back" onclick="go('s-gifts')">↺ back to the gifts</button>
@@ -1215,7 +1264,7 @@ body.dim .bokeh{opacity:1}
         Hope your day is as lovely<br>as your pinterest feed 💗
       </h1>
       <p class="sub" style="margin-top:12px">
-        happy birthday, saiyeda<br><span class="kao" style="font-size:1.2rem">♡ (˶ᵔ ᵕ ᵔ˶) ♡</span>
+        <span class="kao" style="font-size:1.2rem">♡ (˶ᵔ ᵕ ᵔ˶) ♡</span>
       </p>
 
       <div class="hr"><span>✦ ✦ ✦</span></div>
@@ -1226,15 +1275,15 @@ body.dim .bokeh{opacity:1}
             <circle cx="70" cy="70" r="65" stroke-width="2.6"/>
             <circle cx="70" cy="70" r="35" stroke-width="1.6"/>
           </g>
-          <text font-family="Fredoka, sans-serif" font-weight="600" font-size="11" letter-spacing="4.3"
-                fill="currentColor"><textPath href="#pmArc">HAPPY BIRTHDAY ✿ SAIYEDA ✿</textPath></text>
+          <text font-family="Fredoka, sans-serif" font-weight="600" font-size="11" letter-spacing="3.6"
+                fill="currentColor"><textPath href="#pmArc">BARAKALLAH FII UMRIK ✿ SAIYEDA ✿</textPath></text>
           <text x="70" y="74" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700"
                 font-size="19" fill="currentColor">12·11</text>
           <text x="71" y="89" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="600"
                 font-size="8.5" letter-spacing="2" fill="currentColor">2026</text>
         </svg>
       </div>
-      <p class="closing">that's everything, made just for you.<br>have the loveliest day <span class="kao">(◕‿◕)</span></p>
+      <p class="closing">if you actually made it this far,<br>arigatou gozaimasu <span class="kao">(◕‿◕)</span></p>
 
       <div class="credit">♪ Alfaaz · Hamza Malik × Zain Zohaib</div>
 
@@ -1268,7 +1317,7 @@ body.dim .bokeh{opacity:1}
    ↓↓↓  THE PASSCODE — change these 4 digits to her birthday  ↓↓↓
    ══════════════════════════════════════════════════════════════ */
 const PASSCODE = "1211";          //  12 November — day then month (DDMM)
-const PASSCODE_HINT = "psst — it's your birthday (day, then month)";   // shown under the title
+const PASSCODE_HINT = "psst, it's your birthday (day, then month)";   // shown under the title
 /* ══════════════════════════════════════════════════════════════ */
 
 const $  = s => document.querySelector(s);
@@ -1490,7 +1539,7 @@ function press(k){
    get progressively less subtle, then give up entirely */
 const WRONG_HINTS = [
   "not quite ✿ it's a date you know very well",
-  "nope — day first, then the month",
+  "nope, day first, then the month",
   "think: the day people spam your phone with messages",
   "it's the 12th of something. you were there.",
   "Saiyeda. it is your own birthday. 1 2 1 1 😭"
@@ -2509,6 +2558,48 @@ window.addEventListener('pageshow',  audioOnShow);
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden && playing && actx && actx.state === 'suspended') actx.resume();
 });
+
+/* ───────── not before midnight ─────────
+   The link can be sent early. Until 12 November begins in Dhaka the card
+   shows a countdown where the lock would be, and at zero it turns into
+   the lock on its own. (The instant itself is worked out in the <head>.) */
+(function waitForMidnight(){
+  const opens = window.__opens;
+  if (!opens) return;
+  $('#waitBear').innerHTML = bear({ ear:'#E7C7A8', mouth:'smile' });
+  $('#s-lock').classList.remove('active', 'in');
+  $('#s-wait').classList.add('active', 'in');
+  document.documentElement.classList.remove('waiting');
+
+  const pad = n => String(n).padStart(2, '0');
+  const put = (id, v) => {
+    const el = $(id);
+    if (el.textContent === v) return;
+    el.textContent = v;
+    el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick');
+  };
+  let timer = 0, done = false;
+  function tick(){
+    if (done) return;
+    const left = opens - Date.now();
+    if (left <= 0){
+      done = true;
+      clearInterval(timer);
+      put('#cdH', '00'); put('#cdM', '00'); put('#cdS', '00');
+      $('#waitTitle').textContent = 'it\u2019s time ✿';
+      Sakura.burst({ x:.5, y:.42, count:44, angle:90, spread:330, power:.6 });
+      setTimeout(() => go('s-lock'), 1300);
+      return;
+    }
+    const s = Math.ceil(left / 1000);
+    put('#cdH', pad(Math.floor(s / 3600)));
+    put('#cdM', pad(Math.floor(s % 3600 / 60)));
+    put('#cdS', pad(s % 60));
+  }
+  tick();
+  timer = setInterval(tick, 250);
+  document.addEventListener('visibilitychange', tick);     // catch up at once when she comes back to the tab
+})();
 
 /* ───────── background doodles ───────── */
 const MOTIFS = ['☕','✿','♡','✧','🌷','🍓','✦','🎵','☁','🧁','★','🪐','🌙','🪩'];
